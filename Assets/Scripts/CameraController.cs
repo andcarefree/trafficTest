@@ -7,7 +7,7 @@ public class CameraController : MonoBehaviour
     public Transform cameraTransform;
     public float moveSpeed;
     public float moveTime;
-    public float rotationAmount;
+    public float rotationSpeed;
 
     public Vector3 newPosition;
     public Vector3 zoomAmount;
@@ -30,15 +30,15 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        SelectObjectOnClick();
         HandleMouseMovement();
         HandleKeyboardMovement();
 
         HandleMouseZoom();
+        HandleMouseRotation();
 
-        // HandleMouseRotation();
-
-        transform.position = Vector3.Lerp(transform.position, newPosition,  moveTime);
-        // transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * moveTime);
+        transform.position = Vector3.Lerp(transform.position, newPosition, moveTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, moveTime);
         cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, newZoom, moveTime);
     }
 
@@ -64,11 +64,7 @@ public class CameraController : MonoBehaviour
 
     void HandleMouseMovement()
     {
-        if (Input.mouseScrollDelta.y != 0 )
-        {
-            newZoom += Input.mouseScrollDelta.y * zoomAmount;
-        }
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(2))
         {
             Plane Plane = new Plane(Vector3.up, Vector3.zero);
             Ray Ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -79,7 +75,7 @@ public class CameraController : MonoBehaviour
                 dragStartPosition = Ray.GetPoint(entry);
             }
         }
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(2))
         {
             Plane Plane = new Plane(Vector3.up, Vector3.zero);
             Ray Ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -112,8 +108,31 @@ public class CameraController : MonoBehaviour
         {
             rotationStopPosition = Input.mousePosition;
             Vector3 rotationDiff = rotationStopPosition - rotationStartPosition;
-            // rotationStartPosition = rotationStopPosition;
-            // newRotation = Quaternion.Euler(Vector3.up * (-rotationDiff.x / 0.5f));
+            rotationStartPosition = rotationStopPosition;
+            newRotation *= Quaternion.Euler(Vector3.up * (-rotationDiff.x * rotationSpeed));
         }
+    }
+
+    public static GameObject SelectObjectOnClick()
+    {
+        GameObject selectedObject = null;
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit rayHit;
+
+            if (Physics.Raycast(ray, out rayHit))
+            {
+                selectedObject = rayHit.collider.gameObject;
+                Debug.Log(selectedObject.name);
+            }
+        }
+        return selectedObject;
+    }
+
+    void SelectObjectInRect()
+    {
+
     }
 }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 9025392021884977296}
   - component: {fileID: 9025392021884977299}
   - component: {fileID: 9025392021884977297}
+  - component: {fileID: 6437255435577205086}
   m_Layer: 0
   m_Name: Line
   m_TagString: Untagged
@@ -49,6 +50,7 @@ LineRenderer:
   m_MotionVectors: 0
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5141,12 +5143,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 165e379c1d118a949b6d0d7028fe1824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trafficState: 0
+  carNumber: 0
   points:
   - {x: 5, y: 0, z: -5}
   - {x: 15, y: 0, z: -5}
   - {x: 25, y: 0, z: -5}
   nextRoads: []
   lastCar: {fileID: 0}
+--- !u!65 &6437255435577205086
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9025392021884977298}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 60, y: 1, z: 1.0000019}
+  m_Center: {x: 0.001999855, y: 0, z: 0}
 --- !u!1 &9025392022072148228
 GameObject:
   m_ObjectHideFlags: 0
@@ -5203,6 +5220,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5308,6 +5326,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5413,6 +5432,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

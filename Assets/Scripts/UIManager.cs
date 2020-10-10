@@ -7,16 +7,19 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    static bool playStat = false;
+    public static bool playStat = false;
     static bool showState = true;
-
-    public static bool buttonClicked = false;
+    bool button1Clicked = false;
+    bool button2Clicked = false;
 
     public GameObject toolPanel;
     public GameObject Road;
+    public static GameObject clickedRoadObject;
+
     public Text textref;
 
     public List<Vector3> roadPosition;
+    public List<GameObject> roadList;
 
     // Start is called before the first frame update
     void Awake()
@@ -27,12 +30,11 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        if (buttonClicked){
-            placeObject();
-        }
+        PlaceRoadObject();
+        ConnectLane();
     }
 
-    public void onClickStartButton()
+    public void OnClickStartButton()
     {
         Debug.Log("start button is clicked");
         if (!playStat)
@@ -48,14 +50,14 @@ public class UIManager : MonoBehaviour
             textref.text = "Start";
         }
     }
-    public void onClickResetButton()
+    public void OnClickResetButton()
     {
-        Debug.Log("stop button is pushed");
+        // Debug.Log("stop button is pushed");
         SceneManager.LoadScene( SceneManager.GetActiveScene().buildIndex );
         Time.timeScale = 0;
-    }//Just for testing. need to be rewritten
+    }
 
-    public void switchPanelShowState()
+    void SwitchPanelShowState()
     {
         showState = !showState;
         if (showState)
@@ -68,41 +70,76 @@ public class UIManager : MonoBehaviour
         }
     }
     
-    public void placeObject()
+    void PlaceRoadObject()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (button1Clicked)
         {
-            Plane Plane = new Plane(Vector3.up, Vector3.zero);
-            Ray Ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            float entry;
+            if (Input.GetKey(KeyCode.Escape))
+            {    
+                button1Clicked = false;
+                roadPosition.Clear();
+                return;
+            }
 
-            if (Plane.Raycast(Ray, out entry))
+            if (Input.GetMouseButtonDown(0))
             {
-                roadPosition.Add(Ray.GetPoint(entry));
+                Plane Plane = new Plane(Vector3.up, Vector3.zero);
+                Ray Ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                float entry;
+
+                if (Plane.Raycast(Ray, out entry))
+                {
+                    roadPosition.Add(Ray.GetPoint(entry));
+                }
+            }
+            if (roadPosition.Count == 2)
+            {
+                Vector3 position = (roadPosition[1] + roadPosition[0]) / 2.0f;
+
+                Quaternion rotation = Quaternion.LookRotation(roadPosition[1] - roadPosition[0], Vector3.up);
+                rotation *= Quaternion.Euler(0, -90f, 0);
+
+                Instantiate(Road, position, rotation);
+
+                roadPosition.Clear();
+
+                button1Clicked = false;
             }
         }
-        if (roadPosition.Count == 2)
+    }
+
+    void ConnectLane()
+    {
+        if(button2Clicked)
         {
-            Vector3 position = (roadPosition[1] + roadPosition[0]) / 2.0f;
+            if(Input.GetMouseButtonDown(0))
+            {
+                roadList.Add(CameraController.SelectObjectOnClick());
+            }
+            if(Input.GetKey(KeyCode.Escape))
+            {
+                roadList.Clear();
+                return;
+            }
 
-            Quaternion rotation = Quaternion.LookRotation(roadPosition[1] - roadPosition[0], Vector3.up);
-            rotation *= Quaternion.Euler(0, -90f, 0);
+            if(roadList.Count == 2)
+            {
+                var nextRoad = roadList[1].GetComponentsInParent<Road>();
+                roadList[0].GetComponent<Line>().nextRoads = nextRoad;
 
-            Instantiate(Road, position, rotation);
-
-            roadPosition.Clear();
-
-            buttonClicked = false;
+                roadList.Clear();
+                button2Clicked = false;
+            }
         }
     }
 
-    public void onClickedButton1()
+    public void OnClickRoadButton()
     {
-        buttonClicked = true;
+        button1Clicked = true;
     }
 
-    public enum ObjectType
+    public void OnClickLinkButton()
     {
-        Road, Source, Junction
+        button2Clicked = true;
     }
 }

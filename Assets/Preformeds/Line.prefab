@@ -5141,12 +5141,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 165e379c1d118a949b6d0d7028fe1824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trafficState: 0
+  carNumber: 0
   points:
   - {x: 5, y: 0, z: -5}
   - {x: 15, y: 0, z: -5}
   - {x: 25, y: 0, z: -5}
   nextRoads: []
   lastCar: {fileID: 0}
+  lineLock: {fileID: 0}
 --- !u!1 &9025392022072148228
 GameObject:
   m_ObjectHideFlags: 0

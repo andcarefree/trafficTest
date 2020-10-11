@@ -16,14 +16,6 @@ public class Following : Action
     //跟驰要额外考虑到前车停下来的话，后车在一个触发距离内也能够停车
     public override TaskStatus OnUpdate()
     {
-        //更新linT与下一个目标点
-        //如果车辆目标点与车辆所在位置差距过大，则按算法更新目标点
-        while (Vector3.Distance(car.target, car.transform.position) <= 2f)
-        {
-            car.lineT += (float)1 / (float)car.segment;
-            car.target = Line.Bezier(car.lineT, car.linePoints);
-        }
-
         //更新车辆加速度
         if (car.front == null)
         {
@@ -35,16 +27,17 @@ public class Following : Action
         }
         else
         {
+            //如果车辆合流时出现重叠或者间距更近，会发生车辆急速后跳的现象
             car.accel = 200 * (car.front.velocity - car.velocity) / (car.front.s - car.s);
         }
-       
-        //车辆朝向目标点
-        car.carTurn();
 
-        //更新车辆速度与位移
-        car.velocity = Mathf.Min(car.maxVelocity, car.velocity + car.accel * Time.deltaTime);
-        car.s += car.velocity * Time.deltaTime / 3.6f;
-        this.transform.Translate(Vector3.forward * car.velocity * Time.deltaTime / 3.6f);
+        car.driving();
+
+        //释放锁
+        if(car.line.lineLock == car && car.state == Car.State.inLine&& car.lineT >= 0.05)
+        {
+            car.line.lineLock = null;
+        }
 
         if (car.lineT >= 1)
         {
@@ -66,7 +59,6 @@ public class Following : Action
                 car.state = Car.State.inLine;
                 car.setLine(car.line);
             }
-            return TaskStatus.Success;
         }
         return TaskStatus.Running;
     }

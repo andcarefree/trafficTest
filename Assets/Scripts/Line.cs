@@ -16,6 +16,7 @@ public class Line : MonoBehaviour
     public Road[] nextRoads;
     private float time;
     public Car lastCar = null;
+    public Car lineLock;
     public Vector3 lineStart
     {
         get

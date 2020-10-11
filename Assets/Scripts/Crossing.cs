@@ -4,15 +4,7 @@ using UnityEngine;
 
 public class Crossing : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    Road[] inRoads;
+    Road[] outRoads;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

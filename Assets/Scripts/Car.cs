@@ -86,15 +86,6 @@ public class Car:MonoBehaviour
     }
 
     /// <summary>
-    /// 车辆转向
-    /// </summary>
-    public void carTurn()
-    {
-        if (target != transform.position)
-            transform.LookAt(target);
-    }
-
-    /// <summary>
     /// 找到路口内路径，以点组形式返回
     /// 会改变车辆的line与linePoints
     /// </summary>
@@ -113,5 +104,31 @@ public class Car:MonoBehaviour
         //linePoints = Line.Interpolation(line, nextLine);
         linePoints = Line.linkLine(line, nextLine);
         line = nextLine;
+    }
+
+    public void driving()
+    {
+        //更新linT与下一个目标点
+        //如果车辆目标点与车辆所在位置差距过大，则按算法更新目标点
+        while (Vector3.Distance(target,transform.position) <= 2f)
+        {
+            lineT += (float)1 / (float)segment;
+            target = Line.Bezier(lineT, linePoints);
+        }
+
+        //车辆朝向目标点
+        if (target != transform.position)
+            transform.LookAt(target);
+
+        //更新车辆速度与位移
+        velocity = Mathf.Min(maxVelocity, velocity + accel * Time.deltaTime);
+        s += velocity * Time.deltaTime / 3.6f;
+        this.transform.Translate(Vector3.forward * velocity * Time.deltaTime / 3.6f);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        //这个函数在碰撞开始时候调用
+        Debug.Log("Enter");
     }
 }

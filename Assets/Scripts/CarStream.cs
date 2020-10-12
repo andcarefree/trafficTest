@@ -14,7 +14,7 @@ public class CarStream : MonoBehaviour
     /// 判断两车的位置关系,以pointer的朝向判断target的位置
     /// </summary>
     /// <returns>pointer在前target在后返回true;pointer在后target在前返回false</returns>
-    public bool judgeLocation(Car pointer ,Car target)
+    private bool judgeLocation(Car pointer ,Car target)
     {
         Vector3 dir1 = pointer.transform.forward.normalized;
         Vector3 dir2 = (target.transform.position - pointer.transform.position).normalized;

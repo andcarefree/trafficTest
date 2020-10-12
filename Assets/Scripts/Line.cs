@@ -5,18 +5,17 @@ using UnityEngine;
 
 public class Line : MonoBehaviour
 {
-    public const int RED_TIME = 10;
-    public const int GREEN_TIME = 10;
-    public TrafficStateEnum trafficState;
-
-    public int carNumber = 0;
     private LineRenderer lineRenderer;
     public Vector3[] points;
     public const int segmentNum = 100;
     public Road[] nextRoads;
     private float time;
-    public Car lastCar = null;
+    public Road fatherRoad;
+    
     public Car lineLock;
+
+    public LinkedList<Car> cars;
+
     public Vector3 lineStart
     {
         get
@@ -54,7 +53,6 @@ public class Line : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.sortingLayerID = 0;
         time = 0;
-        trafficState = TrafficStateEnum.PASS;
     }
     private void Update()
     {
@@ -65,19 +63,6 @@ public class Line : MonoBehaviour
             points[i - 1] = pointTran[i].position;
         }
         DrawCurve();
-
-        /*红绿灯按时间更新
-        time += Time.deltaTime;
-        if (trafficState == TrafficStateEnum.PASS && time >= Line.GREEN_TIME)
-        {
-            trafficState = TrafficStateEnum.BAN;
-            time = 0;
-        }
-        else if (trafficState == TrafficStateEnum.BAN && time >= Line.RED_TIME)
-        {
-            trafficState = TrafficStateEnum.PASS;
-            time = 0;
-        }*/
     }
 
     private void DrawCurve()
@@ -170,10 +155,4 @@ public class Line : MonoBehaviour
         result[3] = target.points[0];
         return result;
     }
-
-    
-}
-public enum TrafficStateEnum
-{
-    BAN, PASS
 }

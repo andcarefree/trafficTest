@@ -3,24 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
-
-public class ChangeLine : Action
+public class ChangeLineInstruction : Conditional
 {
     Car car;
 
-    public void changeLine(Line now ,Line target)
-    {
-
-    }
-    // Use this for initialization
     public override void OnStart()
     {
         car = gameObject.GetComponent<Car>();
     }
 
-    // Update is called once per frame
     public override TaskStatus OnUpdate()
     {
-        return TaskStatus.Success;
+        if (car.state != Car.State.inLine) return TaskStatus.Failure;
+
+        if (car.lineChange == true)
+        {
+            return TaskStatus.Success;
+        }
+        else
+        {
+            return TaskStatus.Failure;
+        }
+        
     }
 }

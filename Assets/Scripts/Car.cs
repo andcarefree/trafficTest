@@ -59,30 +59,74 @@ public class Car:MonoBehaviour
 
     public Car front,behind;
 
+    /**/
+    public bool lineChange = false;
+    /**/
     public void DestroyCar()
     {
-        if (behind != null)
-            behind.front = null;
-        --gameObject.GetComponent<Car>().line.carNumber;
+        this.line.cars.Remove(this);
         Destroy(this.gameObject);
     }
 
     public void setLine(Line l)
     {
-        ++l.carNumber;
-        if(behind != null)
-        {
-            behind.front = null;
-            behind = null;
-        }
+        this.line.cars.Remove(this);
         line = l;
         lineT = 0;
         linePoints = l.points;
         segment = Line.segmentNum;
-        if (l.lastCar != null)
-            l.lastCar.behind = this;
-        front = l.lastCar;
+        l.cars.AddLast(this);
+    }
+
+    private bool judgeLocation(Car pointer, Car target)
+    {
+        Vector3 dir1 = pointer.transform.forward.normalized;
+        Vector3 dir2 = (target.transform.position - pointer.transform.position).normalized;
+        if (Vector3.Dot(dir1, dir2) < 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void changeLine(Line l)
+    {
+        Car pointer = line.cars;
+        while (pointer != null)
+        {
+            //判断车辆插入位置,要考虑到车辆坐标与朝向
+            //在该车流中找到第一个在car后面的车辆，并在其之前插入
+            if (!judgeLocation(pointer, this))
+            {
+                if (pointer == line.firstCar)
+                {
+                    this.behind = pointer;
+                    pointer.front = this;
+                    l.firstCar = this;
+                }
+                else
+                {
+                    this.behind = pointer;
+                    this.front = pointer.front;
+                    this.front.behind = this;
+                    this.behind.front = this;
+                }
+
+                this.line = l;
+                this.linePoints = l.points;
+                return;
+            }
+        }
+        //车流未找到插入位置，在末端插入
+        l.lastCar.behind = this;
+        this.front = l.lastCar;
         l.lastCar = this;
+
+        this.line = l;
+        this.linePoints = l.points;
     }
 
     /// <summary>
@@ -129,6 +173,6 @@ public class Car:MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         //这个函数在碰撞开始时候调用
-        Debug.Log("Enter");
+        Debug.LogError("发生碰撞");
     }
 }

@@ -33,7 +33,7 @@ public class OriginRoad : MonoBehaviour//泊松分布的交通流
     private void GenerateCar()
     {
         Line line = originRoad.lines[UnityEngine.Random.Range(0, originRoad.lines.Length)];
-        if (line.lastCar != null&& line.lastCar.s <= 2) return;//上次同车道生产的车辆未走远时，放弃生产车辆
+        if (line.cars.Last != null&& line.cars.Last.Value.s <= 2) return;//上次同车道生产的车辆未走远时，放弃生产车辆
         GameObject go = GameObject.Instantiate(Car, line.lineStart, Quaternion.identity);
         go.GetComponent<Car>().setLine(line);
     }

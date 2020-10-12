@@ -70,7 +70,10 @@ public class Car:MonoBehaviour
 
     public void setLine(Line l)
     {
-        this.line.cars.Remove(this);
+        if (this.line != null)
+        {
+            this.line.cars.Remove(this);
+        }
         line = l;
         lineT = 0;
         linePoints = l.points;
@@ -94,36 +97,19 @@ public class Car:MonoBehaviour
 
     public void changeLine(Line l)
     {
-        Car pointer = line.cars;
+        LinkedListNode<Car> pointer = line.cars.First;
         while (pointer != null)
         {
             //判断车辆插入位置,要考虑到车辆坐标与朝向
             //在该车流中找到第一个在car后面的车辆，并在其之前插入
-            if (!judgeLocation(pointer, this))
+            if (!judgeLocation(pointer.Value, this))
             {
-                if (pointer == line.firstCar)
-                {
-                    this.behind = pointer;
-                    pointer.front = this;
-                    l.firstCar = this;
-                }
-                else
-                {
-                    this.behind = pointer;
-                    this.front = pointer.front;
-                    this.front.behind = this;
-                    this.behind.front = this;
-                }
-
-                this.line = l;
-                this.linePoints = l.points;
+                l.cars.AddBefore(pointer, this);
                 return;
             }
         }
         //车流未找到插入位置，在末端插入
-        l.lastCar.behind = this;
-        this.front = l.lastCar;
-        l.lastCar = this;
+        l.cars.AddLast(this);
 
         this.line = l;
         this.linePoints = l.points;
@@ -141,7 +127,7 @@ public class Car:MonoBehaviour
         //找到车辆数最少的车道
         for(int i = 0; i < line.nextRoads[rdm1].lines.Length; i++)
         {
-            rdm2 = line.nextRoads[rdm1].lines[i].carNumber < line.nextRoads[rdm1].lines[rdm2].carNumber ? i : rdm2;
+            rdm2 = line.nextRoads[rdm1].lines[i].cars.Count < line.nextRoads[rdm1].lines[rdm2].cars.Count ? i : rdm2;
         }
         //int rdm2 = Random.Range(0, line.nextRoads[rdm1].lines.Length-1);//确定车道
         Line nextLine = line.nextRoads[rdm1].lines[rdm2];

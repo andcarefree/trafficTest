@@ -50,6 +50,7 @@ public class Line : MonoBehaviour
 
     private void Start()
     {
+        cars = new LinkedList<Car>();
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.sortingLayerID = 0;
         time = 0;

@@ -31,7 +31,6 @@ public class CarStop : Action
             //道路与路口的转换
             else if (car.state == Car.State.inLine)
             {
-                --car.line.carNumber;
                 car.state = Car.State.crossing;
             }
             else

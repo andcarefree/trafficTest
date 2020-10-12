@@ -8,15 +8,14 @@ public class OriginRoad : MonoBehaviour//泊松分布的交通流
     public Road originRoad;
     private float z;//单位时间内平均到达数（辆/s）
     private float m;//泊松分布下车辆到达率( m = zt)
-    private float t = 0;
-    // Use this for initialization
+    //private float t = 0;
+    
     void Start()
     {
         this.originRoad = this.GetComponent<Road>();
         z = 1f;
     }
 
-    // Update is called once per frame
     void Update()
     {
         /*t += Time.deltaTime;
@@ -35,6 +34,11 @@ public class OriginRoad : MonoBehaviour//泊松分布的交通流
         Line line = originRoad.lines[UnityEngine.Random.Range(0, originRoad.lines.Length)];
         if (line.cars.Last != null&& line.cars.Last.Value.s <= 2) return;//上次同车道生产的车辆未走远时，放弃生产车辆
         GameObject go = GameObject.Instantiate(Car, line.lineStart, Quaternion.identity);
-        go.GetComponent<Car>().setLine(line);
+        Car car = go.GetComponent<Car>();
+        car.line = line;
+        car.lineT = 0;
+        car.linePoints = line.points;
+        car.segment = Line.segmentNum;
+        line.cars.AddLast(car);
     }
 }

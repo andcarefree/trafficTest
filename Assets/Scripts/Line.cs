@@ -9,7 +9,6 @@ public class Line : MonoBehaviour
     public Vector3[] points;
     public const int segmentNum = 100;
     public Road[] nextRoads;
-    private float time;
     public Road fatherRoad;
     
     public Car lineLock;
@@ -53,7 +52,6 @@ public class Line : MonoBehaviour
         cars = new LinkedList<Car>();
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.sortingLayerID = 0;
-        time = 0;
     }
     private void Update()
     {

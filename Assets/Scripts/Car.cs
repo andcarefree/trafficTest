@@ -10,14 +10,8 @@ public class Car:MonoBehaviour
         inLine,
         crossing
     }
-    public enum RunStateEnum
-    {
-        RUN,
-        STOP
-    }
 
     public State state = State.inLine;
-    public RunStateEnum runState = RunStateEnum.RUN;
     /// <summary>
     /// 加速度
     /// </summary>
@@ -34,11 +28,12 @@ public class Car:MonoBehaviour
     /// 限速
     /// </summary>
     public float maxVelocity = 60;
+
+
     /// <summary>
     /// 路径长度
     /// </summary>
     public float s = 0;
-
     /// <summary>
     /// 所在路线
     /// </summary>
@@ -56,8 +51,6 @@ public class Car:MonoBehaviour
     /// 目标点
     /// </summary>
     public Vector3 target = new Vector3(1, 0, 0);
-
-    public Car front,behind;
 
     /**/
     public bool lineChange = false;
@@ -97,7 +90,7 @@ public class Car:MonoBehaviour
 
     public void changeLine(Line l)
     {
-        LinkedListNode<Car> pointer = line.cars.First;
+        LinkedListNode<Car> pointer = l.cars.First;
         while (pointer != null)
         {
             //判断车辆插入位置,要考虑到车辆坐标与朝向
@@ -105,12 +98,13 @@ public class Car:MonoBehaviour
             if (!judgeLocation(pointer.Value, this))
             {
                 l.cars.AddBefore(pointer, this);
+                this.line = l;
+                this.linePoints = l.points;
                 return;
             }
         }
         //车流未找到插入位置，在末端插入
         l.cars.AddLast(this);
-
         this.line = l;
         this.linePoints = l.points;
     }

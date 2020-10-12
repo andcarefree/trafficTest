@@ -30,19 +30,20 @@ public class ChangeLine : Action
         {
             runPoints = new Vector3[] { car.transform.position, car.transform.position + new Vector3(0, 0, 3) };
         }
+        //1. 确定换道轨迹
+        car.linePoints = runPoints;
         /*实验代码*/
     }
 
     public override TaskStatus OnUpdate()
     {
-        //1. 确定换道轨迹
-        car.linePoints = runPoints;
-        car.velocity = 5;
+        car.velocity = 10;
         car.driving();
-        if(car.lineT == 0)
+        if(car.lineT >= 1)
         {
             //2。换道成功后改变属性
             car.changeLine(targetLine);
+            car.lineT = T;
             return TaskStatus.Success;
         }
         return TaskStatus.Running;

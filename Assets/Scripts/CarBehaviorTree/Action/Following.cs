@@ -17,18 +17,18 @@ public class Following : Action
     public override TaskStatus OnUpdate()
     {
         //更新车辆加速度
-        if (car.front == null)
+        if (car.line.cars.First.Value == car)
         {
             car.accel = Random.Range(1, 11);
         }
-        else if (car.front.s - car.s >= 120)
+        else if (car.line.cars.Find(car).Previous.Value.s - car.s >= 120)
         {
-            car.accel = car.front.velocity - car.velocity + 10;
+            car.accel = car.line.cars.Find(car).Previous.Value.velocity - car.velocity + 10;
         }
         else
         {
             //如果车辆合流时出现重叠或者间距更近，会发生车辆急速后跳的现象
-            car.accel = 200 * (car.front.velocity - car.velocity) / (car.front.s - car.s);
+            car.accel = 200 * (car.line.cars.Find(car).Previous.Value.velocity - car.velocity) / (car.line.cars.Find(car).Previous.Value.s - car.s);
         }
 
         car.driving();

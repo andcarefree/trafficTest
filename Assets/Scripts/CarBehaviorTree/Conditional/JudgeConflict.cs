@@ -12,20 +12,28 @@ public class JudgeConflict : Conditional
 
     public override void OnTriggerEnter(Collider other)
     {
-        Component car = other.gameObject.GetComponent<Car>();
+        Car otherCar = other.gameObject.GetComponent<Car>();
 
-        if (car == null) return;
+        if (otherCar == null) return;
 
-        if (car != this.car.front && car != this.car.behind)//碰撞体是车辆且不是本车流车辆
+        if (otherCar.line != this.car.line)//碰撞体是车辆且不是本车流车辆
         {
-            Debug.LogWarning("发生冲突" + " " + other.name);
+            Debug.LogError("发生冲突" + " " + other.name);
             conflict = true;
-        }else if(car == this.car.front || car == this.car.behind)//碰撞体是同车流车辆
+        }else if(otherCar.line != this.car.line)//碰撞体是同车流车辆
         {
             Debug.LogWarning("跟驰过近" + " " + car.name + " " + this.car.name);
         }
     }
 
+    public override void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.GetComponent<Car>() != null)
+        {
+            Debug.LogWarning("冲突结束");
+            conflict = false;
+        }  
+    }
     public override void OnStart()
     {
         car = gameObject.GetComponent<Car>();

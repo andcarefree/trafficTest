@@ -8,13 +8,14 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static bool playStat = false;
-    static bool showState = true;
+    bool showState = true;
     bool button1Clicked = false;
     bool button2Clicked = false;
+    bool button3Clicked = false;
 
     public GameObject toolPanel;
-    public GameObject Road;
-    public static GameObject clickedRoadObject;
+    public GameObject roadPrefeb;
+    public GameObject carPrefeb;
 
     public Text textref;
 
@@ -32,6 +33,7 @@ public class UIManager : MonoBehaviour
     {
         PlaceRoadObject();
         ConnectLane();
+        SetupCarSource();
     }
 
     public void OnClickStartButton()
@@ -57,12 +59,12 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 0;
     }
 
-    void SwitchPanelShowState()
+    public void SwitchPanelShowState()
     {
         showState = !showState;
         if (showState)
         {
-            toolPanel.SetActive(true);
+            toolPanel.SetActive(true);    
         }
         else
         {
@@ -99,7 +101,7 @@ public class UIManager : MonoBehaviour
                 Quaternion rotation = Quaternion.LookRotation(roadPosition[1] - roadPosition[0], Vector3.up);
                 rotation *= Quaternion.Euler(0, -90f, 0);
 
-                Instantiate(Road, position, rotation);
+                Instantiate(roadPrefeb, position, rotation);
 
                 roadPosition.Clear();
 
@@ -133,6 +135,26 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    void SetupCarSource()
+    {
+        if (button3Clicked)
+        {
+            if(Input.GetMouseButtonDown(0))
+            {
+                var selectedRoad = CameraController.SelectObjectOnClick();
+
+                if ((selectedRoad.GetComponentInParent<OriginRoad>() as OriginRoad) == null)
+                {
+                    OriginRoad road = selectedRoad.transform.parent.gameObject.AddComponent<OriginRoad>();
+
+                    selectedRoad.GetComponentInParent<OriginRoad>().Car = carPrefeb;
+                }
+
+                button3Clicked = false;
+            }       
+        }
+    }
+
     public void OnClickRoadButton()
     {
         button1Clicked = true;
@@ -141,5 +163,10 @@ public class UIManager : MonoBehaviour
     public void OnClickLinkButton()
     {
         button2Clicked = true;
+    }
+
+    public void OnClickOriginButton()
+    {
+        button3Clicked = true;
     }
 }

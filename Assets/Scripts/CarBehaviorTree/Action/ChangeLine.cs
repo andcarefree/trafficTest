@@ -32,6 +32,7 @@ public class ChangeLine : Action
         }
         //1. 确定换道轨迹
         car.linePoints = runPoints;
+        car.target = car.linePoints[0];
         /*实验代码*/
     }
 

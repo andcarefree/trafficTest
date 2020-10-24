@@ -24,11 +24,11 @@ public class ChangeLine : Action
         car.lineT = 0;
         if(car.line == car.line.fatherRoad.lines[0])
         {
-            runPoints = new Vector3[] { car.transform.position, car.transform.position - new Vector3(0, 0, 3) };
+            runPoints = new Vector3[] { car.transform.position, car.transform.position - new Vector3(0, 0, 10) };
         }
         else
         {
-            runPoints = new Vector3[] { car.transform.position, car.transform.position + new Vector3(0, 0, 3) };
+            runPoints = new Vector3[] { car.transform.position, car.transform.position + new Vector3(0, 0, 10) };
         }
         //1. 确定换道轨迹
         car.linePoints = runPoints;
@@ -47,5 +47,10 @@ public class ChangeLine : Action
             return TaskStatus.Success;
         }
         return TaskStatus.Running;
+    }
+
+    public override void OnEnd()
+    {
+        car.lineChange = false;
     }
 }

@@ -102,6 +102,7 @@ public class Car:MonoBehaviour
                 this.linePoints = l.points;
                 return;
             }
+            pointer = pointer.Next;
         }
         //车流未找到插入位置，在末端插入
         l.cars.AddLast(this);

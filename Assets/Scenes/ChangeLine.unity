@@ -217,6 +217,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 70
       objectReference: {fileID: 0}
+    - target: {fileID: 5031697552864954630, guid: 5e57b7b7aec88374386dca97ef87d5c9,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5031697551211982458, guid: 5e57b7b7aec88374386dca97ef87d5c9,
         type: 3}
       propertyPath: fatherRoad
@@ -232,6 +237,16 @@ PrefabInstance:
       propertyPath: fatherRoad
       value: 
       objectReference: {fileID: 1647133956}
+    - target: {fileID: 5031697551953498543, guid: 5e57b7b7aec88374386dca97ef87d5c9,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5031697551471523886, guid: 5e57b7b7aec88374386dca97ef87d5c9,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e57b7b7aec88374386dca97ef87d5c9, type: 3}
 --- !u!1 &336773976

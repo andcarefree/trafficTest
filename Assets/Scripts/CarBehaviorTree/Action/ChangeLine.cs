@@ -8,7 +8,6 @@ public class ChangeLine : Action
 {
     Car car;
     Line targetLine;
-    float orgT;
 
     /// <summary>
     /// 换道随机选择一个车道
@@ -44,15 +43,14 @@ public class ChangeLine : Action
         car.line.cars.Remove(car);
         RandomPick();
         car.linePoints = CalculatePath();
-        //保存车辆在原车道的T用于换道结束后的状态恢复
-        orgT = car.lineT;
+        //新行驶路径初始化
         car.lineT = 0;
         car.target = car.linePoints[0];
     }
 
     public override TaskStatus OnUpdate()
     {
-        car.velocity = 30;
+        car.velocity = 40;
         car.driving();
         if(car.lineT >= 1)
         {

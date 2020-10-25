@@ -79,11 +79,35 @@ public class Line : MonoBehaviour
     public static Vector3 Bezier(float t,Vector3[] p)
     {
         Vector3 ans = Vector3.zero;
-        for(int i=0;i<p.Length;i++)
+        int n = p.Length;
+        for(int i=0;i<n;i++)
         {
-            ans += p[i] * C(i, p.Length - 1) * Mathf.Pow(t,  i) * Mathf.Pow(1 - t,p.Length-1- i);
+            ans += p[i] * C(i, n - 1) * Mathf.Pow(t, i) * Mathf.Pow(1 - t, n - 1 - i);
         }
         return ans;
+    }
+
+    /// <summary>
+    /// TODO 求出点在贝塞尔曲线上对应的T值，数值分析方法
+    /// </summary>
+    public static float CalculateT(Vector3 point, Vector3[] p)
+    {
+        float start = 0f;
+        float end = 1f;
+        float mid = (start + end) / 2;
+        while (Vector3.Distance(point,Bezier(mid,p)) >= 2f)
+        {
+            if(Vector3.Distance(point,Bezier(start,p)) > Vector3.Distance(point, Bezier(end, p)))
+            {
+                start = mid + 0.01f;
+            }
+            else
+            {
+                end = mid;
+            }
+            mid = (start + end) / 2;
+        }
+        return mid;
     }
 
     /// <returns>

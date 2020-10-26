@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
+// TODO 车辆的速度与加速度处理需要重新设计使其符合现实情境
 public class Car:MonoBehaviour
 {
     public enum State
     {
         inLine,
-        crossing
+        crossing,
+        changing
     }
 
     public State state = State.inLine;
@@ -74,7 +76,7 @@ public class Car:MonoBehaviour
         l.cars.AddLast(this);
     }
 
-    private bool judgeLocation(Car pointer, Car target)
+    public static bool judgeLocation(Car pointer, Car target)
     {
         Vector3 dir1 = pointer.transform.forward.normalized;
         Vector3 dir2 = (target.transform.position - pointer.transform.position).normalized;
@@ -147,6 +149,8 @@ public class Car:MonoBehaviour
 
         //更新车辆速度与位移
         velocity = Mathf.Min(maxVelocity, velocity + accel * Time.deltaTime);
+        //屏蔽掉速度小于0的倒车行为
+        velocity = Mathf.Max(0, velocity);
         s += velocity * Time.deltaTime / 3.6f;
         this.transform.Translate(Vector3.forward * velocity * Time.deltaTime / 3.6f);
     }

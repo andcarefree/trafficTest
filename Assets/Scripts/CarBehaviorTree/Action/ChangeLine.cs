@@ -43,22 +43,19 @@ public class ChangeLine : Action
         car.line.cars.Remove(car);
         RandomPick();
         car.linePoints = CalculatePath();
-        //新行驶路径初始化
+        //行驶路径初始化
+        car.state = Car.State.changing;
+        car.line = null;
         car.lineT = 0;
         car.target = car.linePoints[0];
     }
 
     public override TaskStatus OnUpdate()
     {
-        car.velocity = 40;
+        car.accel = 20;
         car.driving();
         if(car.lineT >= 1)
         {
-            car.changeLine(targetLine);
-            //TODO 应该考虑到T状态的变迁，考虑到换道起始位置与终点位置在初始朝向上的增量，
-            //目前这种算法只能适用于直线道路上的换道
-            //不用了，数值分析可以直接根据点坐标求其在贝塞尔曲线上的T
-            car.lineT = Line.CalculateT(car.transform.position, car.line.points);
             return TaskStatus.Success;
         }
         return TaskStatus.Running;
@@ -66,6 +63,12 @@ public class ChangeLine : Action
 
     public override void OnEnd()
     {
+        car.changeLine(targetLine);
+        //TODO 应该考虑到T状态的变迁，考虑到换道起始位置与终点位置在初始朝向上的增量，
+        //目前这种算法只能适用于直线道路上的换道
+        //不用了，数值分析可以直接根据点坐标求其在贝塞尔曲线上的T
+        car.lineT = Line.CalculateT(car.transform.position, car.line.points);
+        car.state = Car.State.inLine;
         car.lineChange = false;
     }
 }

@@ -14,11 +14,8 @@ public class ChangeLineInstruction : Conditional
 
     public override TaskStatus OnUpdate()
     {
-        if (car.state != Car.State.inLine) return TaskStatus.Failure;
-
         if (car.lineChange == true)
         {
-
             return TaskStatus.Success;
         }
         else

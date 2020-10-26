@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 
+/// <summary>
+/// 任何情况下车辆的减速停车行为
+/// </summary>
 public class CarStop : Action
 {
     Car car;
@@ -15,31 +18,16 @@ public class CarStop : Action
 
     public override TaskStatus OnUpdate()
     {
-        car.velocity = 5;
-
+        //TODO 逐渐减速过程的细化，注意处理加速度的变化趋势
+        car.velocity = 10;
         car.driving();
 
-        if (car.lineT >= 1)
-        {
-            car.lineT = 0;
-            //车辆行驶完所在道路并且没有后续道路
-            if (car.state == Car.State.inLine && (car.line.nextRoads == null || car.line.nextRoads.Length == 0))
-            {
-                car.DestroyCar();
-                return TaskStatus.Success;
-            }
-            //道路与路口的转换
-            else if (car.state == Car.State.inLine)
-            {
-                car.state = Car.State.crossing;
-            }
-            else
-            {
-                car.state = Car.State.inLine;
-                car.setLine(car.line);
-            }
-        }
-
         return TaskStatus.Running;
+    }
+
+    public override void OnEnd()
+    {
+        //触发停止的时间结束时开始加速
+        car.accel = 30;
     }
 }

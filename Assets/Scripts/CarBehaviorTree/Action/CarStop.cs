@@ -1,8 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using BehaviorDesigner.Runtime;
-using BehaviorDesigner.Runtime.Tasks;
+﻿using BehaviorDesigner.Runtime.Tasks;
 
 /// <summary>
 /// 任何情况下车辆的减速停车行为

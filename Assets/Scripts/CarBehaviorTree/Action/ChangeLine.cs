@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 
+
 public class ChangeLine : Action
 {
     Car car;
     Line targetLine;
-
+    
     /// <summary>
     /// 换道随机选择一个车道
     /// ///TODO 该策略应该是可供二次开发的
@@ -24,25 +25,13 @@ public class ChangeLine : Action
         }
     }
 
-    /// <summary>
-    /// 换道路径生成算法
-    /// ///TODO 该算法应该是可供二次开发的
-    /// </summary>
-    private Vector3[] CalculatePath()
-    {
-        Vector3[] res = new Vector3[4];
-        res[0] = car.transform.position;
-        res[1] = car.transform.position + 7 * car.transform.forward.normalized;
-        res[2] = res[1] + (targetLine.transform.position - car.line.transform.position);
-        res[3] = res[2] + 7 * car.transform.forward.normalized;
-        return res;
-    }
     public override void OnStart()
     {
         car = gameObject.GetComponent<Car>();
         car.line.cars.Remove(car);
         RandomPick();
-        car.linePoints = CalculatePath();
+        CalculatePath calculate = new CalculatePath();
+        car.linePoints = calculate.ChangePath(car.transform.position, car.transform.forward.normalized, targetLine.transform.position,calculate.MyCalculatePath);
         //行驶路径初始化
         car.state = Car.State.changing;
         car.line = null;

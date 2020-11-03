@@ -13,7 +13,6 @@ public class Line : MonoBehaviour
     
     public Car lineLock;
 
-    [SerializeField]
     public LinkedList<Car> cars;
 
     public Vector3 lineStart

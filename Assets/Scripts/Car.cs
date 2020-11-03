@@ -136,7 +136,6 @@ public class Car:MonoBehaviour
     public void driving()
     {
         //更新linT与下一个目标点
-        //如果车辆目标点与车辆所在位置差距过大，则按算法更新目标点
         while (Vector3.Distance(target,transform.position) <= 2f)
         {
             lineT += (float)1 / (float)segment;

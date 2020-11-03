@@ -31,7 +31,7 @@ public class ChangeLine : Action
         car.line.cars.Remove(car);
         RandomPick();
         CalculatePath calculate = new CalculatePath();
-        car.linePoints = calculate.ChangePath(car.transform.position, car.transform.forward.normalized, targetLine.transform.position,calculate.MyCalculatePath);
+        car.linePoints = calculate.ChangePath(car.transform.position, car.transform.forward.normalized,car.line.transform.position, targetLine.transform.position,calculate.MyCalculatePath);
         //行驶路径初始化
         car.state = Car.State.changing;
         car.line = null;

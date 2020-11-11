@@ -18,10 +18,9 @@ public class Road : MonoBehaviour
     private void Start()
     {
         lines = GetComponentsInChildren<Line>();
-    }
-    private void Update()
-    {
-
+        foreach (Line line in lines) {
+            line.fatherRoad = this;
+        }
     }
 }
 

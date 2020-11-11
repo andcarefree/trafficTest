@@ -10,5 +10,6 @@
 	2.换道策略
 		能够使用的参数:
 			状态 state
-			换道指令
+			换道指令 lineChange
+			加速度 accel
 			

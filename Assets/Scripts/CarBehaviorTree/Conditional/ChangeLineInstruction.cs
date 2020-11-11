@@ -26,6 +26,24 @@ public class ChangeLineInstruction : Conditional
             return TaskStatus.Failure;
         }
 
+        //换道条件判断
+        //当前车道运行速度低于预期时，寻求车道换道
+        if (car.line != null && car.line.cars.First != null && car.line.cars.First.Value != car && car.s>10)
+        {
+            if (Vector3.Distance(car.line.cars.Find(car).Previous.Value.transform.position, car.transform.position) > 3)
+            {
+
+            }
+            else if (car.line.cars.Find(car).Previous.Value.velocity <= 40 && car.expectVelocity - car.velocity > 5)
+            {
+                car.lineChange = true;
+            }
+            else if (car.line.cars.Find(car).Previous.Value.velocity >= 40 && car.expectVelocity - car.velocity > 15)
+            {
+                car.lineChange = true;
+            }
+        }
+
         if (car.state == Car.State.changing || (car.lineChange == true && car.state == Car.State.inLine))
         {
             return TaskStatus.Success;

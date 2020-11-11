@@ -23,5 +23,4 @@ public class CalculatePath
     {
         return method(position, foward,linePosition, targetLinePosition);
     }
-
 }

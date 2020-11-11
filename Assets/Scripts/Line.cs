@@ -10,7 +10,7 @@ public class Line : MonoBehaviour
     public const int segmentNum = 100;
     public Road[] nextRoads;
     public Road fatherRoad;
-    
+    public float maxVelocity;
     public Car lineLock;
 
     public LinkedList<Car> cars;
@@ -52,6 +52,7 @@ public class Line : MonoBehaviour
         cars = new LinkedList<Car>();
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.sortingLayerID = 0;
+        maxVelocity = 50;
     }
     private void Update()
     {

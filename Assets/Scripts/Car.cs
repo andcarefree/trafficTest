@@ -6,6 +6,7 @@ using UnityEngine;
 // TODO 车辆的速度与加速度处理需要重新设计使其符合现实情境
 public class Car:MonoBehaviour
 {
+    const float MaxVelocityNoRoad = 30;
     public enum State
     {
         inLine,
@@ -26,10 +27,6 @@ public class Car:MonoBehaviour
     /// 速度
     /// </summary>
     public float velocity = 0;
-    /// <summary>
-    /// 限速
-    /// </summary>
-    public float maxVelocity = 60;
 
 
     /// <summary>
@@ -53,6 +50,9 @@ public class Car:MonoBehaviour
     /// 目标点
     /// </summary>
     public Vector3 target = new Vector3(1, 0, 0);
+
+    public float expectVelocity;
+    public static float[] expects = { 30, 40, 50, 60, 70 };
 
     /**/
     public bool lineChange = false;
@@ -146,8 +146,8 @@ public class Car:MonoBehaviour
         if (target != transform.position)
             transform.LookAt(target);
 
-        //更新车辆速度与位移
-        velocity = Mathf.Min(maxVelocity, velocity + accel * Time.deltaTime);
+        //道路限速；车辆期望速度；正常行驶速度；取最小值
+        velocity = Mathf.Min(this.line==null?Car.MaxVelocityNoRoad:this.line.maxVelocity, velocity + accel * Time.deltaTime,expectVelocity);
         //屏蔽掉速度小于0的倒车行为
         velocity = Mathf.Max(0, velocity);
         s += velocity * Time.deltaTime / 3.6f;
@@ -158,5 +158,10 @@ public class Car:MonoBehaviour
     {
         //这个函数在碰撞开始时候调用
         Debug.LogError("发生碰撞");
+    }
+
+    private void Awake()
+    {
+        this.expectVelocity = Car.expects[(int)Random.Range(0f, (float)Car.expects.Length)];
     }
 }

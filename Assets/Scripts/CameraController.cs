@@ -30,7 +30,6 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SelectObjectOnClick();
         HandleMouseMovement();
         HandleKeyboardMovement();
 
@@ -111,28 +110,5 @@ public class CameraController : MonoBehaviour
             rotationStartPosition = rotationStopPosition;
             newRotation *= Quaternion.Euler(Vector3.up * (-rotationDiff.x * rotationSpeed));
         }
-    }
-
-    public static GameObject SelectObjectOnClick()
-    {
-        GameObject selectedObject = null;
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit rayHit;
-
-            if (Physics.Raycast(ray, out rayHit))
-            {
-                selectedObject = rayHit.collider.gameObject;
-                Debug.Log(selectedObject.name);
-            }
-        }
-        return selectedObject;
-    }
-
-    void SelectObjectInRect()
-    {
-
     }
 }

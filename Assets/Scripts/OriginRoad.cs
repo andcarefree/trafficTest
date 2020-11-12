@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[DisallowMultipleComponent]
 public class OriginRoad : MonoBehaviour//泊松分布的交通流
 {
     public GameObject Car;

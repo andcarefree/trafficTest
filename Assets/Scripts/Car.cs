@@ -16,7 +16,7 @@ public class Car:MonoBehaviour
 
     public State state = State.inLine;
     /// <summary>
-    /// 加速度
+    /// 加速度,单位m/s
     /// </summary>
     public float accel = 0;
     /// <summary>
@@ -24,7 +24,7 @@ public class Car:MonoBehaviour
     /// </summary>
     public float maxAccel;
     /// <summary>
-    /// 速度
+    /// 速度,单位km/h
     /// </summary>
     public float velocity = 0;
 
@@ -58,6 +58,11 @@ public class Car:MonoBehaviour
     /// 修改该属性发出换道指令
     /// </summary>
     public bool lineChange = false;
+
+    /// <summary>
+    /// 车辆突然停下的测试
+    /// </summary>
+    public bool stopTest = false;
     
 
     /// <summary>
@@ -66,6 +71,54 @@ public class Car:MonoBehaviour
     /// 维护一个临近范围车辆集，当触发车辆进入时即加入该集合，集合内寻找一个disOfForward最短的做跟驰
     /// </summary>
     public Car followCar;
+
+    /// <summary>
+    /// 将车辆速度转换为m/s
+    /// </summary>
+    public float Km2m()
+    {
+        return this.velocity / 3.6f;
+    }
+
+    public Car PreCar()
+    {
+        if(this.line.cars.Find(this).Previous == null)
+        {
+            return null;
+        }
+        return this.line.cars.Find(this).Previous.Value;
+    }
+    public Car NextCar()
+    {
+        if(this.line.cars.Find(this).Next == null)
+        {
+            return null;
+        }
+        return this.line.cars.Find(this).Next.Value;
+    }
+
+    public Car CarClosest(Line line)
+    {
+        if(line.cars.First == null)
+        {
+            return null;
+        }
+
+        Car pointer = line.cars.First.Value;
+        while(pointer.NextCar() != null)
+        {
+            if(Vector3.Distance(this.transform.position, pointer.transform.position) < Vector3.Distance(this.transform.position, pointer.NextCar().transform.position))
+            {
+                break;
+            }
+            else
+            {
+                pointer = pointer.NextCar();
+            }
+        }
+        return pointer;
+    }
+
     public void DestroyCar()
     {
         this.line.cars.Remove(this);
@@ -85,6 +138,9 @@ public class Car:MonoBehaviour
         l.cars.AddLast(this);
     }
 
+    /// <summary>
+    /// target在pointer之后则返回真
+    /// </summary>
     public static bool judgeLocation(Car pointer, Car target)
     {
         Vector3 dir1 = pointer.transform.forward.normalized;
@@ -99,26 +155,37 @@ public class Car:MonoBehaviour
         }
     }
 
-    public void changeLine(Line l)
+    public Car findNextCar(Line l)
     {
         LinkedListNode<Car> pointer = l.cars.First;
         while (pointer != null)
         {
-            //判断车辆插入位置,要考虑到车辆坐标与朝向
-            //在该车流中找到第一个在car后面的车辆，并在其之前插入
+            //在该车流中找到第一个在car后面的车辆
             if (!judgeLocation(pointer.Value, this))
             {
-                l.cars.AddBefore(pointer, this);
-                this.line = l;
-                this.linePoints = l.points;
-                return;
+                return pointer.Value;
             }
             pointer = pointer.Next;
         }
-        //车流未找到插入位置，在末端插入
-        l.cars.AddLast(this);
-        this.line = l;
-        this.linePoints = l.points;
+        return null;
+    }
+
+    public void changeLine(Line l)
+    {
+        Car target = findNextCar(l);
+        if(target == null)
+        {
+            //车流未找到插入位置，在末端插入
+            l.cars.AddLast(this);
+            this.line = l;
+            this.linePoints = l.points;
+        }
+        else
+        {
+            l.cars.AddBefore(l.cars.Find(target), this);
+            this.line = l;
+            this.linePoints = l.points;
+        }
     }
 
     /// <summary>
@@ -155,12 +222,18 @@ public class Car:MonoBehaviour
         if (target != transform.position)
             transform.LookAt(target);
 
+        if(stopTest == true)
+        {
+            velocity = 0;
+            return;
+        }
+
         //道路限速；车辆期望速度；正常行驶速度；取最小值
-        velocity = Mathf.Min(this.line==null?Car.MaxVelocityNoRoad:this.line.maxVelocity, velocity + accel * Time.deltaTime,expectVelocity);
+        velocity = Mathf.Min(this.line==null?Car.MaxVelocityNoRoad:this.line.maxVelocity, velocity + 3.6f*accel * Time.deltaTime,expectVelocity);
         //屏蔽掉速度小于0的倒车行为
         velocity = Mathf.Max(0, velocity);
-        s += velocity * Time.deltaTime / 3.6f;
-        this.transform.Translate(Vector3.forward * velocity * Time.deltaTime / 3.6f);
+        s += Km2m() * Time.deltaTime;
+        this.transform.Translate(Vector3.forward * Km2m() * Time.deltaTime);
     }
 
     public float disOfForward(Car other)

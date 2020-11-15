@@ -7,28 +7,47 @@ using BehaviorDesigner.Runtime.Tasks;
 public class Following : Action
 {
     Car car;
+    /// <summary>
+    /// GM跟驰模型
+    /// </summary>
+    /// <param name="c">车辆灵敏度</param>
+    private float GM(float c,float m,float l,Car previous)
+    {
+        return c * Mathf.Pow(car.Km2m(), m) * (previous.Km2m() - car.Km2m()) / Mathf.Pow(previous.s - car.s, l);
+    }
+
     public override void OnAwake()
     {
         car = gameObject.GetComponent<Car>();
         car.target = car.transform.position;
     }
 
-    //跟驰要额外考虑到前车停下来的话，后车在一个触发距离内也能够停车
+    
     public override TaskStatus OnUpdate()
     {
-        //更新车辆加速度
-        if (car.line.cars.First.Value == car)
+        if (car.line.cars.Find(car).Previous == null)
         {
-            car.accel = Random.Range(1, 11);
-        }
-        else if (car.line.cars.Find(car).Previous.Value.s - car.s >= 120)
-        {
-            car.accel = car.line.cars.Find(car).Previous.Value.velocity - car.velocity + 10;
+            if(car.velocity <= car.expectVelocity)
+            {
+                car.accel = Random.Range(1, 11);
+            }
+            else
+            {
+                car.accel = Random.Range(-5, 5);
+            }  
         }
         else
         {
-            //如果车辆合流时出现重叠或者间距更近，会发生车辆急速后跳的现象
-            car.accel = 200 * (car.line.cars.Find(car).Previous.Value.velocity - car.velocity) / (car.line.cars.Find(car).Previous.Value.s - car.s);
+            Car previous = car.line.cars.Find(car).Previous.Value;
+            //车头时距小于等于5s，车辆进入跟驰状态
+            if ((previous.s - car.s - car.transform.localScale.z) / car.Km2m() <= 5)
+            {
+                car.accel = GM(1, 1.5f, 0.9f,previous);
+            }
+            else
+            {
+                car.accel = 5;
+            }
         }
 
         car.driving();

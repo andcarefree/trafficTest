@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 
@@ -9,29 +7,28 @@ public class ChangeLine : Action
 {
     Car car;
     Line targetLine;
-    
+    public SharedInt targetLineIndex;
+
     /// <summary>
-    /// 换道随机选择一个车道
-    /// ///TODO 该策略应该是可供二次开发的
+    /// 换道路径生成算法
+    /// ///TODO 该算法应该是可供二次开发的
     /// </summary>
-    private void RandomPick()
+    public Vector3[] CalculatePath()
     {
-        int n = car.line.fatherRoad.lines.Length;
-        targetLine = car.line.fatherRoad.lines[Random.Range(0, n)];
-        //确保目标路径不为自身
-        while(car.line == targetLine)
-        {
-            targetLine = car.line.fatherRoad.lines[Random.Range(0, n)];
-        }
+        Vector3[] ret =new Vector3[4];
+        ret[0] = car.transform.position;
+        ret[1] = ret[0] + car.transform.forward.normalized * 4.6f;
+        ret[2] = ret[1] + targetLine.transform.position - car.line.transform.position;
+        ret[3] = ret[2] + ret[1] - ret[0];
+        return ret;
     }
 
     public override void OnStart()
     {
         car = gameObject.GetComponent<Car>();
+        targetLine = car.line.fatherRoad.lines[targetLineIndex.Value];
+        car.linePoints = CalculatePath();
         car.line.cars.Remove(car);
-        RandomPick();
-        CalculatePath calculate = new CalculatePath();
-        car.linePoints = calculate.ChangePath(car.transform.position, car.transform.forward.normalized,car.line.transform.position, targetLine.transform.position,calculate.MyCalculatePath);
         //行驶路径初始化
         car.state = Car.State.changing;
         car.line = null;
@@ -41,7 +38,7 @@ public class ChangeLine : Action
 
     public override TaskStatus OnUpdate()
     {
-        car.accel = 20;
+        car.accel = 5;
         car.driving();
         if(car.lineT >= 1)
         {
@@ -53,9 +50,6 @@ public class ChangeLine : Action
     public override void OnEnd()
     {
         car.changeLine(targetLine);
-        //TODO 应该考虑到T状态的变迁，考虑到换道起始位置与终点位置在初始朝向上的增量，
-        //目前这种算法只能适用于直线道路上的换道
-        //不用了，数值分析可以直接根据点坐标求其在贝塞尔曲线上的T
         car.lineT = Line.CalculateT(car.transform.position, car.line.points);
         car.state = Car.State.inLine;
         car.lineChange = false;

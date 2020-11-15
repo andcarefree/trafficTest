@@ -47,12 +47,22 @@ public class Line : MonoBehaviour
         }
     }
 
+    public int indexInRoad()
+    {
+        for (int i = 0; i < fatherRoad.lines.Length; i++){
+            if(fatherRoad.lines[i] == this)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
     private void Start()
     {
-        cars = new LinkedList<Car>();
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.sortingLayerID = 0;
-        maxVelocity = 50;
+        cars = new LinkedList<Car>();
+        maxVelocity = 70;
     }
     private void Update()
     {

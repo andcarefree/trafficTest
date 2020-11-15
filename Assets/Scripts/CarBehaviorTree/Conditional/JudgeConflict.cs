@@ -14,10 +14,12 @@ public class JudgeConflict : Conditional
         Car otherCar = other.gameObject.GetComponent<Car>();
 
         if (otherCar == null) return;//碰撞体非车辆
+        
+        if (otherCar.transform.forward.normalized == car.transform.forward.normalized) return;//碰撞车辆与该车辆平行
 
         if(otherCar.line == this.car.line)//碰撞体是同车流车辆
         {
-            Debug.LogWarning("跟驰过近" + " " + car.transform.position + " " + this.car.transform.position);
+            //Debug.LogWarning("跟驰过近" + " " + car.transform.position + " " + this.car.transform.position);
             return;
         }
 
@@ -28,7 +30,7 @@ public class JudgeConflict : Conditional
         //2.修改碰撞器形状与触发方法，拓展车辆之间的通信
         if(car.state == Car.State.inLine && !Car.judgeLocation(car, otherCar))
         {
-            Debug.LogError("道路行车需要让行" + " " + car.transform.position);
+            //Debug.LogWarning("道路行车需要让行" + " " + car.transform.position);
             conflict = true;
             return;
         }
@@ -38,7 +40,7 @@ public class JudgeConflict : Conditional
     {
         if(other.gameObject.GetComponent<Car>() != null && conflict == true)
         {
-            Debug.LogWarning("冲突结束");
+            //Debug.LogWarning("冲突结束");
             conflict = false;
         }  
     }

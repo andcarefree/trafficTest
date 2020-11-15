@@ -5076,7 +5076,7 @@ LineRenderer:
   - {x: 25, y: 0, z: -5}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 3.75
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -5094,8 +5094,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0, g: 0, b: 0, a: 1}
-      key1: {r: 0, g: 0, b: 0, a: 1}
+      key0: {r: 0.34509805, g: 0.34117648, b: 0.3372549, a: 1}
+      key1: {r: 0.34509805, g: 0.34117648, b: 0.3372549, a: 1}
       key2: {r: 1, g: 1, b: 1, a: 1}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -5141,14 +5141,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 165e379c1d118a949b6d0d7028fe1824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trafficState: 0
-  carNumber: 0
   points:
   - {x: 5, y: 0, z: -5}
   - {x: 15, y: 0, z: -5}
   - {x: 25, y: 0, z: -5}
   nextRoads: []
-  lastCar: {fileID: 0}
+  fatherRoad: {fileID: 0}
+  maxVelocity: 0
   lineLock: {fileID: 0}
 --- !u!1 &9025392022072148228
 GameObject:
@@ -5283,7 +5282,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9025392022086398277}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10, y: 0, z: 0}
+  m_LocalPosition: {x: -100, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9025392021884977296}
@@ -5388,7 +5387,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9025392023138113592}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10, y: 0, z: 0}
+  m_LocalPosition: {x: 100, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9025392021884977296}

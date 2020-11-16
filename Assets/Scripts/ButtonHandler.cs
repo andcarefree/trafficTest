@@ -1,26 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using TMPro;
-
 
 public class ButtonHandler : MonoBehaviour
 {
     public static bool playStat = false;
-    bool showState = true;
-    bool button1Clicked = false;
-    bool button2Clicked = false;
-    bool button3Clicked = false;
+    private static bool isPlacingRoad = false;
+    private static bool isConnectingLane = false;
+    private static bool isSetupSource = false;
 
     public static List<Vector3> objectsPosition;
     public static List<GameObject> objectsInRect;
 
     public GameObject roadPrefeb;
     public GameObject carPrefeb;
+    public GameObject saveDialog;
 
-    public TextMeshPro textref;
+    public TextMeshProUGUI textref;
 
     public List<Vector3> roadPosition;
     public List<GameObject> roadList;
@@ -42,11 +39,11 @@ public class ButtonHandler : MonoBehaviour
 
     void PlaceRoadObject()
     {
-        if (button1Clicked)
+        if (isPlacingRoad)
         {
             if (Input.GetKey(KeyCode.Escape))
             {    
-                button1Clicked = false;
+                isPlacingRoad = false;
                 roadPosition.Clear();
                 return;
             }
@@ -73,14 +70,14 @@ public class ButtonHandler : MonoBehaviour
 
                 roadPosition.Clear();
 
-                button1Clicked = false;
+                isPlacingRoad = false;
             }
         }
     }
 
     void ConnectLane()
     {
-        if(button2Clicked)
+        if(isConnectingLane)
         {
             if(Input.GetMouseButtonDown(0))
             {
@@ -98,14 +95,14 @@ public class ButtonHandler : MonoBehaviour
                 roadList[0].GetComponent<Line>().nextRoads = nextRoad;
 
                 roadList.Clear();
-                button2Clicked = false;
+                isConnectingLane = false;
             }
         }
     }
 
     void SetupCarSource()
     {
-        if (button3Clicked)
+        if (isSetupSource)
         {
             if(Input.GetMouseButtonDown(0))
             {
@@ -114,7 +111,7 @@ public class ButtonHandler : MonoBehaviour
                 OriginRoad road = selectedRoad.transform.parent.gameObject.AddComponent<OriginRoad>();
                 selectedRoad.GetComponentInParent<OriginRoad>().Car = carPrefeb;
 
-                button3Clicked = false;
+                isSetupSource = false;
             }       
         }
     }
@@ -161,17 +158,17 @@ public class ButtonHandler : MonoBehaviour
 
     public void OnClickRoadButton()
     {
-        button1Clicked = true;
+        isPlacingRoad = true;
     }
 
     public void OnClickLinkButton()
     {
-        button2Clicked = true;
+        isConnectingLane = true;
     }
 
     public void OnClickOriginButton()
     {
-        button3Clicked = true;
+        isSetupSource = true;
     }
 
     public void OnApplicationQuit()
@@ -181,5 +178,21 @@ public class ButtonHandler : MonoBehaviour
         #else
             Application.Quit();
         #endif
+    }
+
+    public void OnSave()
+    {
+        saveDialog.SetActive(true);
+    }
+
+    public void ConfirmSave()
+    {
+
+        // SerializationManager.Save(, SaveData.current);
+    }
+
+    public void CancelSave()
+    {
+        saveDialog.SetActive(false);
     }
 }

@@ -18,24 +18,52 @@ public class Road : MonoBehaviour
     /// </summary>
 
     public RoadTypeEnum roadType;
+    public ObjectData objectData;
 
     private void Start()
     {
+        //add the road itself to savelist
+        if (string.IsNullOrEmpty(objectData.id))
+        {
+            objectData.id = System.DateTime.Now.ToLongDateString() + System.DateTime.Now.ToLongTimeString() + Random.Range(0, int.MaxValue).ToString();
+            
+            Debug.Log(SaveData.current.objects);
+            SaveData.current.objects.Add(objectData);
+        }
+        
         lines = GetComponentsInChildren<Line>();
-        prevPosition = Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
-        ButtonHandler.objectsPosition.Add(prevPosition);
+
+        GameEvent.current.OnLoadEvent += DestoryOnLoad;
+
+        // used to keep the position of the road
+        // which is designed for selecting function
+        //
+        // prevPosition = Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
+        // ButtonHandler.objectsPosition.Add(prevPosition);
     }
     private void Update()
     {
-        nowPosition = Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
+        objectData.position = transform.position;
+        objectData.rotation = transform.rotation;
 
-        if(nowPosition != prevPosition)
-        {
-            int index = ButtonHandler.objectsPosition.FindIndex(x => x == prevPosition);
-            ButtonHandler.objectsPosition[index] = nowPosition;
-            prevPosition = nowPosition;
-        }
+        // used to compare the position
+        //
+        // nowPosition = Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
+        //
+        // if(nowPosition != prevPosition)
+        // {
+        //     int index = ButtonHandler.objectsPosition.FindIndex(x => x == prevPosition);
+        //     ButtonHandler.objectsPosition[index] = nowPosition;
+        //     prevPosition = nowPosition;
+        // }
     }
+
+    public void DestoryOnLoad()
+    {
+        GameEvent.current.OnLoadEvent -= DestoryOnLoad;
+        Destroy(this.gameObject);
+    }
+
 }
 
 public enum RoadTypeEnum

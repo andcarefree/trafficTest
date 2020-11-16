@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Ludiq;
+using Bolt;
 
 public class CameraController : MonoBehaviour
 {
@@ -30,32 +32,35 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleMouseMovement();
-        HandleKeyboardMovement();
+        if(!(bool)Variables.ActiveScene.Get("isOverlayExists"))
+        {
+            HandleMouseMovement();
+            HandleKeyboardMovement();
 
-        HandleMouseZoom();
-        HandleMouseRotation();
+            HandleMouseZoom();
+            HandleMouseRotation();
 
-        transform.position = Vector3.Lerp(transform.position, newPosition, moveTime);
-        transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, moveTime);
-        cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, newZoom, moveTime);
+            transform.position = Vector3.Lerp(transform.position, newPosition, moveTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, moveTime);
+            cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, newZoom, moveTime);
+        }
     }
 
     void HandleKeyboardMovement()
     {
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.UpArrow))
         {
             newPosition += (transform.forward * moveSpeed);
         }
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.DownArrow))
         {
             newPosition += (transform.forward * -moveSpeed);
         }
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
             newPosition += (transform.right * -moveSpeed);
         }
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow))
         {
             newPosition += (transform.right * moveSpeed);
         }

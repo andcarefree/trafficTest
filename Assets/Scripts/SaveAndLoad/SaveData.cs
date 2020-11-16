@@ -24,5 +24,5 @@ public class SaveData
             }
         }
     }
-    public List<ObjectData> objects;
+    public List<ObjectData> objects = new List<ObjectData>();
 }

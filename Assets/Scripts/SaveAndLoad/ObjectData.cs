@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class ObjectData : MonoBehaviour
+public class ObjectData
 {
     public string id;
     public string type;

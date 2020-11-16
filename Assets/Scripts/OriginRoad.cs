@@ -13,7 +13,7 @@ public class OriginRoad : MonoBehaviour//泊松分布的交通流
     // Use this for initialization
     void Start()
     {
-        this.originRoad = this.GetComponent<Road>();
+        originRoad = gameObject.GetComponent<Road>();
         z = 1f;
     }
 

@@ -7,6 +7,9 @@ public class ChangeLineInstruction : Conditional
 {
     Car car;
 
+    //限制换道频率
+    float changTime;
+
     public SharedInt targetLineIndex;
     /// <summary>
     /// 判断换道产生的收益值,返回值[0,1]
@@ -60,11 +63,12 @@ public class ChangeLineInstruction : Conditional
             }
 
         }
-        if (preS + nextS <= car.transform.localScale.z * 3 || nextS <= car.transform.lossyScale.z * 2.0)
+
+        if (preS <= car.transform.localScale.z || nextS <= car.transform.lossyScale.z * 1.5)
         {
             return 0;
         }
-        if (car.PreCar() == null || (PreSpeed <= car.PreCar().velocity && preS < car.transform.localScale.z * 3.0))
+        if (car.PreCar() == null || (PreSpeed <= car.PreCar().velocity && preS - car.PreCar().s < car.transform.lossyScale.z))
         {
             return 0;
         }
@@ -113,9 +117,9 @@ public class ChangeLineInstruction : Conditional
         //换道条件判断
         if (car.line != null && car.line.cars.First != null && car.line.cars.First.Value != car && car.s > car.transform.localScale.z)
         {
-            Car previous = car.line.cars.Find(car).Previous.Value;
+            Car pre = car.line.cars.Find(car).Previous.Value;
             //当前车道运行速度低于预期时，寻求车道换道
-            if ((previous.velocity <= 40 && car.expectVelocity - car.velocity > 5 && car.accel<5)|| (previous.velocity >= 40 && car.expectVelocity - car.velocity > 15 && car.accel < 5))
+            if ((pre.velocity <= 40 && car.expectVelocity - car.velocity > 5 && car.accel<5)|| (pre.velocity >= 40 && car.expectVelocity - car.velocity > 15 && car.accel < 5))
             {
                 car.lineChange = true;
             }
@@ -150,7 +154,14 @@ public class ChangeLineInstruction : Conditional
     {
         if(car.state == Car.State.changing)
         {
+            changTime = 0;
             return TaskStatus.Success;
+        }
+
+        if(changTime < 1)
+        {
+            changTime += Time.deltaTime;
+            return TaskStatus.Failure;
         }
 
         PositiveChange();

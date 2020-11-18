@@ -33,7 +33,7 @@ public class SaveManager : MonoBehaviour
             var index = i;
             buttonObject.GetComponent<Button>().onClick.AddListener(() =>
             {
-                getObjectFromLoadFile(saveFileName[index]);
+                GetObjectFromLoadFile(saveFileName[index]);
             });
             buttonObject.GetComponentInChildren<TextMeshProUGUI>().text = saveFileName[index].Replace($"{Application.persistentDataPath}/saves\\", "");
         }
@@ -50,11 +50,11 @@ public class SaveManager : MonoBehaviour
         saveFileName = Directory.GetFiles(Application.persistentDataPath + "/saves");
     }
 
-    public void getObjectFromLoadFile(string loadFile)
+    public void GetObjectFromLoadFile(string loadFile)
     {
         SaveData.current = (SaveData)SerializationManager.Load(loadFile);
 
-        GameEvent.current.OnLoad();
+        GameEvents.current.DispatchOnLoad();
         
         foreach(var newObject in SaveData.current.objects)
         {

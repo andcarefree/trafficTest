@@ -33,7 +33,7 @@ public class Road : MonoBehaviour
         
         lines = GetComponentsInChildren<Line>();
 
-        GameEvent.current.OnLoadEvent += DestoryOnLoad;
+        GameEvents.current.OnLoadEvent += DestoryOnLoad;
 
         // used to keep the position of the road
         // which is designed for selecting function
@@ -60,7 +60,7 @@ public class Road : MonoBehaviour
 
     public void DestoryOnLoad()
     {
-        GameEvent.current.OnLoadEvent -= DestoryOnLoad;
+        GameEvents.current.OnLoadEvent -= DestoryOnLoad;
         Destroy(this.gameObject);
     }
 

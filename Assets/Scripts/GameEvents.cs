@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-public class GameEvent : MonoBehaviour
+public class GameEvents : MonoBehaviour
 {
-    public static GameEvent current;
+    public static GameEvents current;
     public event Action OnLoadEvent;
 
     void Awake()
@@ -11,7 +11,7 @@ public class GameEvent : MonoBehaviour
         current = this;
     }
     
-    public void OnLoad()
+    public void DispatchOnLoad()
     {
         if(OnLoadEvent != null)
         {

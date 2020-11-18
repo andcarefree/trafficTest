@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using Bolt;
+using Ludiq;
 
 public class ButtonHandler : MonoBehaviour
 {
-    public static bool playStat = false;
     private static bool isPlacingRoad = false;
     private static bool isConnectingLane = false;
     private static bool isSetupSource = false;
@@ -17,12 +17,9 @@ public class ButtonHandler : MonoBehaviour
     public GameObject carPrefeb;
     public GameObject saveDialog;
 
-    public TextMeshProUGUI textref;
-
     public List<Vector3> roadPosition;
     public List<GameObject> roadList;
 
-    // Start is called before the first frame update
     void Awake()
     {
         Time.timeScale = 0;
@@ -139,26 +136,10 @@ public class ButtonHandler : MonoBehaviour
         return selectedObject;
     }
 
-    public void OnClickStartButton()
-    {
-        // Debug.Log("start button is clicked");
-        if (!playStat)
-        {
-            Time.timeScale = 1;
-            playStat = true;
-            textref.text = "暂停";
-        }
-        else
-        {
-            Time.timeScale = 0;
-            playStat = false;
-            textref.text = "开始";
-        }
-    }
-
     public void OnClickRoadButton()
     {
         isPlacingRoad = true;
+        Variables.ActiveScene.Set("isRoadGenerating", true);
     }
 
     public void OnClickLinkButton()
@@ -169,30 +150,5 @@ public class ButtonHandler : MonoBehaviour
     public void OnClickOriginButton()
     {
         isSetupSource = true;
-    }
-
-    public void OnApplicationQuit()
-    {
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #else
-            Application.Quit();
-        #endif
-    }
-
-    public void OnSave()
-    {
-        saveDialog.SetActive(true);
-    }
-
-    public void ConfirmSave()
-    {
-
-        // SerializationManager.Save(, SaveData.current);
-    }
-
-    public void CancelSave()
-    {
-        saveDialog.SetActive(false);
     }
 }

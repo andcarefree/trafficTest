@@ -6,6 +6,7 @@ using BehaviorDesigner.Runtime.Tasks;
 public class ChangeLineInstruction : Conditional
 {
     Car car;
+
     public SharedInt targetLineIndex;
     /// <summary>
     /// 判断换道产生的收益值,返回值[0,1]
@@ -17,8 +18,8 @@ public class ChangeLineInstruction : Conditional
     //TODO 对外提供收益函数的替换接口
     static float JudgeValue(Car car, Line line)
     {
-        //换道之后成为头车
-        if (line.cars.First == null || Car.judgeLocation(car, line.cars.First.Value))
+        //目标车道不存在车辆
+        if (line.cars.First == null)
         {
             return 1;
         }
@@ -30,10 +31,19 @@ public class ChangeLineInstruction : Conditional
         //near在car之后
         if (Car.judgeLocation(car, near))
         {
-            Car nearPre = near.PreCar();//间隙前车
+            //换道之后成为头车且间隙允许换道
+            if(near.PreCar()==null)
+            {
+                preS = 10000;
+                PreSpeed = 10000;
+            }
+            else
+            {
+                Car nearPre = near.PreCar();//间隙前车
+                PreSpeed = nearPre.velocity;
+                preS = nearPre.s - car.s;
+            }
             nextS = car.s - near.s;
-            PreSpeed = nearPre.velocity;
-            preS = nearPre.s - car.s;
         }
         else//near在car之前
         {
@@ -50,11 +60,11 @@ public class ChangeLineInstruction : Conditional
             }
 
         }
-        if (preS + nextS <= car.transform.localScale.z * 3 || nextS <= car.transform.lossyScale.z * 2.0)//间隙小于车长1.5倍或后车行驶间距小于车长
+        if (preS + nextS <= car.transform.localScale.z * 3 || nextS <= car.transform.lossyScale.z * 2.0)
         {
             return 0;
         }
-        if (car.PreCar() == null || (PreSpeed <= car.PreCar().velocity && preS < car.transform.localScale.z * 2.0))
+        if (car.PreCar() == null || (PreSpeed <= car.PreCar().velocity && preS < car.transform.localScale.z * 3.0))
         {
             return 0;
         }

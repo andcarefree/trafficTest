@@ -7,6 +7,7 @@ public class ChangeLine : Action
 {
     Car car;
     Line targetLine;
+
     public SharedInt targetLineIndex;
 
     /// <summary>
@@ -53,5 +54,6 @@ public class ChangeLine : Action
         car.lineT = Line.CalculateT(car.transform.position, car.line.points);
         car.state = Car.State.inLine;
         car.lineChange = false;
+        car.driving();
     }
 }

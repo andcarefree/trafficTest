@@ -25,30 +25,41 @@ public class Following : Action
     
     public override TaskStatus OnUpdate()
     {
-        if (car.line.cars.Find(car).Previous == null)
+        //TODO
+        if(car.state != Car.State.inLine)
         {
-            if(car.velocity <= car.expectVelocity)
-            {
-                car.accel = Random.Range(1, 11);
-            }
-            else
-            {
-                car.accel = Random.Range(-5, 5);
-            }  
+            car.accel = 0;
+            car.velocity = 30;
         }
         else
         {
-            Car previous = car.line.cars.Find(car).Previous.Value;
-            //车头时距小于等于5s，车辆进入跟驰状态
-            if ((previous.s - car.s - car.transform.localScale.z) / car.Km2m() <= 5)
+            if (car.line.cars.Find(car).Previous == null)
             {
-                car.accel = GM(1, 1.5f, 0.9f,previous);
+                if(car.velocity <= car.expectVelocity)
+                {
+                    car.accel = Random.Range(1, 11);
+                }
+                else
+                {
+                    car.accel = Random.Range(-5, 5);
+                }  
             }
             else
             {
-                car.accel = 5;
+                Car previous = car.line.cars.Find(car).Previous.Value;
+                //车头时距小于等于5s，车辆进入跟驰状态
+                if ((previous.s - car.s - car.transform.localScale.z) / car.Km2m() <= 5)
+                {
+                    car.accel = GM(1, 1.5f, 0.9f,previous);
+                }
+                else
+                {
+                    car.accel = 5;
+                }
             }
         }
+
+
 
         car.driving();
 

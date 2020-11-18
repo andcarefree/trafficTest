@@ -34,8 +34,6 @@ public class GeneratePoint : MonoBehaviour
     public void GenerateCar()
     {
         GameObject go = GameObject.Instantiate(car, line.lineStart, Quaternion.identity);
-        if (latestCar != null)
-            latestCar.behind = go.GetComponent<Car>();
         go.GetComponent<Car>().setLine(line);
         if (t < 50)
         {

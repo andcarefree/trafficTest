@@ -5,17 +5,16 @@ using UnityEngine;
 
 public class Line : MonoBehaviour
 {
-    public const int RED_TIME = 10;
-    public const int GREEN_TIME = 10;
-    public TrafficStateEnum trafficState;
-
-    public int carNumber = 0;
     private LineRenderer lineRenderer;
     public Vector3[] points;
     public const int segmentNum = 100;
     public Road[] nextRoads;
-    private float time;
-    public Car lastCar = null;
+    public Road fatherRoad;
+    public float maxVelocity;
+    public Car lineLock;
+
+    public LinkedList<Car> cars;
+
     public Vector3 lineStart
     {
         get
@@ -48,12 +47,22 @@ public class Line : MonoBehaviour
         }
     }
 
+    public int indexInRoad()
+    {
+        for (int i = 0; i < fatherRoad.lines.Length; i++){
+            if(fatherRoad.lines[i] == this)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
     private void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.sortingLayerID = 0;
-        time = 0;
-        trafficState = TrafficStateEnum.PASS;
+        cars = new LinkedList<Car>();
+        maxVelocity = 70;
     }
     private void Update()
     {
@@ -64,19 +73,6 @@ public class Line : MonoBehaviour
             points[i - 1] = pointTran[i].position;
         }
         DrawCurve();
-
-        /*红绿灯按时间更新
-        time += Time.deltaTime;
-        if (trafficState == TrafficStateEnum.PASS && time >= Line.GREEN_TIME)
-        {
-            trafficState = TrafficStateEnum.BAN;
-            time = 0;
-        }
-        else if (trafficState == TrafficStateEnum.BAN && time >= Line.RED_TIME)
-        {
-            trafficState = TrafficStateEnum.PASS;
-            time = 0;
-        }*/
     }
 
     private void DrawCurve()
@@ -93,11 +89,35 @@ public class Line : MonoBehaviour
     public static Vector3 Bezier(float t,Vector3[] p)
     {
         Vector3 ans = Vector3.zero;
-        for(int i=0;i<p.Length;i++)
+        int n = p.Length;
+        for(int i=0;i<n;i++)
         {
-            ans += p[i] * C(i, p.Length - 1) * Mathf.Pow(t,  i) * Mathf.Pow(1 - t,p.Length-1- i);
+            ans += p[i] * C(i, n - 1) * Mathf.Pow(t, i) * Mathf.Pow(1 - t, n - 1 - i);
         }
         return ans;
+    }
+
+    /// <summary>
+    /// TODO 求出点在贝塞尔曲线上对应的T值，数值分析方法
+    /// </summary>
+    public static float CalculateT(Vector3 point, Vector3[] p)
+    {
+        float start = 0f;
+        float end = 1f;
+        float mid = (start + end) / 2;
+        while (Vector3.Distance(point,Bezier(mid,p)) >= 2f)
+        {
+            if(Vector3.Distance(point,Bezier(start,p)) > Vector3.Distance(point, Bezier(end, p)))
+            {
+                start = mid + 0.01f;
+            }
+            else
+            {
+                end = mid;
+            }
+            mid = (start + end) / 2;
+        }
+        return mid;
     }
 
     /// <returns>
@@ -169,10 +189,4 @@ public class Line : MonoBehaviour
         result[3] = target.points[0];
         return result;
     }
-
-    
-}
-public enum TrafficStateEnum
-{
-    BAN, PASS
 }

@@ -56,6 +56,9 @@ public class Road : MonoBehaviour
         //     ButtonHandler.objectsPosition[index] = nowPosition;
         //     prevPosition = nowPosition;
         // }
+        foreach (Line line in lines) {
+            line.fatherRoad = this;
+        }
     }
 
     public void DestoryOnLoad()

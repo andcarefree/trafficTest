@@ -71,6 +71,11 @@ public class Car:MonoBehaviour
     /// 维护一个临近范围车辆集，当触发车辆进入时即加入该集合，集合内寻找一个disOfForward最短的做跟驰
     /// </summary>
     public Car followCar;
+    
+    void Start()
+    {
+        GameEvents.current.OnLoadEvent += DestroyCar;
+    }
 
     /// <summary>
     /// 将车辆速度转换为m/s

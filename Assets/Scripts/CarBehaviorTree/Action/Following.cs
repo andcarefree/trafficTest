@@ -81,6 +81,7 @@ public class Following : Action
             //道路与路口的转换
             else if (car.state == Car.State.inLine)
             {
+                car.line.cars.Remove(car.line.cars.Find(car));
                 car.state = Car.State.crossing;
             }
             else

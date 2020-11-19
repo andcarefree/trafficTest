@@ -61,7 +61,7 @@ public class Road : MonoBehaviour
         }
     }
 
-    public void DestoryOnLoad()
+    private void DestoryOnLoad()
     {
         GameEvents.current.OnLoadEvent -= DestoryOnLoad;
         Destroy(this.gameObject);

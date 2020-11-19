@@ -121,7 +121,10 @@ public class Car:MonoBehaviour
 
     public void DestroyCar()
     {
-        this.line.cars.Remove(this);
+        if(this.line != null)
+        {
+            this.line.cars.Remove(this);
+        }
         Destroy(this.gameObject);
     }
 

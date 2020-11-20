@@ -43,12 +43,13 @@ public class ChangeLine : Action
         car.driving();
         if(car.lineT >= 1)
         {
+            End();
             return TaskStatus.Success;
         }
         return TaskStatus.Running;
     }
 
-    public override void OnEnd()
+    private void End()
     {
         car.changeLine(targetLine);
         car.lineT = Line.CalculateT(car.transform.position, car.line.points);

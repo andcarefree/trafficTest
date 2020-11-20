@@ -251,12 +251,6 @@ public class Car:MonoBehaviour
         return Vector3.Dot(forward, spacing);
     }
 
-    void OnCollisionEnter(Collision collision)
-    {
-        //这个函数在碰撞开始时候调用
-        Debug.LogError("发生碰撞");
-    }
-
     private void Awake()
     {
         this.expectVelocity = Car.expects[(int)Random.Range(0f, (float)Car.expects.Length)];

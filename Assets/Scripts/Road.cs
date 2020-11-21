@@ -33,6 +33,8 @@ public class Road : MonoBehaviour
         
         lines = GetComponentsInChildren<Line>();
 
+        RectangleSelector.current.selectable.Add(this.gameObject);
+
         GameEvents.current.OnLoadEvent += DestoryOnLoad;
 
         // used to keep the position of the road

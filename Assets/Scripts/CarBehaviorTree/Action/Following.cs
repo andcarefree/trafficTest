@@ -7,11 +7,14 @@ using BehaviorDesigner.Runtime.Tasks;
 public class Following : Action
 {
     Car car;
+    public delegate float GM(float c, float m, float l, Car previous);
+    public static GM gm;
+
     /// <summary>
     /// GM跟驰模型
     /// </summary>
     /// <param name="c">车辆灵敏度</param>
-    private float GM(float c,float m,float l,Car previous)
+    private float OriginalGM(float c,float m,float l,Car previous)
     {
         return c * Mathf.Pow(car.Km2m(), m) * (previous.Km2m() - car.Km2m()) / Mathf.Pow(previous.s - car.s, l);
     }
@@ -20,6 +23,8 @@ public class Following : Action
     {
         car = gameObject.GetComponent<Car>();
         car.target = car.transform.position;
+        gm = OriginalGM;
+        DllReader.TestDllRecover();
     }
 
     
@@ -50,7 +55,7 @@ public class Following : Action
                 //车头时距小于等于5s，车辆进入跟驰状态
                 if ((previous.s - car.s - car.transform.localScale.z) / car.Km2m() <= 5)
                 {
-                    car.accel = GM(1, 1.5f, 0.9f,previous);
+                    car.accel = gm(1, 1.5f, 0.9f,previous);
                 }
                 else
                 {

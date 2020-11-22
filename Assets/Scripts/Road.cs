@@ -42,6 +42,10 @@ public class Road : MonoBehaviour
         //
         // prevPosition = Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
         // ButtonHandler.objectsPosition.Add(prevPosition);
+        foreach (Line line in lines)
+        {
+            line.fatherRoad = this;
+        }
     }
     private void Update()
     {
@@ -58,9 +62,6 @@ public class Road : MonoBehaviour
         //     ButtonHandler.objectsPosition[index] = nowPosition;
         //     prevPosition = nowPosition;
         // }
-        foreach (Line line in lines) {
-            line.fatherRoad = this;
-        }
     }
 
     private void DestoryOnLoad()

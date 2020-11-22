@@ -72,3 +72,4 @@ crashlytics-build.properties
 
 # VScode profile folder
 /.vscode
+/Custom

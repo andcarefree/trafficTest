@@ -28,7 +28,6 @@ public class ButtonHandler : MonoBehaviour
 
     void Update()
     {
-        SelectObjectOnClick();
         PlaceRoadObject();
         ConnectLane();
         SetupCarSource();
@@ -115,11 +114,6 @@ public class ButtonHandler : MonoBehaviour
         }
     }
 
-    public static void SelectObjectInRect()
-    {
-
-    }
-
     public static GameObject SelectObjectOnClick()
     {
         GameObject selectedObject = null;
@@ -135,6 +129,7 @@ public class ButtonHandler : MonoBehaviour
                 Debug.Log(selectedObject.name);
             }
         }
+
         return selectedObject;
     }
 

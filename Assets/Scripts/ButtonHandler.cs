@@ -59,11 +59,13 @@ public class ButtonHandler : MonoBehaviour
             if (roadPosition.Count == 2)
             {
                 Vector3 position = (roadPosition[1] + roadPosition[0]) / 2.0f;
+                float scale = Vector3.Distance(roadPosition[1], roadPosition[0]) / 60.0f;
 
                 Quaternion rotation = Quaternion.LookRotation(roadPosition[1] - roadPosition[0], Vector3.up);
                 rotation *= Quaternion.Euler(0, -90f, 0);
 
-                Instantiate(roadPrefeb, position, rotation);
+                GameObject newRoad = Instantiate(roadPrefeb, position, rotation);
+                newRoad.transform.localScale = new Vector3(scale, 1.0f, 1.0f);
 
                 roadPosition.Clear();
 

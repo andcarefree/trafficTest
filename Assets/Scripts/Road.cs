@@ -27,7 +27,6 @@ public class Road : MonoBehaviour
         {
             objectData.id = System.DateTime.Now.ToLongDateString() + System.DateTime.Now.ToLongTimeString() + Random.Range(0, int.MaxValue).ToString();
             
-            Debug.Log(SaveData.current.objects);
             SaveData.current.objects.Add(objectData);
         }
         

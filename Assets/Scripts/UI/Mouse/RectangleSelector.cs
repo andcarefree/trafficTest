@@ -38,20 +38,21 @@ public class RectangleSelector : MonoBehaviour
                 selectionBox.gameObject.SetActive(true);
 
             var selection = Rect.MinMaxRect(Mathf.Min(startPosition.x, endPosition.x), 
-                                            Screen.height - Mathf.Min(startPosition.y, endPosition.y),
+                                            Screen.height - Mathf.Max(startPosition.y, endPosition.y),
                                             Mathf.Max(startPosition.x, endPosition.x), 
-                                            Screen.height - Mathf.Max(startPosition.y, endPosition.y));
+                                            Screen.height - Mathf.Min(startPosition.y, endPosition.y));
             
             foreach(var go in selectable)
             {
                 var position = Camera.main.WorldToScreenPoint(go.transform.position);
-                
-                if(selection.Contains(position, true) & !selected.Contains(go))
+                var positionInScreen = new Vector2(position.x, Camera.main.pixelHeight - position.y);
+
+                if(selection.Contains(positionInScreen, true) & !selected.Contains(go))
                 {
                     selected.Add(go);
                     go.GetComponent<Outline>().enabled = true;
                 }
-                else if(!selection.Contains(position, true) & selected.Contains(go))
+                else if(!selection.Contains(positionInScreen, true) & selected.Contains(go))
                 {
                     selected.Remove(go);
                     go.GetComponent<Outline>().enabled = false;

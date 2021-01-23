@@ -11,7 +11,6 @@ public class ButtonHandler : MonoBehaviour
     private static bool isSetupSource = false;
 
     public static List<Vector3> objectsPosition;
-    public static List<GameObject> objectsInRect;
 
     public GameObject roadPrefeb;
     public GameObject carPrefeb;
@@ -136,7 +135,7 @@ public class ButtonHandler : MonoBehaviour
     public void OnClickRoadButton()
     {
         isPlacingRoad = true;
-        Variables.ActiveScene.Set("isRoadGenerating", true);
+        PublicVars.current.isRoadGenerating = true;
     }
 
     public void OnClickLinkButton()

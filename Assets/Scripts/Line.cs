@@ -66,10 +66,12 @@ public class Line : MonoBehaviour
     }
     private void Update()
     {
+        //获取子点对象的transform
         Transform[] pointTran = GetComponentsInChildren<Transform>();
         points = new Vector3[pointTran.Length - 1];
         for (int i = 1; i < pointTran.Length; i++)
         {
+            //获取子点对象的坐标
             points[i - 1] = pointTran[i].position;
         }
         DrawCurve();

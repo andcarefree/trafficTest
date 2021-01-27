@@ -24,11 +24,25 @@ public class ChangeLine : Action
         return ret;
     }
 
+    /*应付中期检查*/
+     public Vector3[] Move()
+    {
+        Vector3[] ret = new Vector3[2];
+        ret[0] = car.transform.position;
+        ret[1] = ret[0] + targetLine.transform.position - car.line.transform.position;
+        return ret;
+    }
+    /* */
+    
+
     public override void OnStart()
     {
         car = gameObject.GetComponent<Car>();
         targetLine = car.line.fatherRoad.lines[targetLineIndex.Value];
         car.linePoints = CalculatePath();
+        /*应付中期检查，更换一个换道路径*/
+        //car.linePoints = Move();
+        /**/
         car.line.cars.Remove(car);
         //行驶路径初始化
         car.state = Car.State.changing;

@@ -109,6 +109,29 @@ public class ChangeLineInstruction : Conditional
         }
     }
 
+    /*应付中期*/
+    private Line LeftPick()
+    {
+        Line[] lines = car.line.fatherRoad.lines;
+        int nowIndex = car.line.indexInRoad();
+        if(nowIndex == 0)
+        {
+            return car.line;
+        }
+        return JudgeValue(car, lines[nowIndex - 1]) > 0 ? lines[nowIndex - 1] : car.line;
+    }
+    private Line RightPick()
+    {
+        Line[] lines = car.line.fatherRoad.lines;
+        int nowIndex = car.line.indexInRoad();
+        if (nowIndex == lines.Length - 1)
+        {
+            return car.line;
+        }
+        return JudgeValue(car, lines[nowIndex + 1]) > 0 ? lines[nowIndex + 1] : car.line;
+    }
+    /**/
+
 
     /// <summary>
     /// 车辆不满足当前行驶环境时寻求主动换道时修改car.lineChange
@@ -133,7 +156,11 @@ public class ChangeLineInstruction : Conditional
     /// <returns></returns>
     private bool SuccessChange()
     {
-        Line line = NearLinePick();
+        //Line line = NearLinePick();
+        /*应付中期*/
+        Line line = RightPick();
+        //Line line = LeftPick();
+        /**/
         if (!line.Equals(car.line))
         {
             targetLineIndex.Value = line.indexInRoad();

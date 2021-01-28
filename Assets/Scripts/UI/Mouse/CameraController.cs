@@ -1,8 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Ludiq;
-using Bolt;
+using UnityEngine.EventSystems;
 
 public class CameraController : MonoBehaviour
 {
@@ -30,7 +29,7 @@ public class CameraController : MonoBehaviour
     void Update()
     {
         // Check if there is any panel opened
-        if(!PublicVars.current.isOverlayExists)
+        if(!EventSystem.current.IsPointerOverGameObject())
         {
             // Move camera by using wsad / arrows
             if (Input.GetKey(KeyCode.UpArrow))

@@ -18,6 +18,5 @@ public class PublicVars
             }
         }
     }
-    public bool isOverlayExists = false;
     public bool isRoadGenerating = false;
 }

@@ -6,9 +6,9 @@ using Ludiq;
 
 public class ButtonHandler : MonoBehaviour
 {
-    private static bool isPlacingRoad = false;
-    private static bool isConnectingLane = false;
-    private static bool isSetupSource = false;
+    private bool isPlacingRoad = false;
+    private bool isConnectingLane = false;
+    private bool isSetupSource = false;
 
     public static List<Vector3> objectsPosition;
 

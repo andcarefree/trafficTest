@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 public class DetectorHandler : MonoBehaviour
 {
     public static DetectorHandler detector;
     public GameObject detectorPanel;
+    public GameObject propertyPrefab;
 
     void Start()
     {
@@ -18,11 +20,15 @@ public class DetectorHandler : MonoBehaviour
         // When nothing is selected, show prompt
         if(RectangleSelector.current.selected.Count == 0)
         {
-            detectorPanel.transform.Find("WarningText").gameObject.SetActive(true);
+            detectorPanel.transform.Find("Warning Text").gameObject.SetActive(true);
+            detectorPanel.transform.Find("Scroll View").gameObject.SetActive(false);
+
         }
         else
         {
-            detectorPanel.transform.Find("WarningText").gameObject.SetActive(false);
+            detectorPanel.transform.Find("Warning Text").gameObject.SetActive(false);
+            detectorPanel.transform.Find("Scroll View").gameObject.SetActive(true);
+
         }
 
         // When a single thing is selected, show its properties
@@ -31,12 +37,14 @@ public class DetectorHandler : MonoBehaviour
             var currentObject = RectangleSelector.current.selected[0];
             if(currentObject.tag == "Car")
             {
-                var properties = Type.GetType("Car").GetProperties();
-                for(int i = 0; i < properties.Length; i++)
+                var properties = currentObject.GetComponent<Car>().GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                foreach(var property in properties)
                 { 
-                    Debug.Log(properties[i].ToString());
-                }            
-            }
+                    Debug.Log(property.Name);
+                    // GameObject gameObject = Instantiate(propertyPrefab);
+                    // gameObject.transform.SetParent(detectorPanel.transform.Find("Content"), false);
+                }   
+            }         
         }
     }
 }

@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Reflection;
+using System.Windows.Forms;
 
 public class DllReader 
 {
@@ -13,6 +14,25 @@ public class DllReader
     public static object custom;
     public static Type type;
     public static MethodInfo gm;
+    
+    /// <summary>
+    /// 调用对话框选择dll文件
+    /// </summary>
+    /// <returns></returns>
+   public static Type SelectDll(string fileName=null)
+    {
+        OpenFileDialog openFile = new OpenFileDialog();
+        openFile.Filter = "*.dll|*.dll";
+        openFile.InitialDirectory = "C://";//Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        openFile.Multiselect = false;
+        if (openFile.ShowDialog() == DialogResult.Cancel)
+            return null;
+        if(fileName==null)
+            fileName = System.IO.Path.GetFileNameWithoutExtension(openFile.FileName);
+
+        return ReadDll(fileName,openFile.FileName);
+    }
+
     /// <summary>
     /// 读取dll文件
     /// </summary>
@@ -30,6 +50,7 @@ public class DllReader
 
         Assembly assembly = Assembly.Load(b);
         Type type1 = assembly.GetType(className);
+        
         return type1;
        
     }
@@ -46,10 +67,18 @@ public class DllReader
 
     public static void testInit()
     {
-        type = ReadDll(@"Custom", @"Custom\DllRecoverTest.dll");
+        /*OpenFileDialog openFileDialog = new OpenFileDialog();
+        openFileDialog.Title = "SelectDLL";
+        openFileDialog.Filter = "*.*|*.*";
+
+        if (openFileDialog.ShowDialog() == DialogResult.OK)
+            Debug.Log(openFileDialog.FileName);*/
+        //type = ReadDll(@"Custom", @"Custom\DllRecoverTest.dll");
+        type = SelectDll(@"Custom");
         go=CreateManager(type);
         gm = type.GetMethod("CustomGM");
         custom = go.GetComponent(type);
+        Following.gm = go.GetComponent<OriginCustom>().CustomGM;
         
     }
     

@@ -7,6 +7,8 @@ using UnityEngine;
 public class Car:OriginCar
 {
     const float MaxVelocityNoRoad = 30;
+
+    /*
     public enum State
     {
         inLine,
@@ -27,16 +29,22 @@ public class Car:OriginCar
     /// 速度,单位km/h
     /// </summary>
     public float velocity = 0;
-
+    
 
     /// <summary>
     /// 路径长度
     /// </summary>
     public float s = 0;
+
+    */
+    
+
     /// <summary>
     /// 所在路线
     /// </summary>
-    public Line line;
+
+    public new Line line;
+    /*
     /// <summary>
     /// 路线的T参数
     /// </summary>
@@ -44,6 +52,7 @@ public class Car:OriginCar
     /// <summary>
     /// 路点信息
     /// </summary>
+    /// 
     public Vector3[] linePoints;
     public float segment;
     /// <summary>
@@ -64,13 +73,14 @@ public class Car:OriginCar
     /// </summary>
     public bool stopTest = false;
     
-
+    
     /// <summary>
     /// 车辆跟驰对象，通过该对象限制加速度（包括路内跟驰，换道，路口内所有情形）
     /// 解决冲突问题，车辆与阻碍其行驶的车辆构成一个跟驰行为，确保不会相撞
     /// 维护一个临近范围车辆集，当触发车辆进入时即加入该集合，集合内寻找一个disOfForward最短的做跟驰
     /// </summary>
     public Car followCar;
+    */
     
     void Start()
     {
@@ -80,7 +90,7 @@ public class Car:OriginCar
     /// <summary>
     /// 将车辆速度转换为m/s
     /// </summary>
-    public float Km2m()
+    public new float Km2m()
     {
         return this.velocity / 3.6f;
     }

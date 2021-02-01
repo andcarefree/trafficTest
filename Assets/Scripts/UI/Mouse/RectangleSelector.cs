@@ -55,12 +55,19 @@ public class RectangleSelector : MonoBehaviour
                         selected.Add(go);
                         go.GetComponent<Outline>().enabled = true;
                     }
-                    else if(!selection.Contains(positionInScreen, true) & selected.Contains(go))
-                    {
-                        selected.Remove(go);
-                        go.GetComponent<Outline>().enabled = false;
+                }
+            }
+            else if(Input.GetKey(KeyCode.Escape))
+            {
+                foreach(GameObject gameObject in selectable)
+                {
+                    if(selected.Contains(gameObject))
+                    {    
+                        gameObject.GetComponent<Outline>().enabled = false;
+                        selected.Remove(gameObject);
                     }
                 }
+
             }
             else
             {

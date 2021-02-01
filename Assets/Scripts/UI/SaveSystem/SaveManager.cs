@@ -10,11 +10,6 @@ public class SaveManager : MonoBehaviour
     public GameObject scrollContentArea;
     public GameObject loadObject;
     public string[] saveFileName;
-
-    void Start()
-    {
-        Debug.Log(Application.persistentDataPath);
-    }
     
     public void OnSave()
     {

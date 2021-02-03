@@ -20,7 +20,7 @@ public class RectangleSelector : MonoBehaviour
 
     void Update()
     {
-        if(!EventSystem.current.IsPointerOverGameObject())
+        if(!EventSystem.current.IsPointerOverGameObject() & !PublicVars.current.isGUIActive)
         {
             if(Input.GetMouseButtonDown(0))
             {
@@ -50,10 +50,13 @@ public class RectangleSelector : MonoBehaviour
                     var position = Camera.main.WorldToScreenPoint(go.transform.position);
                     var positionInScreen = new Vector2(position.x, Camera.main.pixelHeight - position.y);
 
-                    if(selection.Contains(positionInScreen, true) & !selected.Contains(go))
+                    if(selection.Contains(positionInScreen, true))
                     {
-                        selected.Add(go);
-                        go.GetComponent<Outline>().enabled = true;
+                        if(!selected.Contains(go))
+                        {
+                            selected.Add(go);
+                            go.GetComponent<Outline>().enabled = true;
+                        }              
                     }
                 }
             }

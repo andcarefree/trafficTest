@@ -63,6 +63,8 @@ public class Inspector : MonoBehaviour
                     propertyTable.transform.Find("Name").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.Name);
                     if(property.GetValue(currentObject.GetComponent<Car>()) != null)
                         propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.GetValue(currentObject.GetComponent<Car>()).ToString());
+                    else
+                        propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText("null"); 
                 }
             }
             if(currentObject.tag == "Road")
@@ -82,6 +84,8 @@ public class Inspector : MonoBehaviour
                     propertyTable.transform.Find("Name").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.Name);
                     if(property.GetValue(currentObject.GetComponent<Road>()) != null)
                         propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.GetValue(currentObject.GetComponent<Road>()).ToString());
+                    else
+                        propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText("null"); 
                 }
             }
             if(currentObject.tag == "Lane")
@@ -101,6 +105,8 @@ public class Inspector : MonoBehaviour
                     propertyTable.transform.Find("Name").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.Name);
                     if(property.GetValue(currentObject.GetComponent<Line>()) != null)
                         propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.GetValue(currentObject.GetComponent<Line>()).ToString());
+                    else
+                        propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText("null");    
                 }
             } 
         }

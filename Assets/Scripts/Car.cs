@@ -11,7 +11,8 @@ public class Car:MonoBehaviour
     {
         inLine,
         crossing,
-        changing
+        changing,
+        prepareCross
     }
 
     public State state = State.inLine;

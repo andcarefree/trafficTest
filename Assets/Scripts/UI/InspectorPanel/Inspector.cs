@@ -28,11 +28,15 @@ public class Inspector : MonoBehaviour
             detectorPanel.transform.Find("Scroll View").gameObject.SetActive(true);
         }
 
+        // Check things selected
         if(RectangleSelector.current.selected.Count != tableInList)
         {
             ShowProperty();
             tableInList = RectangleSelector.current.selected.Count;
         }
+
+        // Update properties of selected objects
+        UpdateProperty();
     }
 
     // when something is seleced, show its properties
@@ -44,11 +48,11 @@ public class Inspector : MonoBehaviour
             propertyTableList.Remove(propertyTableList[i]);
         }
         
-        foreach(var currentObject in RectangleSelector.current.selected)
+        foreach(var gameObject in RectangleSelector.current.selected)
         {
-            if(currentObject.tag == "Car")
+            if(gameObject.tag == "Car")
             {
-                var properties = currentObject.GetComponent<Car>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                var properties = gameObject.GetComponent<Car>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
                 foreach(var property in properties)
                 {
                     #if UNITY_EDITOR
@@ -57,19 +61,19 @@ public class Inspector : MonoBehaviour
 
                     GameObject propertyTable = Instantiate(propertyPrefab);
                     propertyTable.transform.SetParent(content.transform, false);
-                    propertyTable.name = property.Name;
+                    propertyTable.name = gameObject.GetInstanceID().ToString() + ' ' + property.Name;
                     propertyTableList.Add(propertyTable);
 
                     propertyTable.transform.Find("Name").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.Name);
-                    if(property.GetValue(currentObject.GetComponent<Car>()) != null)
-                        propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.GetValue(currentObject.GetComponent<Car>()).ToString());
+                    if(property.GetValue(gameObject.GetComponent<Car>()) != null)
+                        propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.GetValue(gameObject.GetComponent<Car>()).ToString());
                     else
                         propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText("null"); 
                 }
             }
-            if(currentObject.tag == "Road")
+            if(gameObject.tag == "Road")
             {
-                var properties = currentObject.GetComponent<Road>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                var properties = gameObject.GetComponent<Road>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
                 foreach(var property in properties)
                 {
                     #if UNITY_EDITOR
@@ -78,19 +82,19 @@ public class Inspector : MonoBehaviour
 
                     GameObject propertyTable = Instantiate(propertyPrefab);
                     propertyTable.transform.SetParent(content.transform, false);
-                    propertyTable.name = property.Name;
+                    propertyTable.name = gameObject.GetInstanceID().ToString() + ' ' + property.Name;
                     propertyTableList.Add(propertyTable);
 
                     propertyTable.transform.Find("Name").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.Name);
-                    if(property.GetValue(currentObject.GetComponent<Road>()) != null)
-                        propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.GetValue(currentObject.GetComponent<Road>()).ToString());
+                    if(property.GetValue(gameObject.GetComponent<Road>()) != null)
+                        propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.GetValue(gameObject.GetComponent<Road>()).ToString());
                     else
                         propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText("null"); 
                 }
             }
-            if(currentObject.tag == "Lane")
+            if(gameObject.tag == "Lane")
             {
-                var properties = currentObject.GetComponent<Line>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                var properties = gameObject.GetComponent<Line>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
                 foreach(var property in properties)
                 {
                     #if UNITY_EDITOR
@@ -99,16 +103,71 @@ public class Inspector : MonoBehaviour
 
                     GameObject propertyTable = Instantiate(propertyPrefab);
                     propertyTable.transform.SetParent(content.transform, false);
-                    propertyTable.name = property.Name;
+                    propertyTable.name = gameObject.GetInstanceID().ToString() + ' ' + property.Name;
                     propertyTableList.Add(propertyTable);
 
                     propertyTable.transform.Find("Name").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.Name);
-                    if(property.GetValue(currentObject.GetComponent<Line>()) != null)
-                        propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.GetValue(currentObject.GetComponent<Line>()).ToString());
+                    if(property.GetValue(gameObject.GetComponent<Line>()) != null)
+                        propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.GetValue(gameObject.GetComponent<Line>()).ToString());
                     else
                         propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText("null");    
                 }
             } 
+        }
+    }
+
+    public void UpdateProperty()
+    {
+        foreach (var gameObject in RectangleSelector.current.selected)
+        {
+            if(gameObject.tag == "Car")
+            {
+                var fields = gameObject.GetComponent<Car>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+
+                foreach(var field in fields)
+                {
+                    foreach (var propertyTable in propertyTableList)
+                    {
+                        if(propertyTable.name == gameObject.GetInstanceID().ToString() + ' ' + field.Name)
+                        {
+                            if(field.GetValue(gameObject.GetComponent<Car>()) != null)
+                                propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText(field.GetValue(gameObject.GetComponent<Car>()).ToString());
+                        }
+                    }
+                }
+            }
+            if(gameObject.tag == "Road")
+            {
+                var fields = gameObject.GetComponent<Road>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+
+                foreach(var field in fields)
+                {
+                    foreach (var propertyTable in propertyTableList)
+                    {
+                        if(propertyTable.name == gameObject.GetInstanceID().ToString() + ' ' + field.Name)
+                        {
+                            if(field.GetValue(gameObject.GetComponent<Road>()) != null)
+                                propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText(field.GetValue(gameObject.GetComponent<Road>()).ToString());
+                        }
+                    }
+                }
+            }
+            if(gameObject.tag == "Lane")
+            {
+                var fields = gameObject.GetComponent<Line>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+
+                foreach(var field in fields)
+                {
+                    foreach (var propertyTable in propertyTableList)
+                    {
+                        if(propertyTable.name == gameObject.GetInstanceID().ToString() + ' ' + field.Name)
+                        {
+                            if(field.GetValue(gameObject.GetComponent<Line>()) != null)
+                                propertyTable.transform.Find("Value").gameObject.GetComponent<TextMeshProUGUI>().SetText(field.GetValue(gameObject.GetComponent<Line>()).ToString());
+                        }
+                    }
+                }
+            }
         }
     }
 }

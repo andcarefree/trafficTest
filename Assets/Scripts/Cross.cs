@@ -7,7 +7,7 @@ using System.Collections.Generic;
 //LineIn增加驶入准许，RoadOut增加驶出准许
 //红绿灯配时设计
 
-//车辆调用链:进入路口区域->选择想要驶出的道路（权重随机）-> 行驶到驶出道路对应能够驶入的Line -> 在目标Road中选择一条目标Line（随机选择或是选择价值系数最优）
+//车辆调用链:进入路口区域->选择想要驶出的道路（权重随机）-> 选择能够到达驶出道路的Line并行驶 -> 在目标Road中选择一条目标Line（随机选择或是选择价值系数最优）
 //->由所在Line与目标Line算出行驶曲线
 
 //需要注意的是，在路口中并不允许换道超车等行为，于是其中只有跟驰与避让行为，避让可以在车辆前进路线上设置一虚拟车辆使其跟驰。
@@ -15,17 +15,16 @@ using System.Collections.Generic;
 //车辆流量的设置，采用交叉口流量设置的话，是在每一个RoadIn设置到每一个方向Road的流量，故对于RoadIn->RoadOut的映射需要附带一个流量数据集
 public class Cross : MonoBehaviour
 {
-    LineIn[] lineIns;
-    Road[] RoadOutTotal;
     LinkedList<Car> cars;
 
     Dictionary<Road, RoadOut> RoadMap;
 
     //维护LineOut对应的交通配时方案
-    Dictionary<Line, LightTimeSet> LightSet;
-    
+    //Dictionary<Line, LightTimeSet> LightSet;
+
+    //Dictionary<Line, Road[]> Line2Out;
     //OutLine交通灯状态
-    Light[] Light;
+    //Light[] Light;
     
     //每一个LineOut对应的可驶入的LineIn
 
@@ -58,15 +57,31 @@ public class Cross : MonoBehaviour
         return null;
     }
 
-    Line FindLineIn(Car car,Road roadOut)
+    public Line FindLineIn(Car car,Road roadOut)
     {
         Road roadIn = car.line.fatherRoad;
+        //循环遍历Car行驶Road中的每一条Line，判断是否能够行驶到roadOut
+        for (int i=0; i < roadIn.lines.Length; i++)
+        {
+            //判断起始位置从当前车道开始
+            int j = (i + car.line.indexInRoad()) % roadIn.lines.Length;
+            foreach(Road nextRoad in roadIn.lines[j].nextRoads)
+            {
+                if(nextRoad == roadOut)
+                {
+                    return roadIn.lines[j];
+                }
+            }
+        }
+        Debug.LogError("Cross.FindLineIn error");
         return null;
     }
 
-    Line FindLineOut(Road roadOut)
+    //从已经选择好的roadOut中选择一条“较好”的道路
+    public Line FindLineOut(Road roadOut)
     {
-        return null;
+        //暂时选择随机选取
+        return roadOut.lines[Random.Range(0, roadOut.lines.Length)];
     }
 
     void Start()
@@ -79,8 +94,13 @@ public class Cross : MonoBehaviour
 
     }
 }
-
-public enum Light
+class RoadOut
+{
+    public Road[] roadOuts;
+    public int[] carstream;
+    public int totalCars;
+}
+/*public enum CrossLight
 {
     RED,
     YELLOW,
@@ -90,18 +110,4 @@ public enum Light
 class LightTimeSet
 {
     float red, yellow, green;
-}
-
-//每一条LineIn都有对应的RoadOut，一对多的关系
-class LineIn
-{
-    Line line;
-    Road[] roadOuts;
-}
-
-class RoadOut
-{
-    public Road[] roadOuts;
-    public int[] carstream;
-    public int totalCars;
-}
+}*/

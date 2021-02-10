@@ -22,17 +22,21 @@ public class Road : MonoBehaviour
 
     private void Start()
     {
+        
+
+
         //add the road itself to savelist
         if (string.IsNullOrEmpty(objectData.id))
         {
             objectData.id = System.DateTime.Now.ToLongDateString() + System.DateTime.Now.ToLongTimeString() + Random.Range(0, int.MaxValue).ToString();
-            
+
+            Debug.Log(SaveData.current.objects);
             SaveData.current.objects.Add(objectData);
         }
-        
+
         lines = GetComponentsInChildren<Line>();
 
-        if(RectangleSelector.current!=null)
+        if (RectangleSelector.current != null)
             RectangleSelector.current.selectable.Add(this.gameObject);
 
         GameEvents.current.OnLoadEvent += DestoryOnLoad;
@@ -58,6 +62,10 @@ public class Road : MonoBehaviour
         //     ButtonHandler.objectsPosition[index] = nowPosition;
         //     prevPosition = nowPosition;
         // }
+        foreach (Line line in lines)
+        {
+            line.fatherRoad = this;
+        }
     }
 
     private void DestoryOnLoad()

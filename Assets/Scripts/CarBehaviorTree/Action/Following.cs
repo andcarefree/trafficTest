@@ -7,24 +7,24 @@ using BehaviorDesigner.Runtime.Tasks;
 public class Following : Action
 {
     Car car;
-    public delegate float GM(float c, float m, float l, Car previous);
-    public static GM gm;
+    public static OriginCustom.GM gm=OriginGM;
+    //public delegate float GM(float c, float m, float l, OriginCar previous);
+    
 
     /// <summary>
     /// GM跟驰模型
     /// </summary>
     /// <param name="c">车辆灵敏度</param>
-    private float OriginalGM(float c,float m,float l,Car previous)
+    private static float OriginGM(OriginCar m_car,float c,float m,float l,OriginCar previous)
     {
-        return c * Mathf.Pow(car.Km2m(), m) * (previous.Km2m() - car.Km2m()) / Mathf.Pow(previous.s - car.s, l);
+        return c * Mathf.Pow(m_car.Km2m(), m) * (previous.Km2m() - m_car.Km2m()) / Mathf.Pow(previous.s - m_car.s, l);
     }
 
     public override void OnAwake()
     {
         car = gameObject.GetComponent<Car>();
         car.target = car.transform.position;
-        gm = OriginalGM;
-        DllReader.TestDllRecover();
+        
     }
 
     
@@ -55,7 +55,12 @@ public class Following : Action
                 //车头时距小于等于5s，车辆进入跟驰状态
                 if ((previous.s - car.s - car.transform.localScale.z) / car.Km2m() <= 5)
                 {
-                    car.accel = gm(1, 1.5f, 0.9f,previous);
+                    /*if (DllReader.gm == null)
+                        car.accel = OriginGM(car,1, 1.5f, 0.9f, previous);
+                    else
+                        car.accel=(float)DllReader.gm.Invoke(DllReader.custom,new object[] {car, 1, 1.5f, 0.9f, previous });*/
+                    car.accel = gm(car, 1, 1.5f, 0.9f, previous);
+
                 }
                 else
                 {

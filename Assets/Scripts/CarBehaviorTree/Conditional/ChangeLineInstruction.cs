@@ -109,6 +109,29 @@ public class ChangeLineInstruction : Conditional
         }
     }
 
+    /*应付中期*/
+    private Line LeftPick()
+    {
+        Line[] lines = car.line.fatherRoad.lines;
+        int nowIndex = car.line.indexInRoad();
+        if(nowIndex == 0)
+        {
+            return car.line;
+        }
+        return JudgeValue(car, lines[nowIndex - 1]) > 0 ? lines[nowIndex - 1] : car.line;
+    }
+    private Line RightPick()
+    {
+        Line[] lines = car.line.fatherRoad.lines;
+        int nowIndex = car.line.indexInRoad();
+        if (nowIndex == lines.Length - 1)
+        {
+            return car.line;
+        }
+        return JudgeValue(car, lines[nowIndex + 1]) > 0 ? lines[nowIndex + 1] : car.line;
+    }
+    /**/
+
 
     /// <summary>
     /// 车辆不满足当前行驶环境时寻求主动换道时修改car.lineChange
@@ -134,6 +157,10 @@ public class ChangeLineInstruction : Conditional
     private bool SuccessChange()
     {
         Line line = NearLinePick();
+        /*应付中期*/
+        //Line line = RightPick();
+        //Line line = LeftPick();
+        /**/
         if (!line.Equals(car.line))
         {
             targetLineIndex.Value = line.indexInRoad();
@@ -142,9 +169,6 @@ public class ChangeLineInstruction : Conditional
         return false;
     }
 
-
-
-
     public override void OnStart()
     {
         car = gameObject.GetComponent<Car>();
@@ -152,6 +176,14 @@ public class ChangeLineInstruction : Conditional
 
     public override TaskStatus OnUpdate()
     {
+        if(car.state == Car.State.prepareCross)
+        {
+            return TaskStatus.Failure;
+        }
+        if(car.crossLine != null)
+        {
+            return TaskStatus.Failure;
+        }
         if(car.state == Car.State.changing)
         {
             changTime = 0;
@@ -169,12 +201,13 @@ public class ChangeLineInstruction : Conditional
         if(car.lineChange == true)
         {
             //即将驶入路口，不予换道
-            if(car.state == Car.State.inLine && Vector3.Distance(car.transform.position, car.line.points[car.line.points.Length - 1]) <= car.transform.localScale.z * 4){
+            if(car.state == Car.State.prepareCross){
 
                 return TaskStatus.Failure;
             }
             if (SuccessChange() == true)
             {
+                car.state = Car.State.changing;
                 return TaskStatus.Success;
             }
         }

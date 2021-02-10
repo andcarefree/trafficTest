@@ -72,9 +72,21 @@ public class Car:MonoBehaviour
     /// </summary>
     public Car followCar;
     
+    void Awake()
+    {
+        this.expectVelocity = Car.expects[(int)Random.Range(0f, (float)Car.expects.Length)];
+    }
+
     void Start()
     {
         GameEvents.current.OnLoadEvent += DestroyCar;
+        RectangleSelector.current.selectable.Add(this.gameObject);
+    }
+
+    void OnDestroy()
+    {
+        RectangleSelector.current.selectable.Remove(this.gameObject);
+        RectangleSelector.current.selected.Remove(this.gameObject);
     }
 
     /// <summary>
@@ -251,8 +263,5 @@ public class Car:MonoBehaviour
         return Vector3.Dot(forward, spacing);
     }
 
-    private void Awake()
-    {
-        this.expectVelocity = Car.expects[(int)Random.Range(0f, (float)Car.expects.Length)];
-    }
+
 }

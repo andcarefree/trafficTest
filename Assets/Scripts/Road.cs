@@ -27,7 +27,6 @@ public class Road : MonoBehaviour
         {
             objectData.id = System.DateTime.Now.ToLongDateString() + System.DateTime.Now.ToLongTimeString() + Random.Range(0, int.MaxValue).ToString();
             
-            Debug.Log(SaveData.current.objects);
             SaveData.current.objects.Add(objectData);
         }
         
@@ -37,9 +36,6 @@ public class Road : MonoBehaviour
 
         GameEvents.current.OnLoadEvent += DestoryOnLoad;
 
-        // used to keep the position of the road
-        // which is designed for selecting function
-        //
         // prevPosition = Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
         // ButtonHandler.objectsPosition.Add(prevPosition);
         foreach (Line line in lines)
@@ -52,7 +48,6 @@ public class Road : MonoBehaviour
         objectData.position = transform.position;
         objectData.rotation = transform.rotation;
 
-        // used to compare the position
         //
         // nowPosition = Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
         //

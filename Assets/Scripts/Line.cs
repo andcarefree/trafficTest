@@ -63,6 +63,8 @@ public class Line : MonoBehaviour
         lineRenderer.sortingLayerID = 0;
         cars = new LinkedList<Car>();
         maxVelocity = 70;
+
+        RectangleSelector.current.selectable.Add(this.gameObject);
     }
     private void Update()
     {

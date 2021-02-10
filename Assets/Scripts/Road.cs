@@ -32,7 +32,8 @@ public class Road : MonoBehaviour
         
         lines = GetComponentsInChildren<Line>();
 
-        RectangleSelector.current.selectable.Add(this.gameObject);
+        if(RectangleSelector.current!=null)
+            RectangleSelector.current.selectable.Add(this.gameObject);
 
         GameEvents.current.OnLoadEvent += DestoryOnLoad;
 

@@ -16,6 +16,7 @@ public class Car:MonoBehaviour
     }
 
     public Cross cross;
+    public Vector3[] crossLine;
 
     public State state = State.inLine;
     /// <summary>
@@ -90,6 +91,10 @@ public class Car:MonoBehaviour
 
     public Car PreCar()
     {
+        if(this.line.cars.Find(this) == null)
+        {
+            return null;
+        }
         if(this.line.cars.Find(this).Previous == null)
         {
             return null;
@@ -98,6 +103,10 @@ public class Car:MonoBehaviour
     }
     public Car NextCar()
     {
+        if(this.line.cars.Find(this) == null)
+        {
+            return null;
+        }
         if(this.line.cars.Find(this).Next == null)
         {
             return null;
@@ -154,6 +163,10 @@ public class Car:MonoBehaviour
     /// </summary>
     public static bool judgeLocation(Car pointer, Car target)
     {
+        if(pointer == null || target == null)
+        {
+            return true;
+        }
         Vector3 dir1 = pointer.transform.forward.normalized;
         Vector3 dir2 = (target.transform.position - pointer.transform.position).normalized;
         if (Vector3.Dot(dir1, dir2) < 0)

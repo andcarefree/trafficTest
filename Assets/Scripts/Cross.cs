@@ -32,11 +32,9 @@ public class Cross : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        Debug.LogWarning("Stay");
         //other is road
         if (other.gameObject.GetComponent<Road>() != null)
         {
-            Debug.LogWarning("road in cross init");
             Road road = other.gameObject.GetComponent<Road>();
             if (RoadMap.ContainsKey(road))
             {
@@ -44,7 +42,7 @@ public class Cross : MonoBehaviour
             }
             Vector3 pos = road.lines[0].points[road.lines[0].points.Length - 1];
             //道路尾端接入路口
-            if (this.gameObject.GetComponent<MeshCollider>().bounds.Contains(pos))
+            if (this.gameObject.GetComponent<SphereCollider>().bounds.Contains(pos))
             {
                 Dictionary<Road, int> stream = new Dictionary<Road, int>();
                 int totalCar = 0;
@@ -52,7 +50,14 @@ public class Cross : MonoBehaviour
                 {
                     foreach (Road nextRoad in line.nextRoads)
                     {
-                        stream[nextRoad] += 1;
+                        if (stream.ContainsKey(nextRoad))
+                        {
+                            stream[nextRoad] += 1;
+                        }
+                        else
+                        {
+                            stream.Add(nextRoad, 1);
+                        }
                     }
                 }
                 foreach (KeyValuePair<Road, int> rvi in stream)
@@ -70,6 +75,10 @@ public class Cross : MonoBehaviour
         //other is a car
         if (other.gameObject.GetComponent<Car>() != null) {
             Car car = other.gameObject.GetComponent<Car>();
+            if(car.state != Car.State.inLine)
+            {
+                return;
+            }
             cars.AddLast(car);
             car.state = Car.State.prepareCross;
             car.cross = this;

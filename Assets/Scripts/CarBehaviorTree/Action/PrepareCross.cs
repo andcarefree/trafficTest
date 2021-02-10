@@ -10,30 +10,19 @@ public class PrepareCross : Action
 
     public SharedInt targetLineIndex;
     public SharedInt LineOutIndex;
-    public SharedVector3[] crossLine;
-
-    SharedVector3[] Vectors2Share(Vector3[] vector3s)
-    {
-        SharedVector3[] ret = new SharedVector3[vector3s.Length];
-        for(int i = 0; i < ret.Length; i++)
-        {
-            ret[i] = vector3s[i];
-        }
-        return ret;
-    }
     public override void OnStart()
     {
         car = gameObject.GetComponent<Car>();
+    }
+    public override TaskStatus OnUpdate()
+    {
         Road roadOut = car.cross.FindRoadOut(car);
         car.cross.carRoadOut[car] = roadOut;
         lineIn = car.cross.FindLineIn(car, roadOut);
         lineOut = car.cross.FindLineOut(roadOut);
-        crossLine = Vectors2Share(Line.linkLine(lineIn, lineOut));
-        targetLineIndex = lineIn.indexInRoad();
-        LineOutIndex = lineOut.indexInRoad();
-    }
-    public override TaskStatus OnUpdate()
-    {
+        car.crossLine = Line.linkLine(lineIn, lineOut);
+        targetLineIndex.Value = lineIn.indexInRoad();
+        LineOutIndex.Value = lineOut.indexInRoad();
         return TaskStatus.Success;
     }
 }

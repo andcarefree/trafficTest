@@ -156,9 +156,9 @@ public class ChangeLineInstruction : Conditional
     /// <returns></returns>
     private bool SuccessChange()
     {
-        //Line line = NearLinePick();
+        Line line = NearLinePick();
         /*应付中期*/
-        Line line = RightPick();
+        //Line line = RightPick();
         //Line line = LeftPick();
         /**/
         if (!line.Equals(car.line))
@@ -169,9 +169,6 @@ public class ChangeLineInstruction : Conditional
         return false;
     }
 
-
-
-
     public override void OnStart()
     {
         car = gameObject.GetComponent<Car>();
@@ -179,6 +176,14 @@ public class ChangeLineInstruction : Conditional
 
     public override TaskStatus OnUpdate()
     {
+        if(car.state == Car.State.prepareCross)
+        {
+            return TaskStatus.Failure;
+        }
+        if(car.crossLine != null)
+        {
+            return TaskStatus.Failure;
+        }
         if(car.state == Car.State.changing)
         {
             changTime = 0;
@@ -196,12 +201,13 @@ public class ChangeLineInstruction : Conditional
         if(car.lineChange == true)
         {
             //即将驶入路口，不予换道
-            if(car.state == Car.State.inLine && Vector3.Distance(car.transform.position, car.line.points[car.line.points.Length - 1]) <= car.transform.localScale.z * 4){
+            if(car.state == Car.State.prepareCross){
 
                 return TaskStatus.Failure;
             }
             if (SuccessChange() == true)
             {
+                car.state = Car.State.changing;
                 return TaskStatus.Success;
             }
         }

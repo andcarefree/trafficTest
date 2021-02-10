@@ -45,7 +45,6 @@ public class ChangeLine : Action
         /**/
         car.line.cars.Remove(car);
         //行驶路径初始化
-        car.state = Car.State.changing;
         car.line = null;
         car.lineT = 0;
         car.target = car.linePoints[0];

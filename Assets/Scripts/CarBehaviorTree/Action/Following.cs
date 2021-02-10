@@ -16,7 +16,7 @@ public class Following : Action
         return c * Mathf.Pow(car.Km2m(), m) * (previous.Km2m() - car.Km2m()) / Mathf.Pow(previous.s - car.s, l);
     }
 
-    public override void OnAwake()
+    public override void OnStart()
     {
         car = gameObject.GetComponent<Car>();
         car.target = car.transform.position;
@@ -59,15 +59,7 @@ public class Following : Action
             }
         }
 
-
-
         car.driving();
-
-        //释放锁
-        if(car.line.lineLock == car && car.state == Car.State.inLine&& car.lineT >= 0.05)
-        {
-            car.line.lineLock = null;
-        }
 
         if (car.lineT >= 1)
         {
@@ -79,15 +71,10 @@ public class Following : Action
                 return TaskStatus.Success;
             }
             //道路与路口的转换
-            else if (car.state == Car.State.inLine)
+            if (car.state == Car.State.inLine)
             {
                 car.line.cars.Remove(car.line.cars.Find(car));
-                car.state = Car.State.crossing;
-            }
-            else
-            {
-                car.state = Car.State.inLine;
-                car.setLine(car.line);
+                return TaskStatus.Success;
             }
         }
         return TaskStatus.Running;

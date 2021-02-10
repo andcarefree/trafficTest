@@ -14,6 +14,10 @@ public class IsInCross : Conditional
         {
             return TaskStatus.Success;
         }
+        if(car.state == Car.State.inLine && car.crossLine != null && car.crossLine.Length != 0)
+        {
+            return TaskStatus.Success;
+        }
         return TaskStatus.Failure;
     }
 }

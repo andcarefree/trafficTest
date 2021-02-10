@@ -36,9 +36,6 @@ public class Road : MonoBehaviour
 
         GameEvents.current.OnLoadEvent += DestoryOnLoad;
 
-        // used to keep the position of the road
-        // which is designed for selecting function
-        //
         // prevPosition = Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
         // ButtonHandler.objectsPosition.Add(prevPosition);
     }
@@ -47,7 +44,6 @@ public class Road : MonoBehaviour
         objectData.position = transform.position;
         objectData.rotation = transform.rotation;
 
-        // used to compare the position
         //
         // nowPosition = Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
         //

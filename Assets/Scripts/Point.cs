@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class Point : MonoBehaviour
 {
-    private void OnMouseDrag()
+    private float scaleX, scaleY, scaleZ;
+
+    void Update()
     {
-        // Vector3 selectPosition= Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        // selectPosition.y = 0;
-        // transform.position = selectPosition;
+        // fix size 
+        transform.localScale = new Vector3(1.0f / transform.parent.localScale.x, 1.0f / transform.parent.localScale.y, 1.0f / transform.parent.localScale.z);
+    }
+    void OnMouseDrag()
+    {
+        Vector3 selectPosition= Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        selectPosition.y = 0;
+        transform.position = selectPosition;
     }
 }

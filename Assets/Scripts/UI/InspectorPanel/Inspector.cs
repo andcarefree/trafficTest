@@ -36,7 +36,10 @@ public class Inspector : MonoBehaviour
         }
 
         // Update properties of selected objects
-        UpdateProperty();
+        if(Time.timeScale != 0)
+        {
+            UpdateProperty();
+        }
     }
 
     // when something is seleced, show its properties
@@ -169,5 +172,10 @@ public class Inspector : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ChangeProperty()
+    {
+        
     }
 }

@@ -1,39 +1,23 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using BehaviorDesigner.Runtime;
-using BehaviorDesigner.Runtime.Tasks;
+﻿using BehaviorDesigner.Runtime.Tasks;
 
 public class IsInCross : Conditional
 {
     Car car;
-    // Start is called before the first frame update
     public override void OnStart()
     {
         car = gameObject.GetComponent<Car>();
     }
 
-    // Update is called once per frame
     public override TaskStatus OnUpdate()
     {
-        if (judgeCarInCross())
+        if(car.state == Car.State.prepareCross || car.state == Car.State.crossing)
         {
             return TaskStatus.Success;
         }
-        else
+        if(car.state == Car.State.inLine && car.crossLine != null && car.crossLine.Length != 0)
         {
-            return TaskStatus.Failure;
+            return TaskStatus.Success;
         }
-    }
-    private bool judgeCarInCross()
-    {
-        if (car.state == Car.State.crossing)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return TaskStatus.Failure;
     }
 }

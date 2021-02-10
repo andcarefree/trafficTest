@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class Inspector : MonoBehaviour
 {
@@ -11,23 +12,43 @@ public class Inspector : MonoBehaviour
     public GameObject content;
     public GameObject propertyPrefab;
     public List<GameObject> propertyTableList;
-    
+    private GameObject WarningTextGO=null;
+    private GameObject ScrollViewGO=null;
 
+
+    public void Start()
+    {
+        if (detectorPanel != null)
+        {
+            try
+            {
+                WarningTextGO = detectorPanel.transform.Find("Warning Text").gameObject;
+                ScrollViewGO = detectorPanel.transform.Find("Scroll View").gameObject;
+            }
+            catch(Exception e)
+            {
+                WarningTextGO = null;
+                ScrollViewGO = null;
+            }
+        }
+    }
 
     void Update()
     {
         // When nothing is selected, show prompt
-        if(RectangleSelector.current.selected.Count == 0)
+        if (WarningTextGO != null && ScrollViewGO != null)
         {
-            detectorPanel.transform.Find("Warning Text").gameObject.SetActive(true);
-            detectorPanel.transform.Find("Scroll View").gameObject.SetActive(false);
+            if (RectangleSelector.current.selected.Count == 0)
+            {
+                WarningTextGO.SetActive(true);
+                ScrollViewGO.SetActive(false);
+            }
+            else
+            {
+                WarningTextGO.SetActive(false);
+                ScrollViewGO.SetActive(true);
+            }
         }
-        else
-        {
-            detectorPanel.transform.Find("Warning Text").gameObject.SetActive(false);
-            detectorPanel.transform.Find("Scroll View").gameObject.SetActive(true);
-        }
-
         // Check things selected
         if(RectangleSelector.current.selected.Count != tableInList)
         {

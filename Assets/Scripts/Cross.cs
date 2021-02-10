@@ -15,9 +15,11 @@ using System.Collections.Generic;
 //车辆流量的设置，采用交叉口流量设置的话，是在每一个RoadIn设置到每一个方向Road的流量，故对于RoadIn->RoadOut的映射需要附带一个流量数据集
 public class Cross : MonoBehaviour
 {
-    LinkedList<Car> cars;
+    public LinkedList<Car> cars;
 
-    Dictionary<Road, RoadOut> RoadMap;
+    Dictionary<Road, RoadIn> RoadMap;
+    public Dictionary<Car, Road> carRoadOut;
+
 
     //维护LineOut对应的交通配时方案
     //Dictionary<Line, LightTimeSet> LightSet;
@@ -25,32 +27,70 @@ public class Cross : MonoBehaviour
     //Dictionary<Line, Road[]> Line2Out;
     //OutLine交通灯状态
     //Light[] Light;
-    
+
     //每一个LineOut对应的可驶入的LineIn
+
+    private void OnTriggerStay(Collider other)
+    {
+        Debug.LogWarning("Stay");
+        //other is road
+        if (other.gameObject.GetComponent<Road>() != null)
+        {
+            Debug.LogWarning("road in cross init");
+            Road road = other.gameObject.GetComponent<Road>();
+            if (RoadMap.ContainsKey(road))
+            {
+                return;
+            }
+            Vector3 pos = road.lines[0].points[road.lines[0].points.Length - 1];
+            //道路尾端接入路口
+            if (this.gameObject.GetComponent<MeshCollider>().bounds.Contains(pos))
+            {
+                Dictionary<Road, int> stream = new Dictionary<Road, int>();
+                int totalCar = 0;
+                foreach (Line line in road.lines)
+                {
+                    foreach (Road nextRoad in line.nextRoads)
+                    {
+                        stream[nextRoad] += 1;
+                    }
+                }
+                foreach (KeyValuePair<Road, int> rvi in stream)
+                {
+                    totalCar += rvi.Value;
+                }
+                RoadMap[road] = new RoadIn(stream, totalCar);
+            }
+        }
+    }
 
     //车辆进入路口区域触发
     void OnTriggerEnter(Collider other)
     {
-        //other is not a car
-        if (other.gameObject.GetComponent<Car>() == null) {
+        //other is a car
+        if (other.gameObject.GetComponent<Car>() != null) {
+            Car car = other.gameObject.GetComponent<Car>();
+            cars.AddLast(car);
+            car.state = Car.State.prepareCross;
+            car.cross = this;
             return;
         }
-        Car car = other.gameObject.GetComponent<Car>();
-        cars.AddLast(car);
-        car.state = Car.State.prepareCross;
     }
 
     //根据道路车流量权重随机选择驶出道路
     public Road FindRoadOut(Car car)
     {
-        RoadOut roadOut = RoadMap[car.line.fatherRoad];
-        float rand = Random.Range(0,roadOut.totalCars);
-        for (int i = 0,temp = 0; i < roadOut.carstream.Length; i++)
+        
+        RoadIn roadIn = RoadMap[car.line.fatherRoad];
+        float rand = Random.Range(0,roadIn.totalCars);
+        int temp = 0;
+        foreach (KeyValuePair<Road,int> kvp in roadIn.roadOutStream)
         {
-            temp += roadOut.carstream[i];
+            temp += kvp.Value;
             if (rand <= temp)
             {
-                return roadOut.roadOuts[i];
+                carRoadOut[car] = kvp.Key;
+                return kvp.Key;
             }
         }
         Debug.LogError("RoadIn streams set error !");
@@ -87,18 +127,20 @@ public class Cross : MonoBehaviour
     void Start()
     {
         cars = new LinkedList<Car>();
-    }
-
-    void Update()
-    {
-
+        RoadMap = new Dictionary<Road, RoadIn>();
+        carRoadOut = new Dictionary<Car, Road>();
     }
 }
-class RoadOut
+class RoadIn
 {
-    public Road[] roadOuts;
-    public int[] carstream;
+    public Dictionary<Road, int> roadOutStream;
     public int totalCars;
+
+    public RoadIn(Dictionary<Road, int> stream, int totalCar)
+    {
+        this.roadOutStream = stream;
+        this.totalCars = totalCar;
+    }
 }
 /*public enum CrossLight
 {

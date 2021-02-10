@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4077038019558064420}
   - component: {fileID: 4077038019558064421}
-  - component: {fileID: 3201849964903961397}
+  - component: {fileID: 223530681382260215}
   m_Layer: 0
   m_Name: Road
   m_TagString: Untagged
@@ -50,6 +50,24 @@ MonoBehaviour:
   roadObject: {fileID: 0}
   lines: []
   roadType: 0
+  objectData:
+    id: 
+    type: 
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 0}
+--- !u!65 &223530681382260215
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4077038019558064422}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 70, y: 1, z: 10}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &4077038018802569535
 PrefabInstance:
   m_ObjectHideFlags: 0

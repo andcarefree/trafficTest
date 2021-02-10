@@ -15,6 +15,8 @@ public class Car:MonoBehaviour
         prepareCross
     }
 
+    public Cross cross;
+
     public State state = State.inLine;
     /// <summary>
     /// 加速度,单位m/s

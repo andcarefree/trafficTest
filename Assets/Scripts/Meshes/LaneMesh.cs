@@ -18,4 +18,11 @@ public class LaneMesh : MonoBehaviour
         
     }
 
+    Vector3 QuadraicBezier(Vector3 position1, Vector3 position2, Vector3 position3, float t)
+    {
+        var temp1 = t * position1 + (1 - t) * position2;
+        var temp2 = t * position2 + (1 - t) * position3;
+        var position = t * temp1 + (1 - t) * temp2;
+        return position;
+    }
 }

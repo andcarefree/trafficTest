@@ -20,6 +20,7 @@ public class ButtonHandler : MonoBehaviour
     void Awake()
     {
         Time.timeScale = 0;
+
         objectsPosition = new List<Vector3>();
     }
 
@@ -29,6 +30,38 @@ public class ButtonHandler : MonoBehaviour
         ConnectLane();
         SetupCarSource();
     }
+
+    // Not finished yet
+    // private IEnumerator SetRoad()
+    // {
+    //     Plane Plane = new Plane(Vector3.up, Vector3.zero);
+    //     Ray Ray = new Ray();
+    //     float entry;
+
+    //     yield return StartCoroutine(WaitForKeyDown(new KeyCode[]{KeyCode.Mouse0}));
+    //     Ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //     if (Plane.Raycast(Ray, out entry))
+    //     {
+    //         roadPosition[0] = Ray.GetPoint(entry);
+    //     }
+
+    //     yield return StartCoroutine(WaitForKeyDown(new KeyCode[]{KeyCode.Mouse0}));
+    //     Ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //     if (Plane.Raycast(Ray, out entry))
+    //     {
+    //         roadPosition[1] = Ray.GetPoint(entry);
+    //     }
+
+    //     Vector3 position = (roadPosition[1] + roadPosition[0]) / 2.0f;
+    //     float scale = Vector3.Distance(roadPosition[1], roadPosition[0]) / 60.0f;
+
+    //     Quaternion rotation = Quaternion.LookRotation(roadPosition[1] - roadPosition[0], Vector3.up);
+    //     rotation *= Quaternion.Euler(0, -90f, 0);
+
+    //     GameObject newRoad = Instantiate(roadPrefeb, position, rotation);
+    //     newRoad.transform.localScale = new Vector3(scale, 1.0f, 1.0f);
+
+    // }
 
     void PlaceRoadObject()
     {
@@ -76,7 +109,7 @@ public class ButtonHandler : MonoBehaviour
         {
             if(Input.GetMouseButtonDown(0))
             {
-                roadList.Add(ButtonHandler.SelectObjectOnClick());
+                roadList.Add(this.SelectObjectOnClick());
             }
             if(Input.GetKey(KeyCode.Escape))
             {
@@ -101,7 +134,7 @@ public class ButtonHandler : MonoBehaviour
         {
             if(Input.GetMouseButtonDown(0))
             {
-                var selectedRoad = ButtonHandler.SelectObjectOnClick();
+                var selectedRoad = this.SelectObjectOnClick();
 
                 OriginRoad road = selectedRoad.transform.parent.gameObject.AddComponent<OriginRoad>();
                 selectedRoad.GetComponentInParent<OriginRoad>().Car = carPrefeb;
@@ -111,7 +144,24 @@ public class ButtonHandler : MonoBehaviour
         }
     }
 
-    public static GameObject SelectObjectOnClick()
+    private IEnumerator WaitForKeyDown(KeyCode[] keyCodes)
+    {
+        bool isPressed = false;
+        while (!isPressed)
+        {
+            foreach (var keyCode in keyCodes)
+            {
+                if (Input.GetKeyDown(keyCode))
+                {
+                    isPressed = true;
+                    break;
+                }
+            }
+            yield return null;
+        }
+    }
+
+    public GameObject SelectObjectOnClick()
     {
         GameObject selectedObject = null;
 
@@ -133,7 +183,7 @@ public class ButtonHandler : MonoBehaviour
     public void OnClickRoadButton()
     {
         isPlacingRoad = true;
-        PublicVars.current.isRoadGenerating = true;
+        // StartCoroutine(SetRoad());
     }
 
     public void OnClickLinkButton()
@@ -145,4 +195,5 @@ public class ButtonHandler : MonoBehaviour
     {
         isSetupSource = true;
     }
+
 }

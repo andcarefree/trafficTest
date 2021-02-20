@@ -30,7 +30,7 @@ public class ButtonHandler : MonoBehaviour
         SetupCarSource();
     }
 
-    void PlaceRoadObject()
+    private void PlaceRoadObject()
     {
         if (isPlacingRoad)
         {
@@ -130,18 +130,18 @@ public class ButtonHandler : MonoBehaviour
         return selectedObject;
     }
 
-    public void OnClickRoadButton()
+    public void OnGenerateRoadButtonClick()
     {
         isPlacingRoad = true;
         PublicVars.current.isRoadGenerating = true;
     }
 
-    public void OnClickLinkButton()
+    public void OnLinkLaneButtonClick()
     {
         isConnectingLane = true;
     }
 
-    public void OnClickOriginButton()
+    public void OnSetCarSourceButtonClick()
     {
         isSetupSource = true;
     }

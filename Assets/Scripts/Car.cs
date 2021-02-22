@@ -74,13 +74,39 @@ public class Car:MonoBehaviour
     /// 解决冲突问题，车辆与阻碍其行驶的车辆构成一个跟驰行为，确保不会相撞
     /// 维护一个临近范围车辆集，当触发车辆进入时即加入该集合，集合内寻找一个disOfForward最短的做跟驰
     /// </summary>
-    public Car followCar;
-    
-    void Start()
+
+    public HashSet<Car> NearbyCars;
+
+    void OnTriggerEnter(Collider other)
     {
-        GameEvents.current.OnLoadEvent += DestroyCar;
+        if (other.gameObject.GetComponent<Car>() != null)
+        {
+            this.NearbyCars.Add(other.gameObject.GetComponent<Car>());
+        }
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject.GetComponent<Car>() != null)
+        {
+            this.NearbyCars.Remove(other.gameObject.GetComponent<Car>());
+        }
+    }
+
+    private void Awake()
+    {
+        this.expectVelocity = Car.expects[(int)Random.Range(0f, (float)Car.expects.Length)];
+    }
+    private void Start()
+    {
+        GameEvents.current.OnLoadEvent += DestroyCar;
+        this.NearbyCars = new HashSet<Car>();
+    }
+    private void Update()
+    {
+        //从NearbyCars中挑选一个跟随
+
+    }
     /// <summary>
     /// 将车辆速度转换为m/s
     /// </summary>
@@ -265,10 +291,5 @@ public class Car:MonoBehaviour
         Vector3 forward = this.transform.forward.normalized;
         Vector3 spacing = other.transform.position - this.transform.position;
         return Vector3.Dot(forward, spacing);
-    }
-
-    private void Awake()
-    {
-        this.expectVelocity = Car.expects[(int)Random.Range(0f, (float)Car.expects.Length)];
     }
 }

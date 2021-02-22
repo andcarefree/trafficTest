@@ -15,7 +15,6 @@ public class Inspector : MonoBehaviour
     private GameObject WarningTextGO=null;
     private GameObject ScrollViewGO=null;
 
-
     public void Start()
     {
         if (detectorPanel != null)
@@ -25,10 +24,14 @@ public class Inspector : MonoBehaviour
                 WarningTextGO = detectorPanel.transform.Find("Warning Text").gameObject;
                 ScrollViewGO = detectorPanel.transform.Find("Scroll View").gameObject;
             }
-            catch(Exception e)
+            catch(Exception exception)
             {
                 WarningTextGO = null;
                 ScrollViewGO = null;
+
+                #if UNITY_EDITOR    
+                    Debug.Log(exception);
+                #endif
             }
         }
     }
@@ -193,10 +196,5 @@ public class Inspector : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void ChangeProperty()
-    {
-        
     }
 }

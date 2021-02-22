@@ -22,9 +22,6 @@ public class Road : MonoBehaviour
 
     private void Start()
     {
-        
-
-
         //add the road itself to savelist
         if (string.IsNullOrEmpty(objectData.id))
         {
@@ -36,8 +33,7 @@ public class Road : MonoBehaviour
 
         lines = GetComponentsInChildren<Line>();
 
-        if (RectangleSelector.current != null)
-            RectangleSelector.current.selectable.Add(this.gameObject);
+        RectangleSelector.current.selectable.Add(this.gameObject);
 
         GameEvents.current.OnLoadEvent += DestoryOnLoad;
 

@@ -180,20 +180,24 @@ public class ButtonHandler : MonoBehaviour
         return selectedObject;
     }
 
-    public void OnClickRoadButton()
+    public void OnGenerateRoadButtonClick()
     {
         isPlacingRoad = true;
         // StartCoroutine(SetRoad());
     }
 
-    public void OnClickLinkButton()
+    public void OnLinkLaneButtonClick()
     {
         isConnectingLane = true;
     }
 
-    public void OnClickOriginButton()
+    public void OnSetCarSourceButtonClick()
     {
         isSetupSource = true;
     }
 
+    public void OnLoadModelButtonClick()
+    {
+        DllReader.testInit();
+    }
 }

@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 
 // TODO 车辆的速度与加速度处理需要重新设计使其符合现实情境
-public class Car:OriginCar
+public class Car : OriginCar
 {
     const float MaxVelocityNoRoad = 30;
 

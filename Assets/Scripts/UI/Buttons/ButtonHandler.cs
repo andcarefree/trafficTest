@@ -145,4 +145,9 @@ public class ButtonHandler : MonoBehaviour
     {
         isSetupSource = true;
     }
+
+    public void OnLoadModelButtonClick()
+    {
+        DllReader.testInit();
+    }
 }

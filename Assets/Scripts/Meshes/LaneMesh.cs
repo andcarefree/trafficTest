@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
+[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer)), DisallowMultipleComponent]
 public class LaneMesh : MonoBehaviour
 {
     private Mesh mesh;
@@ -11,15 +11,7 @@ public class LaneMesh : MonoBehaviour
 
     void Awake()
     {
-        #if UNITY_EDITOR
-            Debug.Log("Awake is called");
-        #endif
-
         var task = GenerateMeshAsync();
-
-        #if UNITY_EDITOR
-            Debug.Log("Awake is online");
-        #endif
     }
 
     private async Task GenerateMeshAsync()
@@ -27,10 +19,6 @@ public class LaneMesh : MonoBehaviour
         try
         {
             await Task.Yield();
-
-            #if UNITY_EDITOR
-                Debug.Log("Task is running");
-            #endif
 
             GetComponent<MeshFilter>().mesh = mesh = new Mesh();
             mesh.name = "Lane";
@@ -44,12 +32,10 @@ public class LaneMesh : MonoBehaviour
                 for (int x = 0; x <= 10; x++)
                 {
                     vertices[v++] = new Vector3(x, y, 0);
-                    await Task.Delay(200);
                 }
                 for (int x = 0; x <= 10; x++)
                 {
                     vertices[v++] = new Vector3(10 - x, y, 3.5f);
-                    await Task.Delay(200);
                 }
             }
 
@@ -92,6 +78,7 @@ public class LaneMesh : MonoBehaviour
                 t += 6;
             } 
             mesh.triangles = triangles;
+            mesh.RecalculateNormals();
         }
         catch(System.Exception error)
         {

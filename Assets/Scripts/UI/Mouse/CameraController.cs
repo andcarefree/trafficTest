@@ -51,10 +51,6 @@ public class CameraController : MonoBehaviour
     // Move camera by using wsad / arrows
     private async Task MoveCamera()
     {
-        #if UNITY_EDITOR
-            Debug.Log("MoveCamera task started" + System.DateTime.Now.ToString());
-        #endif
-
         await Task.Yield();
 
         if (Input.GetKey(KeyCode.UpArrow))
@@ -104,10 +100,6 @@ public class CameraController : MonoBehaviour
     // Zooming by using mouse scroll
     private async Task ZoomCamera()
     {
-        #if UNITY_EDITOR
-            Debug.Log("ZoomCamera task started" + System.DateTime.Now.ToString());
-        #endif
-
         await Task.Yield();
 
         if (Input.mouseScrollDelta.y != 0)
@@ -119,10 +111,6 @@ public class CameraController : MonoBehaviour
     // Rotating by using leftCtrl + Mouse right Button
     private async Task RotateCamera()
     {
-        #if UNITY_EDITOR
-            Debug.Log("RotateCamera task started" + System.DateTime.Now.ToString());
-        #endif
-
         await Task.Yield();
         
         if (Input.GetMouseButtonDown(1) & Input.GetKey(KeyCode.LeftControl))

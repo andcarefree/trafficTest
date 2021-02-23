@@ -14,6 +14,11 @@ public class LaneMesh : MonoBehaviour
         var task = GenerateMeshAsync();
     }
 
+    void LateUpdate()
+    {
+        RecalculateVerticesPosition();
+    } 
+
     private async Task GenerateMeshAsync()
     {
         try
@@ -79,6 +84,9 @@ public class LaneMesh : MonoBehaviour
             } 
             mesh.triangles = triangles;
             mesh.RecalculateNormals();
+
+            var collider = gameObject.AddComponent<MeshCollider>();
+            var outline = gameObject.AddComponent<Outline>();
         }
         catch(System.Exception error)
         {
@@ -86,14 +94,64 @@ public class LaneMesh : MonoBehaviour
         }
     }
 
+    private void RecalculateVerticesPosition()
+    {
+        var childTransforms = this.GetComponentsInChildren<Transform>();
+        var childPositions = new Vector3[3];
+        var controlPoints = new Vector3[3];
+        var offsets = new Vector3[3];
+        var t = 0f;
+        
+        for (int i = 0; i < 3; i++)
+        {
+            childPositions[i] = childTransforms[i + 1].position;
+        }
+
+        offsets[0] = Quaternion.Euler(0, 90, 0) * (childPositions[1] - childPositions[0]).normalized;
+        offsets[1] = Quaternion.Euler(0, 90, 0) * (childPositions[2] - childPositions[0]).normalized;
+        offsets[2] = Quaternion.Euler(0, 90, 0) * (childPositions[2] - childPositions[1]).normalized;
+
+        // calculate vertices from 2 edges of the front face
+        for (int i = 0; i < 3; i++)
+        {
+            controlPoints[i] = childPositions[i] + 1.75f * offsets[i];
+        }
+
+        for (int i = 0; i < 11; i++)
+        {
+            vertices[i] = QuadraicBezier(controlPoints[0], controlPoints[1], controlPoints[2], t);
+            vertices[22 + i] = vertices[i] + new Vector3(0, 0.1f, 0);
+            t += 0.1f;
+        }
+        
+        // calculate vertices from 2 edges of the back face
+        for (int i = 0; i < 3; i++)
+        {
+            controlPoints[i] = childPositions[i] - 1.75f * offsets[i];
+        }
+        t = 0f;
+
+        for (int i = 0; i < 11; i++)
+        {
+            vertices[21 - i] = QuadraicBezier(controlPoints[0], controlPoints[1], controlPoints[2], t);
+            vertices[43 - i] = vertices[21 - i] + new Vector3(0, 0.1f, 0);
+            t += 0.1f;
+        }
+
+        mesh.vertices = vertices;
+        mesh.RecalculateNormals();
+
+    }
+
     private Vector3 QuadraicBezier(Vector3 position1, Vector3 position2, Vector3 position3, float t)
     {
-        var temp1 = t * position1 + (1 - t) * position2;
-        var temp2 = t * position2 + (1 - t) * position3;
-        var position = t * temp1 + (1 - t) * temp2;
+        var temp1 = (1 - t) * position1 + t * position2;
+        var temp2 = (1 - t) * position2 + t * position3;
+        var position = (1 - t) * temp1 + t * temp2;
         return position;
     }
 
+    // for debug
     private void OnDrawGizmos()
     {
         if (vertices == null)

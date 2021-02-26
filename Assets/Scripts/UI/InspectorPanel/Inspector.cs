@@ -7,51 +7,27 @@ using System;
 
 public class Inspector : MonoBehaviour
 {
-    private int tableInList;
-    public GameObject detectorPanel;
-    public GameObject content;
-    public GameObject propertyPrefab;
-    public List<GameObject> propertyTableList;
-    private GameObject WarningTextGO=null;
-    private GameObject ScrollViewGO=null;
-
-    public void Start()
-    {
-        if (detectorPanel != null)
-        {
-            try
-            {
-                WarningTextGO = detectorPanel.transform.Find("Warning Text").gameObject;
-                ScrollViewGO = detectorPanel.transform.Find("Scroll View").gameObject;
-            }
-            catch(Exception exception)
-            {
-                WarningTextGO = null;
-                ScrollViewGO = null;
-
-                #if UNITY_EDITOR    
-                    Debug.Log(exception);
-                #endif
-            }
-        }
-    }
+    [SerializeField] private int tableInList;
+    [SerializeField] private GameObject content;
+    [SerializeField] private GameObject propertyPrefab;
+    [SerializeField] private GameObject warningText;
+    [SerializeField] private GameObject scrollView;
+    [SerializeField] private List<GameObject> propertyTableList;
 
     void Update()
     {
         // When nothing is selected, show prompt
-        if (WarningTextGO != null && ScrollViewGO != null)
+        if (RectangleSelector.current.selected.Count == 0)
         {
-            if (RectangleSelector.current.selected.Count == 0)
-            {
-                WarningTextGO.SetActive(true);
-                ScrollViewGO.SetActive(false);
-            }
-            else
-            {
-                WarningTextGO.SetActive(false);
-                ScrollViewGO.SetActive(true);
-            }
+            warningText.SetActive(true);
+            scrollView.SetActive(false);
         }
+        else
+        {
+            warningText.SetActive(false);
+            scrollView.SetActive(true);
+        }
+        
         // Check things selected
         if(RectangleSelector.current.selected.Count != tableInList)
         {

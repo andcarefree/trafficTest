@@ -5,19 +5,35 @@ using UnityEngine.UI;
 
 public class SaveManager : MonoBehaviour
 {
-    public TMP_InputField SaveName;
-    public GameObject saveButtonPrefab;
-    public GameObject scrollContentArea;
-    public GameObject loadObject;
-    public string[] saveFileName;
+    [SerializeField] private TMP_InputField saveName;
+    [SerializeField] private GameObject saveButtonPrefab;
+    [SerializeField] private GameObject scrollContentArea;
+    [SerializeField] private GameObject loadObject;
+    [SerializeField] private GameObject loadPanel;
+    [SerializeField] private GameObject warningPanel;
+    [SerializeField] private GameObject warningText;
+    [SerializeField] private string[] saveFileName;
     
     public void OnSave()
     {
-        SerializationManager.Save(SaveName.text, SaveData.current);
+        try
+        {
+            SerializationManager.Save(saveName.text, SaveData.current);
+            warningPanel.SetActive(true);
+            warningText.GetComponent<TextMeshProUGUI>().SetText("保存成功！");
+        }
+        catch (System.Exception exception)
+        {
+            warningPanel.SetActive(true);
+            warningText.GetComponent<TextMeshProUGUI>().SetText(exception.ToString());
+            throw;
+        }
+        
     }
 
     public void OnLoad()
     {
+        loadPanel.SetActive(true);
         GetLoadFile();
 
         foreach(Transform button in scrollContentArea.transform)
@@ -37,10 +53,9 @@ public class SaveManager : MonoBehaviour
             });
             buttonObject.GetComponentInChildren<TextMeshProUGUI>().text = saveFileName[index].Replace($"{Application.persistentDataPath}/saves\\", "");
         }
-
     }
 
-    public void GetLoadFile()
+    private void GetLoadFile()
     {
         if(!Directory.Exists(Application.persistentDataPath + "/saves"))
         {
@@ -50,15 +65,28 @@ public class SaveManager : MonoBehaviour
         saveFileName = Directory.GetFiles(Application.persistentDataPath + "/saves");
     }
 
-    public void GetObjectFromLoadFile(string loadFile)
+    private void GetObjectFromLoadFile(string loadFile)
     {
-        SaveData.current = (SaveData)SerializationManager.Load(loadFile);
-
-        GameEvents.current.DispatchOnLoad();
-        
-        foreach(var newObject in SaveData.current.objects)
+        try
         {
-            Instantiate(loadObject, newObject.position, newObject.rotation);
+            SaveData.current = (SaveData)SerializationManager.Load(loadFile);
+
+            GameEvents.current.DispatchOnLoad();
+            
+            foreach(var newObject in SaveData.current.objects)
+            {
+                Instantiate(loadObject, newObject.position, newObject.rotation);
+            }
+
+            warningPanel.SetActive(true);
+            warningText.GetComponent<TextMeshProUGUI>().SetText("保存成功！");
         }
+        catch (System.Exception exception)
+        {
+            warningPanel.SetActive(true);
+            warningText.GetComponent<TextMeshProUGUI>().SetText(exception.ToString());
+            throw;
+        }
+
     }
 }

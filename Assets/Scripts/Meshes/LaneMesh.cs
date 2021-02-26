@@ -14,11 +14,6 @@ public class LaneMesh : MonoBehaviour
         var task = GenerateMeshAsync();
     }
 
-    void LateUpdate()
-    {
-        RecalculateVerticesPosition();
-    } 
-
     private async Task GenerateMeshAsync()
     {
         try
@@ -94,7 +89,7 @@ public class LaneMesh : MonoBehaviour
         }
     }
 
-    private void RecalculateVerticesPosition()
+    public void RecalculateVerticesPosition()
     {
         var childTransforms = this.GetComponentsInChildren<Transform>();
         var childPositions = new Vector3[3];
@@ -140,7 +135,6 @@ public class LaneMesh : MonoBehaviour
 
         mesh.vertices = vertices;
         mesh.RecalculateNormals();
-
     }
 
     private Vector3 QuadraicBezier(Vector3 position1, Vector3 position2, Vector3 position3, float t)

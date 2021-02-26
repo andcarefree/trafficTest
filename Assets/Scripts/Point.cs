@@ -1,12 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Point : MonoBehaviour
 {
-    private float scaleX, scaleY, scaleZ;
-    private Vector3 mouseOffset;
-    private Vector3 screenPoint;
+    [SerializeField] private float scaleX;
+    [SerializeField] private float scaleY;
+    [SerializeField] private float scaleZ;
+    [SerializeField] private Vector3 mouseOffset;
+    [SerializeField] private Vector3 screenPoint;
 
     void Update()
     {
@@ -26,5 +26,7 @@ public class Point : MonoBehaviour
         Vector3 currentScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
         Vector3 currentPosition = Camera.main.ScreenToWorldPoint(currentScreenPoint) + mouseOffset;
         transform.position = currentPosition;
+
+        GetComponentInParent<LaneMesh>().RecalculateVerticesPosition();
     }
 }

@@ -18,6 +18,5 @@ public class PublicVars
             }
         }
     }
-    public bool isRoadGenerating = false;
     public bool isGUIActive = false;
 }

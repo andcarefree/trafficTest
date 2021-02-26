@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,10 +24,8 @@ public class Road : MonoBehaviour
     private void Start()
     {
         //add the road itself to savelist
-        if (string.IsNullOrEmpty(objectData.id))
+        if (objectData.guid == null)
         {
-            objectData.id = System.DateTime.Now.ToLongDateString() + System.DateTime.Now.ToLongTimeString() + Random.Range(0, int.MaxValue).ToString();
-
             Debug.Log(SaveData.current.objects);
             SaveData.current.objects.Add(objectData);
         }
@@ -37,8 +36,6 @@ public class Road : MonoBehaviour
 
         GameEvents.current.OnLoadEvent += DestoryOnLoad;
 
-        // prevPosition = Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
-        // ButtonHandler.objectsPosition.Add(prevPosition);
         foreach (Line line in lines)
         {
             line.fatherRoad = this;
@@ -49,15 +46,6 @@ public class Road : MonoBehaviour
         objectData.position = transform.position;
         objectData.rotation = transform.rotation;
 
-        //
-        // nowPosition = Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
-        //
-        // if(nowPosition != prevPosition)
-        // {
-        //     int index = ButtonHandler.objectsPosition.FindIndex(x => x == prevPosition);
-        //     ButtonHandler.objectsPosition[index] = nowPosition;
-        //     prevPosition = nowPosition;
-        // }
         foreach (Line line in lines)
         {
             line.fatherRoad = this;

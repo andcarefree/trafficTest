@@ -43,7 +43,7 @@ public class Car : OriginCar
     public float s = 0;
 
     */
-    
+
 
     /// <summary>
     /// 所在路线
@@ -87,7 +87,7 @@ public class Car : OriginCar
     /// </summary>
     public Car followCar;
     */
-    
+
     void Awake()
     {
         this.expectVelocity = Car.expects[(int)Random.Range(0f, (float)Car.expects.Length)];
@@ -96,13 +96,17 @@ public class Car : OriginCar
     void Start()
     {
         GameEvents.current.OnLoadEvent += DestroyCar;
-        RectangleSelector.current.selectable.Add(this.gameObject);
+        if (RectangleSelector.current != null)
+            RectangleSelector.current.selectable.Add(this.gameObject);
     }
 
     void OnDestroy()
     {
-        RectangleSelector.current.selectable.Remove(this.gameObject);
-        RectangleSelector.current.selected.Remove(this.gameObject);
+        if (RectangleSelector.current != null)
+        {
+            RectangleSelector.current.selectable.Remove(this.gameObject);
+            RectangleSelector.current.selected.Remove(this.gameObject);
+        }
     }
 
     /// <summary>
@@ -115,11 +119,11 @@ public class Car : OriginCar
 
     public Car PreCar()
     {
-        if(this.line.cars.Find(this) == null)
+        if (this.line.cars.Find(this) == null)
         {
             return null;
         }
-        if(this.line.cars.Find(this).Previous == null)
+        if (this.line.cars.Find(this).Previous == null)
         {
             return null;
         }
@@ -127,11 +131,11 @@ public class Car : OriginCar
     }
     public Car NextCar()
     {
-        if(this.line.cars.Find(this) == null)
+        if (this.line.cars.Find(this) == null)
         {
             return null;
         }
-        if(this.line.cars.Find(this).Next == null)
+        if (this.line.cars.Find(this).Next == null)
         {
             return null;
         }
@@ -140,15 +144,15 @@ public class Car : OriginCar
 
     public Car CarClosest(Line line)
     {
-        if(line.cars.First == null)
+        if (line.cars.First == null)
         {
             return null;
         }
 
         Car pointer = line.cars.First.Value;
-        while(pointer.NextCar() != null)
+        while (pointer.NextCar() != null)
         {
-            if(Vector3.Distance(this.transform.position, pointer.transform.position) < Vector3.Distance(this.transform.position, pointer.NextCar().transform.position))
+            if (Vector3.Distance(this.transform.position, pointer.transform.position) < Vector3.Distance(this.transform.position, pointer.NextCar().transform.position))
             {
                 break;
             }
@@ -162,7 +166,7 @@ public class Car : OriginCar
 
     public void DestroyCar()
     {
-        if(this.line != null)
+        if (this.line != null)
         {
             this.line.cars.Remove(this);
         }
@@ -187,7 +191,7 @@ public class Car : OriginCar
     /// </summary>
     public static bool judgeLocation(Car pointer, Car target)
     {
-        if(pointer == null || target == null)
+        if (pointer == null || target == null)
         {
             return true;
         }
@@ -221,7 +225,7 @@ public class Car : OriginCar
     public void changeLine(Line l)
     {
         Car target = findNextCar(l);
-        if(target == null)
+        if (target == null)
         {
             //车流未找到插入位置，在末端插入
             l.cars.AddLast(this);
@@ -243,10 +247,10 @@ public class Car : OriginCar
     public void findPath()
     {
         if (state == State.inLine) return;
-        int rdm1 = Random.Range(0, line.nextRoads.Length-1);//确定道路
+        int rdm1 = Random.Range(0, line.nextRoads.Length - 1);//确定道路
         int rdm2 = 0;
         //找到车辆数最少的车道
-        for(int i = 0; i < line.nextRoads[rdm1].lines.Length; i++)
+        for (int i = 0; i < line.nextRoads[rdm1].lines.Length; i++)
         {
             rdm2 = line.nextRoads[rdm1].lines[i].cars.Count < line.nextRoads[rdm1].lines[rdm2].cars.Count ? i : rdm2;
         }
@@ -260,7 +264,7 @@ public class Car : OriginCar
     public void driving()
     {
         //更新linT与下一个目标点
-        while (Vector3.Distance(target,transform.position) <= 2f)
+        while (Vector3.Distance(target, transform.position) <= 2f)
         {
             lineT += (float)1 / (float)segment;
             target = Line.Bezier(lineT, linePoints);
@@ -270,14 +274,14 @@ public class Car : OriginCar
         if (target != transform.position)
             transform.LookAt(target);
 
-        if(stopTest == true)
+        if (stopTest == true)
         {
             velocity = 0;
             return;
         }
 
         //道路限速；车辆期望速度；正常行驶速度；取最小值
-        velocity = Mathf.Min(this.line==null?Car.MaxVelocityNoRoad:this.line.maxVelocity, velocity + 3.6f*accel * Time.deltaTime,expectVelocity);
+        velocity = Mathf.Min(this.line == null ? Car.MaxVelocityNoRoad : this.line.maxVelocity, velocity + 3.6f * accel * Time.deltaTime, expectVelocity);
         //屏蔽掉速度小于0的倒车行为
         velocity = Mathf.Max(0, velocity);
         s += Km2m() * Time.deltaTime;

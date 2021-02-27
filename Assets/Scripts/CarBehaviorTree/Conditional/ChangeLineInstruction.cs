@@ -35,7 +35,7 @@ public class ChangeLineInstruction : Conditional
         if (Car.judgeLocation(car, near))
         {
             //换道之后成为头车且间隙允许换道
-            if(near.PreCar()==null)
+            if (near.PreCar() == null)
             {
                 preS = 10000;
                 PreSpeed = 10000;
@@ -114,7 +114,7 @@ public class ChangeLineInstruction : Conditional
     {
         Line[] lines = car.line.fatherRoad.lines;
         int nowIndex = car.line.indexInRoad();
-        if(nowIndex == 0)
+        if (nowIndex == 0)
         {
             return car.line;
         }
@@ -136,13 +136,14 @@ public class ChangeLineInstruction : Conditional
     /// <summary>
     /// 车辆不满足当前行驶环境时寻求主动换道时修改car.lineChange
     /// </summary>
-    private void PositiveChange() {
+    private void PositiveChange()
+    {
         //换道条件判断
         if (car.line != null && car.line.cars.First != null && car.line.cars.First.Value != car && car.s > car.transform.localScale.z)
         {
             Car pre = car.line.cars.Find(car).Previous.Value;
             //当前车道运行速度低于预期时，寻求车道换道
-            if ((pre.velocity <= 40 && car.expectVelocity - car.velocity > 5 && car.accel<5)|| (pre.velocity >= 40 && car.expectVelocity - car.velocity > 15 && car.accel < 5))
+            if ((pre.velocity <= 40 && car.expectVelocity - car.velocity > 5 && car.accel < 5) || (pre.velocity >= 40 && car.expectVelocity - car.velocity > 15 && car.accel < 5))
             {
                 car.lineChange = true;
             }
@@ -176,21 +177,21 @@ public class ChangeLineInstruction : Conditional
 
     public override TaskStatus OnUpdate()
     {
-        if(car.state == Car.State.prepareCross)
+        if (car.state == Car.State.prepareCross)
         {
             return TaskStatus.Failure;
         }
-        if(car.crossLine != null)
+        if (car.crossLine != null && car.crossLine.Length != 0)
         {
             return TaskStatus.Failure;
         }
-        if(car.state == Car.State.changing)
+        if (car.state == Car.State.changing)
         {
             changTime = 0;
             return TaskStatus.Success;
         }
 
-        if(changTime < 1)
+        if (changTime < 1)
         {
             changTime += Time.deltaTime;
             return TaskStatus.Failure;
@@ -198,10 +199,11 @@ public class ChangeLineInstruction : Conditional
 
         PositiveChange();
 
-        if(car.lineChange == true)
+        if (car.lineChange == true)
         {
             //即将驶入路口，不予换道
-            if(car.state == Car.State.prepareCross){
+            if (car.state == Car.State.prepareCross)
+            {
 
                 return TaskStatus.Failure;
             }

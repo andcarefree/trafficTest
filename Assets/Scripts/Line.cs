@@ -49,8 +49,9 @@ public class Line : OriginLine
 
     public int indexInRoad()
     {
-        for (int i = 0; i < fatherRoad.lines.Length; i++){
-            if(fatherRoad.lines[i] == this)
+        for (int i = 0; i < fatherRoad.lines.Length; i++)
+        {
+            if (fatherRoad.lines[i] == this)
             {
                 return i;
             }
@@ -64,7 +65,8 @@ public class Line : OriginLine
         cars = new LinkedList<Car>();
         maxVelocity = 70;
 
-        RectangleSelector.current.selectable.Add(this.gameObject);
+        if (RectangleSelector.current != null)
+            RectangleSelector.current.selectable.Add(this.gameObject);
     }
     private void Update()
     {
@@ -81,7 +83,7 @@ public class Line : OriginLine
 
     private void DrawCurve()
     {
-        for(int i=1;i<=segmentNum;i++)
+        for (int i = 1; i <= segmentNum; i++)
         {
             float t = (float)i / (float)segmentNum;
             Vector3 pixel = Bezier(t, points);
@@ -90,11 +92,11 @@ public class Line : OriginLine
         }
     }
 
-    public static Vector3 Bezier(float t,Vector3[] p)
+    public static Vector3 Bezier(float t, Vector3[] p)
     {
         Vector3 ans = Vector3.zero;
         int n = p.Length;
-        for(int i=0;i<n;i++)
+        for (int i = 0; i < n; i++)
         {
             ans += p[i] * C(i, n - 1) * Mathf.Pow(t, i) * Mathf.Pow(1 - t, n - 1 - i);
         }
@@ -109,9 +111,9 @@ public class Line : OriginLine
         float start = 0f;
         float end = 1f;
         float mid = (start + end) / 2;
-        while (Vector3.Distance(point,Bezier(mid,p)) >= 2f)
+        while (Vector3.Distance(point, Bezier(mid, p)) >= 2f)
         {
-            if(Vector3.Distance(point,Bezier(start,p)) > Vector3.Distance(point, Bezier(end, p)))
+            if (Vector3.Distance(point, Bezier(start, p)) > Vector3.Distance(point, Bezier(end, p)))
             {
                 start = mid + 0.01f;
             }
@@ -127,7 +129,7 @@ public class Line : OriginLine
     /// <returns>
     /// n! / m!(n-m)!
     /// </returns>
-    private static int C(int m,int n)
+    private static int C(int m, int n)
     {
         int ans = 1;
         for (int i = 1; i <= n; i++)
@@ -141,17 +143,17 @@ public class Line : OriginLine
     /// <summary>
     /// 两条Line之间自动生成一条平滑曲线，以路点形式返回
     /// </summary>
-    public static Vector3 [] Interpolation(Line line1,Line line2)
+    public static Vector3[] Interpolation(Line line1, Line line2)
     {
-        Vector3[] ans=new Vector3[3];
-        float b = ((line2.lineStart.x - line1.lineEnd.x) * line1.endVector.z 
-                  - (line2.lineStart.z - line1.lineEnd.z) * line1.endVector.x)/(line2.startVector.z*line1.endVector.x-line2.startVector.x*line1.endVector.z);
+        Vector3[] ans = new Vector3[3];
+        float b = ((line2.lineStart.x - line1.lineEnd.x) * line1.endVector.z
+                  - (line2.lineStart.z - line1.lineEnd.z) * line1.endVector.x) / (line2.startVector.z * line1.endVector.x - line2.startVector.x * line1.endVector.z);
         //float a = (line2.lineStart.x - line1.lineEnd.y + b * line2.startVector.x) / line1.endVector.x;
         ans[0] = line1.lineEnd;
-        if (b > 999999|| line2.startVector.z * line1.endVector.x - line2.startVector.x * line1.endVector.z==0)
+        if (b > 999999 || line2.startVector.z * line1.endVector.x - line2.startVector.x * line1.endVector.z == 0)
             ans[1] = (line1.lineEnd + line2.lineStart) / 2;
-        else 
-        ans[1] = new Vector3(line2.lineStart.x + b * line2.startVector.x, (line1.lineEnd.y + line2.lineStart.y) / 2, line2.lineStart.z + b * line2.startVector.z);
+        else
+            ans[1] = new Vector3(line2.lineStart.x + b * line2.startVector.x, (line1.lineEnd.y + line2.lineStart.y) / 2, line2.lineStart.z + b * line2.startVector.z);
         ans[2] = line2.lineStart;
         return ans;
     }
@@ -184,7 +186,7 @@ public class Line : OriginLine
     /// <summary>
     /// 作用同Interpolation, 算法不同
     /// </summary>
-    public static Vector3 [] linkLine(Line now,Line target)
+    public static Vector3[] linkLine(Line now, Line target)
     {
         Vector3[] result = new Vector3[4];
         result[0] = now.points[now.points.Length - 1];

@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Reflection;
-using System.Windows.Forms;
+
 
 public class DllReader 
 {
@@ -15,23 +15,7 @@ public class DllReader
     public static Type type;
     public static MethodInfo gm;
     
-    /// <summary>
-    /// 调用对话框选择dll文件
-    /// </summary>
-    /// <returns></returns>
-   public static Type SelectDll(string fileName=null)
-    {
-        OpenFileDialog openFile = new OpenFileDialog();
-        openFile.Filter = "*.dll|*.dll";
-        openFile.InitialDirectory = "C://";//Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        openFile.Multiselect = false;
-        if (openFile.ShowDialog() == DialogResult.Cancel)
-            return null;
-        if(fileName==null)
-            fileName = System.IO.Path.GetFileNameWithoutExtension(openFile.FileName);
-
-        return ReadDll(fileName,openFile.FileName);
-    }
+    
 
     /// <summary>
     /// 读取dll文件
@@ -73,8 +57,8 @@ public class DllReader
 
         if (openFileDialog.ShowDialog() == DialogResult.OK)
             Debug.Log(openFileDialog.FileName);*/
-        //type = ReadDll(@"Custom", @"Custom\DllRecoverTest.dll");
-        type = SelectDll(@"Custom");
+        type = ReadDll(@"Custom", @"Custom/DllRecoverTest.dll");
+        //type = SelectDll(@"Custom");
         go=CreateManager(type);
         gm = type.GetMethod("CustomGM");
         custom = go.GetComponent(type);

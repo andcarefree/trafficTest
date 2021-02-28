@@ -13,7 +13,9 @@ public class Line : OLine
     public float maxVelocity;
     public Car lineLock;
 
-    public LinkedList<Car> cars;
+
+    //public new LinkedList<Car> cars;
+    
 
     public Vector3 lineStart
     {
@@ -62,7 +64,7 @@ public class Line : OLine
     {
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.sortingLayerID = 0;
-        cars = new LinkedList<Car>();
+        cars = new LinkedList<OCar>();
         maxVelocity = 70;
 
         if (RectangleSelector.current != null)

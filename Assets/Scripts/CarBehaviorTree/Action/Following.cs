@@ -51,7 +51,7 @@ public class Following : Action
             }
             else
             {
-                Car previous = car.line.cars.Find(car).Previous.Value;
+                Car previous = (Car)car.line.cars.Find(car).Previous.Value;
                 //车头时距小于等于5s，车辆进入跟驰状态
                 if ((previous.s - car.s - car.transform.localScale.z) / car.Km2m() <= 5)
                 {

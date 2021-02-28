@@ -11,6 +11,7 @@ public class ChangeLineInstruction : Conditional
     float changTime;
 
     public SharedInt targetLineIndex;
+    public static OriginCustom.JV jv=JudgeValue;
     /// <summary>
     /// 判断换道产生的收益值,返回值[0,1]
     /// </summary>
@@ -19,20 +20,20 @@ public class ChangeLineInstruction : Conditional
     //                2.间隙之前的车够快或够远
     //                3.间隙之后的车够远
     //TODO 对外提供收益函数的替换接口
-    static float JudgeValue(Car car, Line line)
+    public static float JudgeValue(OCar car, OLine line)
     {
         //目标车道不存在车辆
         if (line.cars.First == null)
         {
             return 1;
         }
-        Car near = car.CarClosest(line);
+        OCar near = car.CarClosest(line);
         float PreSpeed;//间隙前车速度
         float nextS;//间隙后车的行驶间距
         float preS;//间隙前车的行驶间距
 
         //near在car之后
-        if (Car.judgeLocation(car, near))
+        if (OCar.judgeLocation(car, near))
         {
             //换道之后成为头车且间隙允许换道
             if (near.PreCar() == null)
@@ -42,7 +43,7 @@ public class ChangeLineInstruction : Conditional
             }
             else
             {
-                Car nearPre = near.PreCar();//间隙前车
+                OCar nearPre = near.PreCar();//间隙前车
                 PreSpeed = nearPre.velocity;
                 preS = nearPre.s - car.s;
             }
@@ -50,7 +51,7 @@ public class ChangeLineInstruction : Conditional
         }
         else//near在car之前
         {
-            Car nearNext = near.NextCar();
+            OCar nearNext = near.NextCar();
             PreSpeed = near.velocity;
             preS = near.s - car.s;
             if (nearNext == null)
@@ -86,19 +87,19 @@ public class ChangeLineInstruction : Conditional
         int nowIndex = car.line.indexInRoad();
         if (nowIndex == 0)
         {
-            return JudgeValue(car, lines[1]) > 0 ? lines[1] : car.line;
+            return jv(car, lines[1]) > 0 ? lines[1] : car.line;
         }
         else if (nowIndex == lines.Length - 1)
         {
-            return JudgeValue(car, lines[lines.Length - 2]) > 0 ? lines[lines.Length - 2] : car.line;
+            return jv(car, lines[lines.Length - 2]) > 0 ? lines[lines.Length - 2] : car.line;
         }
         else
         {
-            if (JudgeValue(car, lines[nowIndex - 1]) > 0)
+            if (jv(car, lines[nowIndex - 1]) > 0)
             {
                 return lines[nowIndex - 1];
             }
-            else if (JudgeValue(car, lines[nowIndex + 1]) > 0)
+            else if (jv(car, lines[nowIndex + 1]) > 0)
             {
                 return lines[nowIndex + 1];
             }
@@ -118,7 +119,7 @@ public class ChangeLineInstruction : Conditional
         {
             return car.line;
         }
-        return JudgeValue(car, lines[nowIndex - 1]) > 0 ? lines[nowIndex - 1] : car.line;
+        return jv(car, lines[nowIndex - 1]) > 0 ? lines[nowIndex - 1] : car.line;
     }
     private Line RightPick()
     {
@@ -128,7 +129,7 @@ public class ChangeLineInstruction : Conditional
         {
             return car.line;
         }
-        return JudgeValue(car, lines[nowIndex + 1]) > 0 ? lines[nowIndex + 1] : car.line;
+        return jv(car, lines[nowIndex + 1]) > 0 ? lines[nowIndex + 1] : car.line;
     }
     /**/
 
@@ -141,7 +142,7 @@ public class ChangeLineInstruction : Conditional
         //换道条件判断
         if (car.line != null && car.line.cars.First != null && car.line.cars.First.Value != car && car.s > car.transform.localScale.z)
         {
-            Car pre = car.line.cars.Find(car).Previous.Value;
+            Car pre = (Car)car.line.cars.Find(car).Previous.Value;
             //当前车道运行速度低于预期时，寻求车道换道
             if ((pre.velocity <= 40 && car.expectVelocity - car.velocity > 5 && car.accel < 5) || (pre.velocity >= 40 && car.expectVelocity - car.velocity > 15 && car.accel < 5))
             {

@@ -6,6 +6,7 @@ using UnityEngine;
 // TODO 车辆的速度与加速度处理需要重新设计使其符合现实情境
 public class Car : OCar
 {
+    
     const float MaxVelocityNoRoad = 30;
 
     /*
@@ -112,7 +113,7 @@ public class Car : OCar
             RectangleSelector.current.selected.Remove(this.gameObject);
         }
     }
-
+    /*
     /// <summary>
     /// 将车辆速度转换为m/s
     /// </summary>
@@ -120,8 +121,14 @@ public class Car : OCar
     {
         return this.velocity / 3.6f;
     }
-
-    public Car PreCar()
+    */
+    /*
+    public new Car PreCar()
+    {
+        return (Car)base.PreCar();
+    }
+    */
+    public new Car PreCar()
     {
         if (this.line.cars.Find(this) == null)
         {
@@ -131,9 +138,17 @@ public class Car : OCar
         {
             return null;
         }
-        return this.line.cars.Find(this).Previous.Value;
+        return (Car)this.line.cars.Find(this).Previous.Value;
     }
-    public Car NextCar()
+    
+    /*
+    public new Car NextCar()
+    {
+        return (Car)base.NextCar();
+    }*/
+    
+    
+    public new Car NextCar()
     {
         if (this.line.cars.Find(this) == null)
         {
@@ -143,9 +158,9 @@ public class Car : OCar
         {
             return null;
         }
-        return this.line.cars.Find(this).Next.Value;
+        return (Car)this.line.cars.Find(this).Next.Value;
     }
-
+    
     public Car CarClosest(Line line)
     {
         if (line.cars.First == null)
@@ -153,7 +168,7 @@ public class Car : OCar
             return null;
         }
 
-        Car pointer = line.cars.First.Value;
+        Car pointer = (Car)line.cars.First.Value;
         while (pointer.NextCar() != null)
         {
             if (Vector3.Distance(this.transform.position, pointer.transform.position) < Vector3.Distance(this.transform.position, pointer.NextCar().transform.position))
@@ -213,13 +228,13 @@ public class Car : OCar
 
     public Car findNextCar(Line l)
     {
-        LinkedListNode<Car> pointer = l.cars.First;
+        LinkedListNode<OCar> pointer = l.cars.First;
         while (pointer != null)
         {
             //在该车流中找到第一个在car后面的车辆
             if (!judgeLocation(pointer.Value, this))
             {
-                return pointer.Value;
+                return (Car)pointer.Value;
             }
             pointer = pointer.Next;
         }

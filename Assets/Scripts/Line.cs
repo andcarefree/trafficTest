@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
 
-public class Line : OriginLine
+public class Line : OLine
 {
     private LineRenderer lineRenderer;
     public Vector3[] points;

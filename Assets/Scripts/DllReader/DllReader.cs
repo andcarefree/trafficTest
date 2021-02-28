@@ -11,9 +11,9 @@ public class DllReader
 {
 
     public static GameObject go;
-    public static object custom;
+    public static OriginCustom currentCustom;
     public static Type type;
-    public static MethodInfo gm;
+    
     
     
 
@@ -51,19 +51,13 @@ public class DllReader
 
     public static void testInit()
     {
-        /*OpenFileDialog openFileDialog = new OpenFileDialog();
-        openFileDialog.Title = "SelectDLL";
-        openFileDialog.Filter = "*.*|*.*";
-
-        if (openFileDialog.ShowDialog() == DialogResult.OK)
-            Debug.Log(openFileDialog.FileName);*/
         type = ReadDll(@"Custom", @"Custom/DllRecoverTest.dll");
-        //type = SelectDll(@"Custom");
-        go=CreateManager(type);
-        gm = type.GetMethod("CustomGM");
-        custom = go.GetComponent(type);
-        Following.gm = go.GetComponent<OriginCustom>().CustomGM;
         
+        go=CreateManager(type);
+        
+        currentCustom = go.GetComponent<OriginCustom>();
+        Following.gm = currentCustom.CustomGM;
+        ChangeLine.cp = currentCustom.CustomCP;
     }
     
 }

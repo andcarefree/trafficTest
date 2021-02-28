@@ -8,14 +8,14 @@ public class Following : Action
 {
     Car car;
     public static OriginCustom.GM gm=OriginGM;
-    //public delegate float GM(float c, float m, float l, OriginCar previous);
+    //public delegate float GM(float c, float m, float l, OCar previous);
     
 
     /// <summary>
     /// GM跟驰模型
     /// </summary>
     /// <param name="c">车辆灵敏度</param>
-    private static float OriginGM(OriginCar m_car,float c,float m,float l,OriginCar previous)
+    private static float OriginGM(OCar m_car,float c,float m,float l,OCar previous)
     {
         return c * Mathf.Pow(m_car.Km2m(), m) * (previous.Km2m() - m_car.Km2m()) / Mathf.Pow(previous.s - m_car.s, l);
     }

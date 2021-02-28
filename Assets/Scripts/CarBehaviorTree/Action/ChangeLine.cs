@@ -9,12 +9,12 @@ public class ChangeLine : Action
     Line targetLine;
 
     public SharedInt targetLineIndex;
-
+    public static OriginCustom.CP cp=CalculatePath;
     /// <summary>
     /// 换道路径生成算法
     /// ///TODO 该算法应该是可供二次开发的
     /// </summary>
-    public Vector3[] CalculatePath()
+    public static Vector3[] CalculatePath(OCar car,OLine targetLine)
     {
         Vector3[] ret =new Vector3[4];
         ret[0] = car.transform.position;
@@ -39,7 +39,7 @@ public class ChangeLine : Action
     {
         car = gameObject.GetComponent<Car>();
         targetLine = car.line.fatherRoad.lines[targetLineIndex.Value];
-        car.linePoints = CalculatePath();
+        car.linePoints = cp(car,targetLine);
         /*应付中期检查，更换一个换道路径*/
         //car.linePoints = Move();
         /**/

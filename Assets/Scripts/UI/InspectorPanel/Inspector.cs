@@ -54,7 +54,7 @@ public class Inspector : MonoBehaviour
         {
             if(gameObject.tag == "Car")
             {
-                var properties = gameObject.GetComponent<Car>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                var properties = gameObject.GetComponent<Car>().GetType().GetFields();
                 foreach(var property in properties)
                 {
                     #if UNITY_EDITOR
@@ -75,7 +75,7 @@ public class Inspector : MonoBehaviour
             }
             if(gameObject.tag == "Road")
             {
-                var properties = gameObject.GetComponent<Road>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                var properties = gameObject.GetComponent<Road>().GetType().GetFields();
                 foreach(var property in properties)
                 {
                     #if UNITY_EDITOR
@@ -96,7 +96,7 @@ public class Inspector : MonoBehaviour
             }
             if(gameObject.tag == "Lane")
             {
-                var properties = gameObject.GetComponent<Line>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                var properties = gameObject.GetComponent<Line>().GetType().GetFields();
                 foreach(var property in properties)
                 {
                     #if UNITY_EDITOR
@@ -124,7 +124,7 @@ public class Inspector : MonoBehaviour
         {
             if(gameObject.tag == "Car")
             {
-                var fields = gameObject.GetComponent<Car>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                var fields = gameObject.GetComponent<Car>().GetType().GetFields();
 
                 foreach(var field in fields)
                 {
@@ -140,7 +140,7 @@ public class Inspector : MonoBehaviour
             }
             if(gameObject.tag == "Road")
             {
-                var fields = gameObject.GetComponent<Road>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                var fields = gameObject.GetComponent<Road>().GetType().GetFields();
 
                 foreach(var field in fields)
                 {
@@ -156,7 +156,7 @@ public class Inspector : MonoBehaviour
             }
             if(gameObject.tag == "Lane")
             {
-                var fields = gameObject.GetComponent<Line>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                var fields = gameObject.GetComponent<Line>().GetType().GetFields();
 
                 foreach(var field in fields)
                 {

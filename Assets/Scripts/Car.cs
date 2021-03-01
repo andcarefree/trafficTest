@@ -102,15 +102,15 @@ public class Car : OCar
     {
         GameEvents.current.OnLoadEvent += DestroyCar;
         if (RectangleSelector.current != null)
-            RectangleSelector.current.selectable.Add(this.gameObject);
+            RectangleSelector.current.Selectable.Add(this.gameObject);
     }
 
     void OnDestroy()
     {
         if (RectangleSelector.current != null)
         {
-            RectangleSelector.current.selectable.Remove(this.gameObject);
-            RectangleSelector.current.selected.Remove(this.gameObject);
+            RectangleSelector.current.Selectable.Remove(this.gameObject);
+            RectangleSelector.current.Selected.Remove(this.gameObject);
         }
     }
     /*

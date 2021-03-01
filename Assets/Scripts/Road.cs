@@ -5,43 +5,45 @@ using UnityEngine;
 
 public class Road : MonoBehaviour
 {
-    Vector3 prevPosition;
-    Vector3 nowPosition;
-
+    private Vector3 prevPosition;
+    private Vector3 nowPosition;
     public GameObject roadObject;
 
     /// <summary>
     /// 道路
     /// </summary>
     public Line[] lines;
+
     /// <summary>
     /// 道路是否允许通行
     /// </summary>
-
     public RoadTypeEnum roadType;
-    public ObjectData objectData;
+    private ObjectData objectData = new ObjectData();
 
     private void Start()
     {
         //add the road itself to savelist
         if (objectData.guid == null)
         {
-            Debug.Log(SaveData.current.objects);
             SaveData.current.objects.Add(objectData);
         }
 
         lines = GetComponentsInChildren<Line>();
 
         if (RectangleSelector.current != null)
-            RectangleSelector.current.selectable.Add(this.gameObject);
+        {  
+            RectangleSelector.current.Selectable.Add(this.gameObject);
+        }
 
         GameEvents.current.OnLoadEvent += DestoryOnLoad;
+        GameEvents.current.OnDeleteEvent += DestroyOnDeleteButtonDown;
 
         foreach (Line line in lines)
         {
             line.fatherRoad = this;
         }
     }
+
     private void Update()
     {
         objectData.position = transform.position;
@@ -53,10 +55,23 @@ public class Road : MonoBehaviour
         }
     }
 
-    private void DestoryOnLoad()
+    void OnDestroy()
     {
         GameEvents.current.OnLoadEvent -= DestoryOnLoad;
+        GameEvents.current.OnDeleteEvent -= DestroyOnDeleteButtonDown;
+    }
+
+    private void DestoryOnLoad()
+    {
         Destroy(this.gameObject);
+    }
+
+    private void DestroyOnDeleteButtonDown(int id)
+    {
+        if (id == gameObject.GetInstanceID())
+        {
+            Destroy(this.gameObject);
+        }
     }
 
 }

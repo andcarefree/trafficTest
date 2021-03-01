@@ -68,7 +68,7 @@ public class Line : OLine
         maxVelocity = 70;
 
         if (RectangleSelector.current != null)
-            RectangleSelector.current.selectable.Add(this.gameObject);
+            RectangleSelector.current.Selectable.Add(this.gameObject);
     }
     private void Update()
     {

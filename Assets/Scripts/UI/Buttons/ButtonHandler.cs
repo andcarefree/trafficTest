@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -8,14 +8,17 @@ public class ButtonHandler : MonoBehaviour
     [SerializeField] private TextMeshProUGUI statusBar;
     [SerializeField] private GameObject roadPrefeb;
     [SerializeField] private GameObject carPrefeb;
-    private GameObject[] roadList;
-    private Vector3[] roadPosition;
+    private GameObject[] roadList = new GameObject[2];
+    private Vector3[] roadPosition = new Vector3[2];
 
     void Awake()
     {
         Time.timeScale = 0;
-        roadList = new GameObject[2];
-        roadPosition = new Vector3[2];
+    }
+
+    void Start()
+    {
+        StartCoroutine(destroyObjectOnLick());
     }
 
     private IEnumerator SetUpRoad()
@@ -171,6 +174,22 @@ public class ButtonHandler : MonoBehaviour
         }
 
         return selectedObject;
+    }
+
+    private IEnumerator destroyObjectOnLick()
+    {
+        while (true)
+        {
+            if (Input.GetKeyDown(KeyCode.Delete))
+            {
+                var deleteList = RectangleSelector.current.Selected;
+                for (int i = 0; i < deleteList.Count; i++)
+                {
+                    GameEvents.current.OnDelete(deleteList[i].GetInstanceID());
+                }
+            }
+            yield return null;
+        }
     }
 
     public void OnGenerateRoadButtonClick()

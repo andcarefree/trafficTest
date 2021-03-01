@@ -1,25 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
-public class ScrollBar : MonoBehaviour
+public class ScrollBar : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 {
-    public void BeingDrag()
+    public static bool isGUIActive = false;
+    
+    public void OnBeginDrag(PointerEventData eventData)
     {
-        PublicVars.current.isGUIActive = true;
-
-        #if UNITY_EDITOR
-            Debug.Log("Scroll bar is being dragged");
-        #endif
+        isGUIActive = true;
     }
     
-    public void EndDrag()
+    public void OnEndDrag(PointerEventData eventData)
     {
-        PublicVars.current.isGUIActive = false;
-
-        #if UNITY_EDITOR
-            Debug.Log("Scroll bar is released");
-        #endif
+        isGUIActive = false;
     }
 }

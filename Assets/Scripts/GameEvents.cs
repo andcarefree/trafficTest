@@ -6,8 +6,7 @@ public class GameEvents : MonoBehaviour
 {
     public static GameEvents current;
     public event Action OnLoadEvent;
-    public event Action<int> OnDragEvent;
-    public event Action<int> OnSelectedEvent;
+    public event Action<int> OnDeleteEvent;
 
     void Awake()
     {
@@ -22,19 +21,11 @@ public class GameEvents : MonoBehaviour
         }
     }
 
-    public void DispatchOnDrag(int id)
+    public void OnDelete(int id)
     {
-        if (OnDragEvent != null)
+        if (OnDeleteEvent != null)
         {
-            OnDragEvent(id);
-        }
-    }
-
-    public void OnSelected(int id)
-    {
-        if (OnSelectedEvent != null)
-        {
-            OnSelectedEvent(id);
+            OnDeleteEvent(id);
         }
     }
 }

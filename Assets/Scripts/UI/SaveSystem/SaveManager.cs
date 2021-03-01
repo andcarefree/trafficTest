@@ -12,7 +12,7 @@ public class SaveManager : MonoBehaviour
     [SerializeField] private GameObject loadPanel;
     [SerializeField] private GameObject warningPanel;
     [SerializeField] private GameObject warningText;
-    [SerializeField] private string[] saveFileName;
+    private string[] saveFileName;
     
     public void OnSave()
     {

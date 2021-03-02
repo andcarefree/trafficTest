@@ -52,11 +52,11 @@ public class Cross : MonoBehaviour
                     {
                         if (stream.ContainsKey(nextRoad))
                         {
-                            stream[nextRoad] += 1;
+                            stream[nextRoad] += 10;
                         }
                         else
                         {
-                            stream.Add(nextRoad, 1);
+                            stream.Add(nextRoad, 10);
                         }
                     }
                 }

@@ -17,18 +17,15 @@ public class RunCross : Action
         car.driving();
         if(car.lineT >= 1)
         {
+            car.crossLine = null;
+            car.lineT = 0;
+            car.setLine(car.cross.carRoadOut[car].lines[LineOutIndex.Value]);
+            car.state = Car.State.inLine;
+            car.cross.cars.Remove(car);
+            car.cross = null;
+            car.driving();
             return TaskStatus.Success;
         }
         return TaskStatus.Running;
-    }
-    public override void OnEnd()
-    {
-        car.crossLine = null;
-        car.lineT = 0;
-        car.setLine(car.cross.carRoadOut[car].lines[LineOutIndex.Value]);
-        car.state = Car.State.inLine;
-        car.cross.cars.Remove(car);
-        car.cross = null;
-        car.driving();
     }
 }

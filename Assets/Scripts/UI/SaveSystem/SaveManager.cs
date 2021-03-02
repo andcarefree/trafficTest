@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class SaveManager : MonoBehaviour
 {
     [SerializeField] private TMP_InputField saveName;
+    [SerializeField] private GameObject carPrefab;
     [SerializeField] private GameObject saveButtonPrefab;
     [SerializeField] private GameObject scrollContentArea;
     [SerializeField] private GameObject loadObject;
@@ -75,7 +76,14 @@ public class SaveManager : MonoBehaviour
             
             foreach(var newObject in SaveData.current.objects)
             {
-                Instantiate(loadObject, newObject.position, newObject.rotation);
+                var gameObject = Instantiate(loadObject, newObject.position, newObject.rotation);
+                gameObject.GetComponent<Road>().Id = newObject.id;
+
+                if (newObject.roadType == RoadTypeEnum.SOURCE)
+                {
+                    var originRoad = gameObject.AddComponent<OriginRoad>();
+                    originRoad.Car = carPrefab;
+                }
             }
 
             loadPanel.SetActive(false);

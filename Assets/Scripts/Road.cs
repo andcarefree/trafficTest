@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Road : MonoBehaviour
 {
+    private int id;
+    public int Id { get => id; set => id = value; }
     private Vector3 prevPosition;
     private Vector3 nowPosition;
     public GameObject roadObject;
@@ -22,13 +23,27 @@ public class Road : MonoBehaviour
 
     private void Start()
     {
-        //add the road itself to savelist
-        if (objectData.guid == null)
+        // this is used for preset scene
+        // to check whether the road is car source
+        if (GetComponent<OriginRoad>() != null)
         {
-            SaveData.current.objects.Add(objectData);
+            roadType = RoadTypeEnum.SOURCE;
+        }
+        else
+        {
+            roadType = RoadTypeEnum.NORMAL;
         }
 
-        lines = GetComponentsInChildren<Line>();
+        // generate id for road
+        var random = new System.Random();
+        id = random.Next(1, int.MaxValue);
+
+        // add the road itself to savelist
+        if (objectData.id == 0)
+        {
+            objectData.id = id;
+            SaveData.current.objects.Add(objectData);
+        }
 
         if (RectangleSelector.current != null)
         {  
@@ -37,6 +52,8 @@ public class Road : MonoBehaviour
 
         GameEvents.current.OnLoadEvent += DestorySelf;
         GameEvents.current.OnDeleteEvent += DestroySelf;
+
+        lines = GetComponentsInChildren<Line>();
 
         foreach (Line line in lines)
         {
@@ -48,6 +65,7 @@ public class Road : MonoBehaviour
     {
         objectData.position = transform.position;
         objectData.rotation = transform.rotation;
+        objectData.roadType = roadType;
 
         foreach (Line line in lines)
         {
@@ -55,9 +73,10 @@ public class Road : MonoBehaviour
         }
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         RectangleSelector.current.Selectable.Remove(this.gameObject);
+        SaveData.current.objects.Remove(objectData);
         GameEvents.current.OnLoadEvent -= DestorySelf;
         GameEvents.current.OnDeleteEvent -= DestroySelf;
     }
@@ -76,9 +95,8 @@ public class Road : MonoBehaviour
     }
 }
 
-public enum RoadTypeEnum
-{
-    ORIGIN,
-    DESTINATION,
-    NORMAL
+public enum RoadTypeEnum 
+{ 
+    NORMAL, 
+    SOURCE 
 }

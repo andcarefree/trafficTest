@@ -1,11 +1,10 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 [System.Serializable]
 public class ObjectData
 {
-    public Guid guid;
-    public string type;
+    public int id;
+    public RoadTypeEnum roadType;
     public Vector3 position;
     public Quaternion rotation;
 }

@@ -16,7 +16,8 @@ public class ButtonHandler : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(destroyObjectOnLick());
+        StartCoroutine(DestroyObjectOnLick());
+        Debug.Log(Application.persistentDataPath);
     }
 
     private IEnumerator SetUpRoad()
@@ -153,8 +154,9 @@ public class ButtonHandler : MonoBehaviour
 
                 if (selectedRoad != null)
                 {
-                    OriginRoad road = selectedRoad.transform.parent.gameObject.AddComponent<OriginRoad>();
-                    selectedRoad.GetComponentInParent<OriginRoad>().Car = carPrefeb;
+                    OriginRoad originRoad = selectedRoad.transform.parent.gameObject.AddComponent<OriginRoad>();
+                    originRoad.Car = carPrefeb;
+                    selectedRoad.GetComponentInParent<Road>().roadType = RoadTypeEnum.SOURCE;
 
                     isDone = true;
                 }
@@ -184,7 +186,7 @@ public class ButtonHandler : MonoBehaviour
         return selectedObject;
     }
 
-    private IEnumerator destroyObjectOnLick()
+    private IEnumerator DestroyObjectOnLick()
     {
         while (true)
         {
@@ -205,6 +207,16 @@ public class ButtonHandler : MonoBehaviour
                 RectangleSelector.current.Selected.Clear();
             }
             yield return null;
+        }
+    }
+
+    public void OnStopButtonClick()
+    {
+        Time.timeScale = 0;
+        var cars = GameObject.FindGameObjectsWithTag("Car");
+        for (int i = 0; i < cars.Length; i++)
+        {
+            Destroy(cars[i]);
         }
     }
 

@@ -30,15 +30,31 @@ public class Following : Action
     
     public override TaskStatus OnUpdate()
     {
+        if (car.lineT >= 1)
+        {
+            car.lineT = 0;
+            //车辆行驶完所在道路并且没有后续道路
+            if (car.state == Car.State.inLine && (car.line.nextRoads == null || car.line.nextRoads.Length == 0))
+            {
+                car.DestroyCar();
+                return TaskStatus.Success;
+            }
+            //道路与路口的转换
+            if (car.state == Car.State.inLine)
+            {
+                car.line.cars.Remove(car.line.cars.Find(car));
+                return TaskStatus.Success;
+            }
+        }
         //TODO
-        if(car.state != Car.State.inLine || car.crossLine != null)
+        if (car.state != Car.State.inLine)
         {
             car.accel = 0;
             car.velocity = 30;
         }
         else
         {
-            if (car.line.cars.Find(car) == null || car.line.cars.Find(car).Previous == null)
+            if (car.line.cars.Find(car).Previous == null)
             {
                 if(car.velocity <= car.expectVelocity)
                 {
@@ -70,23 +86,6 @@ public class Following : Action
         }
 
         car.driving();
-
-        if (car.lineT >= 1)
-        {
-            car.lineT = 0;
-            //车辆行驶完所在道路并且没有后续道路
-            if (car.state == Car.State.inLine && (car.line.nextRoads == null || car.line.nextRoads.Length == 0))
-            {
-                car.DestroyCar();
-                return TaskStatus.Success;
-            }
-            //道路与路口的转换
-            if (car.state == Car.State.inLine)
-            {
-                car.line.cars.Remove(car.line.cars.Find(car));
-                return TaskStatus.Success;
-            }
-        }
         return TaskStatus.Running;
     }
 

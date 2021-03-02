@@ -57,6 +57,7 @@ public class Road : MonoBehaviour
 
     void OnDestroy()
     {
+        RectangleSelector.current.Selectable.Remove(this.gameObject);
         GameEvents.current.OnLoadEvent -= DestorySelf;
         GameEvents.current.OnDeleteEvent -= DestroySelf;
     }
@@ -70,7 +71,6 @@ public class Road : MonoBehaviour
     {
         if (id == gameObject.GetInstanceID())
         {
-            RectangleSelector.current.Selectable.Remove(this.gameObject);
             Destroy(this.gameObject);
         }
     }

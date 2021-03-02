@@ -60,6 +60,7 @@ public class Line : OLine
 
     private void OnDestroy()
     {
+        RectangleSelector.current.Selectable.Remove(this.gameObject);
         GameEvents.current.OnDeleteEvent -= DestroySelf;
     }
 

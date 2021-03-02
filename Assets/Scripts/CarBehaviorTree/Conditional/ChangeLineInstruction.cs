@@ -142,6 +142,10 @@ public class ChangeLineInstruction : Conditional
         //换道条件判断
         if (car.line != null && car.line.cars.First != null && car.line.cars.First.Value != car && car.s > car.transform.localScale.z)
         {
+            if (car.line.cars.Find(car) == null)
+            {
+                return;
+            }
             Car pre = (Car)car.line.cars.Find(car).Previous.Value;
             //当前车道运行速度低于预期时，寻求车道换道
             if ((pre.velocity <= 40 && car.expectVelocity - car.velocity > 5 && car.accel < 5) || (pre.velocity >= 40 && car.expectVelocity - car.velocity > 15 && car.accel < 5))
@@ -182,7 +186,8 @@ public class ChangeLineInstruction : Conditional
         {
             return TaskStatus.Failure;
         }
-        if (car.crossLine != null && car.crossLine.Length != 0)
+        //将要进入路口时就禁止主动换道
+        if (car.cross != null && car.state == OCar.State.inLine)
         {
             return TaskStatus.Failure;
         }

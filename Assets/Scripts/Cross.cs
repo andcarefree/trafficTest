@@ -52,11 +52,11 @@ public class Cross : MonoBehaviour
                     {
                         if (stream.ContainsKey(nextRoad))
                         {
-                            stream[nextRoad] += 1;
+                            stream[nextRoad] += 10;
                         }
                         else
                         {
-                            stream.Add(nextRoad, 1);
+                            stream.Add(nextRoad, 10);
                         }
                     }
                 }
@@ -67,6 +67,28 @@ public class Cross : MonoBehaviour
                 RoadMap[road] = new RoadIn(stream, totalCar);
             }
         }
+
+
+        if (other.gameObject.GetComponent<Car>() != null)
+        {
+            Car car = other.gameObject.GetComponent<Car>();
+            if (car.preCross == this)//已经驶出道路
+            {
+                return;
+            }
+            if (car.crossLine != null && car.crossLine.Length != 0)//判断之前是否已经prepare过道路
+            {
+                return;
+            }
+            if (car.state != Car.State.inLine)
+            {
+                return;
+            }
+            cars.AddLast(car);
+            car.state = Car.State.prepareCross;
+            car.cross = this;
+            return;
+        }
     }
 
     //车辆进入路口区域触发
@@ -75,13 +97,13 @@ public class Cross : MonoBehaviour
         //other is a car
         if (other.gameObject.GetComponent<Car>() != null) {
             Car car = other.gameObject.GetComponent<Car>();
-            if(car.state != Car.State.inLine)
+            cars.AddLast(car);
+            car.cross = this;
+            if (car.state != Car.State.inLine)
             {
                 return;
             }
-            cars.AddLast(car);
             car.state = Car.State.prepareCross;
-            car.cross = this;
             return;
         }
     }

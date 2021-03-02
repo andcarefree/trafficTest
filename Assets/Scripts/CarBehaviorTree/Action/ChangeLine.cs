@@ -18,7 +18,7 @@ public class ChangeLine : Action
     {
         Vector3[] ret =new Vector3[4];
         ret[0] = car.transform.position;
-        ret[1] = ret[0] + car.transform.forward.normalized * 4.6f;
+        ret[1] = ret[0] + car.transform.forward.normalized * 3f;
         ret[2] = ret[1] + targetLine.transform.position - car.line.transform.position;
         ret[3] = ret[2] + ret[1] - ret[0];
         return ret;

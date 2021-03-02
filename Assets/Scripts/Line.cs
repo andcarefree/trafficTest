@@ -187,4 +187,30 @@ public class Line : OLine
         result[3] = target.points[0];
         return result;
     }
+
+    //test
+    //稍微延长道路取贝塞尔点
+    public static Vector3[] linkLine2(Line now,Line target)
+    {
+        Vector3[] result = new Vector3[4];
+        var len = Vector3.Distance(now.points[now.points.Length - 1], target.points[0])/3 ;
+        result[0] = now.points[now.points.Length - 1];
+
+        var a1 = now.points[now.points.Length - 2];
+        var a2 = now.points[now.points.Length - 1];
+        var x = len / Vector3.Distance(a1, a2)*(a2.x-a1.x);
+        var z = len / Vector3.Distance(a1, a2)*(a2.z-a1.z);
+        result[1].x = a2.x + x;
+        result[1].z = a2.z + z;
+
+        a1 = target.points[0];
+        a2 = target.points[1];
+        x = len / Vector3.Distance(a1, a2) * (a2.x - a1.x);
+        z = len / Vector3.Distance(a1, a2) * (a2.z - a1.z);
+        result[2].x = a1.x - x;
+        result[2].z = a1.z - z;
+
+        result[3] = target.points[0];
+        return result;
+    }
 }

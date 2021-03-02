@@ -186,7 +186,8 @@ public class ChangeLineInstruction : Conditional
         {
             return TaskStatus.Failure;
         }
-        if (car.crossLine != null && car.crossLine.Length != 0)
+        //将要进入路口时就禁止主动换道
+        if (car.cross != null && car.state == OCar.State.inLine)
         {
             return TaskStatus.Failure;
         }

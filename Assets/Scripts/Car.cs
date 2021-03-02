@@ -20,6 +20,7 @@ public class Car : OCar
     */
 
     public Cross cross;
+    public Cross preCross;
     public Vector3[] crossLine;
 
     /*

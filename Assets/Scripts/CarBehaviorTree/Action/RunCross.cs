@@ -22,6 +22,7 @@ public class RunCross : Action
             car.setLine(car.cross.carRoadOut[car].lines[LineOutIndex.Value]);
             car.state = Car.State.inLine;
             car.cross.cars.Remove(car);
+            car.preCross = car.cross;
             car.cross = null;
             car.driving();
             return TaskStatus.Success;

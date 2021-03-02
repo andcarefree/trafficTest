@@ -35,8 +35,8 @@ public class Road : MonoBehaviour
             RectangleSelector.current.Selectable.Add(this.gameObject);
         }
 
-        GameEvents.current.OnLoadEvent += DestoryOnLoad;
-        GameEvents.current.OnDeleteEvent += DestroyOnDeleteButtonDown;
+        GameEvents.current.OnLoadEvent += DestorySelf;
+        GameEvents.current.OnDeleteEvent += DestroySelf;
 
         foreach (Line line in lines)
         {
@@ -57,23 +57,23 @@ public class Road : MonoBehaviour
 
     void OnDestroy()
     {
-        GameEvents.current.OnLoadEvent -= DestoryOnLoad;
-        GameEvents.current.OnDeleteEvent -= DestroyOnDeleteButtonDown;
+        GameEvents.current.OnLoadEvent -= DestorySelf;
+        GameEvents.current.OnDeleteEvent -= DestroySelf;
     }
 
-    private void DestoryOnLoad()
+    private void DestorySelf()
     {
         Destroy(this.gameObject);
     }
 
-    private void DestroyOnDeleteButtonDown(int id)
+    private void DestroySelf(int id)
     {
         if (id == gameObject.GetInstanceID())
         {
+            RectangleSelector.current.Selectable.Remove(this.gameObject);
             Destroy(this.gameObject);
         }
     }
-
 }
 
 public enum RoadTypeEnum

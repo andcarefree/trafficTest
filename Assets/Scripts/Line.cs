@@ -15,39 +15,10 @@ public class Line : OLine
 
 
     //public new LinkedList<Car> cars;
-    
-
-    public Vector3 lineStart
-    {
-        get
-        {
-            return points[0];
-        }
-    }
-
-    public Vector3 lineEnd
-    {
-        get
-        {
-            return points[points.Length - 1];
-        }
-    }
-
-    public Vector3 startVector
-    {
-        get
-        {
-            return (points[1] - points[0]).normalized;
-        }
-    }
-
-    public Vector3 endVector
-    {
-        get
-        {
-            return (points[points.Length - 1] - points[points.Length - 2]).normalized;
-        }
-    }
+    public Vector3 lineStart { get => points[0]; }
+    public Vector3 lineEnd { get => points[points.Length -1]; }
+    public Vector3 startVector{ get => (points[1] - points[0]).normalized; }
+    public Vector3 endVector { get => (points[points.Length - 1] - points[points.Length - 2]).normalized; }
 
     public int indexInRoad()
     {
@@ -60,6 +31,7 @@ public class Line : OLine
         }
         return -1;
     }
+
     private void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
@@ -68,8 +40,11 @@ public class Line : OLine
         maxVelocity = 70;
 
         if (RectangleSelector.current != null)
+        {
             RectangleSelector.current.Selectable.Add(this.gameObject);
+        }
     }
+
     private void Update()
     {
         //获取子点对象的transform
@@ -81,6 +56,20 @@ public class Line : OLine
             points[i - 1] = pointTran[i].position;
         }
         DrawCurve();
+    }
+
+    private void OnDestroy()
+    {
+        GameEvents.current.OnDeleteEvent -= DestroySelf;
+    }
+
+    private void DestroySelf(int id)
+    {
+        if (id == gameObject.GetInstanceID())
+        {
+            RectangleSelector.current.Selectable.Remove(this.gameObject);
+            Destroy(this.gameObject);
+        }
     }
 
     private void DrawCurve()

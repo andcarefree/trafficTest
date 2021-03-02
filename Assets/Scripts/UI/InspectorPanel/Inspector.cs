@@ -6,12 +6,19 @@ using TMPro;
 
 public class Inspector : MonoBehaviour
 {
+    public static Inspector current;
     private int tableInList;
     [SerializeField] private GameObject content;
     [SerializeField] private GameObject propertyPrefab;
     [SerializeField] private GameObject warningText;
     [SerializeField] private GameObject scrollView;
     private List<GameObject> propertyTableList = new List<GameObject>();
+    public List<GameObject> PropertyTableList { get => propertyTableList; set => propertyTableList = value; }
+
+    void Start()
+    {
+        current = this;
+    }
 
     void Update()
     {

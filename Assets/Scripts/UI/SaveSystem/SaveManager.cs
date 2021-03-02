@@ -78,8 +78,9 @@ public class SaveManager : MonoBehaviour
                 Instantiate(loadObject, newObject.position, newObject.rotation);
             }
 
+            loadPanel.SetActive(false);
             warningPanel.SetActive(true);
-            warningText.GetComponent<TextMeshProUGUI>().SetText("保存成功！");
+            warningText.GetComponent<TextMeshProUGUI>().SetText("读取成功！");
         }
         catch (System.Exception exception)
         {

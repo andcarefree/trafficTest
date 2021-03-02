@@ -20,7 +20,7 @@ public class PrepareCross : Action
         car.cross.carRoadOut[car] = roadOut;
         lineIn = car.cross.FindLineIn(car, roadOut);
         lineOut = car.cross.FindLineOut(roadOut);
-        car.crossLine = Line.linkLine(lineIn, lineOut);
+        car.crossLine = Line.linkLine2(lineIn, lineOut);
         targetLineIndex.Value = lineIn.indexInRoad();
         LineOutIndex.Value = lineOut.indexInRoad();
         return TaskStatus.Success;

@@ -26,14 +26,14 @@ public class Following : Action
     public override TaskStatus OnUpdate()
     {
         //TODO
-        if(car.state != Car.State.inLine)
+        if(car.state != Car.State.inLine || car.crossLine != null)
         {
             car.accel = 0;
             car.velocity = 30;
         }
         else
         {
-            if (car.line.cars.Find(car).Previous == null)
+            if (car.line.cars.Find(car) == null || car.line.cars.Find(car).Previous == null)
             {
                 if(car.velocity <= car.expectVelocity)
                 {

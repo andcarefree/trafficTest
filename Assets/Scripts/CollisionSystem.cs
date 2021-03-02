@@ -3,6 +3,16 @@ using System.Collections.Generic;
 
 public static class CollisionSystem
 {
+    
+
+    //全局冲突域map
+    public static Dictionary<KeyValuePair<Line, Line>, Barrier> newbarriers = new Dictionary<KeyValuePair<Line, Line>, Barrier>();
+    //路口内的行驶路径
+    public static Dictionary<KeyValuePair<Line, Line>, Vector3[]> crossRunPoints = new Dictionary<KeyValuePair<Line, Line>, Vector3[]>();
+    //行驶路径与路口匹配
+    public static Dictionary<Vector3[], Cross> runPoints2Cross = new Dictionary<Vector3[], Cross>();
+
+
     private static Dictionary<KeyValuePair<Car, Car>, Vector3> barriers = new Dictionary<KeyValuePair<Car, Car>, Vector3>();
     //阻碍车辆的障碍物可能有多种，从每一个障碍物都可以获取一个加速度，在所有加速度中取最小值做最小加速度
     private static Dictionary<Car, List<Vector3>> car2barriers = new Dictionary<Car, List<Vector3>>(); 
@@ -103,6 +113,12 @@ public static class CollisionSystem
     }
     public static float ToGiveWay(Car car)
     {
+        //test
+        if(car.state != Car.State.crossing)
+        {
+            return car.accel;
+        }
+
         float ret = car.accel;
         if( car2barriers.ContainsKey(car))
         {

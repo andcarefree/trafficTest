@@ -6,6 +6,8 @@ using UnityEngine;
 // TODO 车辆的速度与加速度处理需要重新设计使其符合现实情境
 public class Car:MonoBehaviour
 {
+    //CollisionSystem.Barrier barrier;
+
     const float MaxVelocityNoRoad = 30;
     public enum State
     {
@@ -96,6 +98,7 @@ public class Car:MonoBehaviour
     private void Awake()
     {
         this.expectVelocity = Car.expects[(int)Random.Range(0f, (float)Car.expects.Length)];
+        this.crossLine = null;
     }
     private void Start()
     {
@@ -277,6 +280,8 @@ public class Car:MonoBehaviour
             velocity = 0;
             return;
         }
+
+        this.accel = CollisionSystem.ToGiveWay(this);
 
         //道路限速；车辆期望速度；正常行驶速度；取最小值
         velocity = Mathf.Min(this.line==null?Car.MaxVelocityNoRoad:this.line.maxVelocity, velocity + 3.6f*accel * Time.deltaTime,expectVelocity);

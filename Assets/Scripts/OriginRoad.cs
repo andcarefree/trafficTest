@@ -14,7 +14,7 @@ public class OriginRoad : MonoBehaviour//泊松分布的交通流
     void Start()
     {
         this.originRoad = this.GetComponent<Road>();
-        z = 3f;
+        z = 1f;
     }
 
     void Update()
@@ -41,5 +41,6 @@ public class OriginRoad : MonoBehaviour//泊松分布的交通流
         car.linePoints = line.points;
         car.segment = Line.segmentNum;
         line.cars.AddLast(car);
+        car.velocity = UnityEngine.Random.Range(20, 30);
     }
 }

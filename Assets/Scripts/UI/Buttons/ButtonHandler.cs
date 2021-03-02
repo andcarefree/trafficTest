@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -8,19 +8,21 @@ public class ButtonHandler : MonoBehaviour
     [SerializeField] private TextMeshProUGUI statusBar;
     [SerializeField] private GameObject roadPrefeb;
     [SerializeField] private GameObject carPrefeb;
-    private GameObject[] roadList;
-    private Vector3[] roadPosition;
 
     void Awake()
     {
         Time.timeScale = 0;
-        roadList = new GameObject[2];
-        roadPosition = new Vector3[2];
+    }
+
+    void Start()
+    {
+        StartCoroutine(destroyObjectOnLick());
     }
 
     private IEnumerator SetUpRoad()
     {
         int status = 1;
+        var roadPosition = new Vector3[2];
 
         statusBar.SetText("请点击道路的第一个点（起点），按ESC键退出");
         while (status == 1)
@@ -85,6 +87,7 @@ public class ButtonHandler : MonoBehaviour
     private IEnumerator ConnectLane()
     {
         int status = 1;
+        var roadList = new GameObject[2];
 
         statusBar.SetText("请点击需要被连接的前一条车道， 按ESC退出");
         while (status == 1)
@@ -96,8 +99,12 @@ public class ButtonHandler : MonoBehaviour
             }
             if(Input.GetMouseButtonDown(0))
             {
-                roadList[1] = this.SelectObjectOnClick();
-                status += 1;
+                roadList[0] = this.SelectObjectOnClick();
+
+                if (roadList[0] != null)
+                {
+                    status += 1;
+                }
             }
             yield return null;
         }
@@ -113,7 +120,11 @@ public class ButtonHandler : MonoBehaviour
             if(Input.GetMouseButtonDown(0))
             {
                 roadList[1] = this.SelectObjectOnClick();
-                status += 1;
+
+                if (roadList[1] != null)
+                {
+                    status += 1;
+                }
             }
             yield return null;
         }
@@ -171,6 +182,30 @@ public class ButtonHandler : MonoBehaviour
         }
 
         return selectedObject;
+    }
+
+    private IEnumerator destroyObjectOnLick()
+    {
+        while (true)
+        {
+            if (Input.GetKeyDown(KeyCode.Delete))
+            {
+                var deleteList = RectangleSelector.current.Selected;
+                var propertyTable = Inspector.current.PropertyTableList;
+                
+                for (int i = 0; i < deleteList.Count; i++)
+                {
+                    GameEvents.current.OnDelete(deleteList[i].GetInstanceID());
+                }
+
+                for (int i = 0; i < propertyTable.Count; i++)
+                {
+                    Destroy(propertyTable[i]);
+                }
+                RectangleSelector.current.Selected.Clear();
+            }
+            yield return null;
+        }
     }
 
     public void OnGenerateRoadButtonClick()

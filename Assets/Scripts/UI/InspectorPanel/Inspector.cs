@@ -1,22 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using TMPro;
 
 public class Inspector : MonoBehaviour
 {
-    [SerializeField] private int tableInList;
+    public static Inspector current;
+    private int tableInList;
     [SerializeField] private GameObject content;
     [SerializeField] private GameObject propertyPrefab;
     [SerializeField] private GameObject warningText;
     [SerializeField] private GameObject scrollView;
-    [SerializeField] private List<GameObject> propertyTableList;
+    private List<GameObject> propertyTableList = new List<GameObject>();
+    public List<GameObject> PropertyTableList { get => propertyTableList; set => propertyTableList = value; }
+
+    void Start()
+    {
+        current = this;
+    }
 
     void Update()
     {
         // When nothing is selected, show prompt
-        if (RectangleSelector.current.selected.Count == 0)
+        if (RectangleSelector.current.Selected.Count == 0)
         {
             warningText.SetActive(true);
             scrollView.SetActive(false);
@@ -28,10 +34,10 @@ public class Inspector : MonoBehaviour
         }
         
         // Check things selected
-        if(RectangleSelector.current.selected.Count != tableInList)
+        if(RectangleSelector.current.Selected.Count != tableInList)
         {
             ShowProperty();
-            tableInList = RectangleSelector.current.selected.Count;
+            tableInList = RectangleSelector.current.Selected.Count;
         }
 
         // Update properties of selected objects
@@ -50,17 +56,13 @@ public class Inspector : MonoBehaviour
             propertyTableList.Remove(propertyTableList[i]);
         }
         
-        foreach(var gameObject in RectangleSelector.current.selected)
+        foreach(var gameObject in RectangleSelector.current.Selected)
         {
             if(gameObject.tag == "Car")
             {
-                var properties = gameObject.GetComponent<Car>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                var properties = gameObject.GetComponent<Car>().GetType().GetFields();
                 foreach(var property in properties)
                 {
-                    #if UNITY_EDITOR
-                        Debug.Log(property.Name);              
-                    #endif
-
                     GameObject propertyTable = Instantiate(propertyPrefab);
                     propertyTable.transform.SetParent(content.transform, false);
                     propertyTable.name = gameObject.GetInstanceID().ToString() + ' ' + property.Name;
@@ -75,13 +77,9 @@ public class Inspector : MonoBehaviour
             }
             if(gameObject.tag == "Road")
             {
-                var properties = gameObject.GetComponent<Road>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                var properties = gameObject.GetComponent<Road>().GetType().GetFields();
                 foreach(var property in properties)
                 {
-                    #if UNITY_EDITOR
-                        Debug.Log(property.Name);              
-                    #endif
-
                     GameObject propertyTable = Instantiate(propertyPrefab);
                     propertyTable.transform.SetParent(content.transform, false);
                     propertyTable.name = gameObject.GetInstanceID().ToString() + ' ' + property.Name;
@@ -96,13 +94,9 @@ public class Inspector : MonoBehaviour
             }
             if(gameObject.tag == "Lane")
             {
-                var properties = gameObject.GetComponent<Line>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                var properties = gameObject.GetComponent<Line>().GetType().GetFields();
                 foreach(var property in properties)
                 {
-                    #if UNITY_EDITOR
-                        Debug.Log(property.Name);              
-                    #endif
-
                     GameObject propertyTable = Instantiate(propertyPrefab);
                     propertyTable.transform.SetParent(content.transform, false);
                     propertyTable.name = gameObject.GetInstanceID().ToString() + ' ' + property.Name;
@@ -120,11 +114,11 @@ public class Inspector : MonoBehaviour
 
     public void UpdateProperty()
     {
-        foreach (var gameObject in RectangleSelector.current.selected)
+        foreach (var gameObject in RectangleSelector.current.Selected)
         {
             if(gameObject.tag == "Car")
             {
-                var fields = gameObject.GetComponent<Car>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                var fields = gameObject.GetComponent<Car>().GetType().GetFields();
 
                 foreach(var field in fields)
                 {
@@ -140,7 +134,7 @@ public class Inspector : MonoBehaviour
             }
             if(gameObject.tag == "Road")
             {
-                var fields = gameObject.GetComponent<Road>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                var fields = gameObject.GetComponent<Road>().GetType().GetFields();
 
                 foreach(var field in fields)
                 {
@@ -156,7 +150,7 @@ public class Inspector : MonoBehaviour
             }
             if(gameObject.tag == "Lane")
             {
-                var fields = gameObject.GetComponent<Line>().GetType().GetFields(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+                var fields = gameObject.GetComponent<Line>().GetType().GetFields();
 
                 foreach(var field in fields)
                 {

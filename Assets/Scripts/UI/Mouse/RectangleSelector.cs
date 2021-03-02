@@ -1,17 +1,19 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class RectangleSelector : MonoBehaviour
 {
+    public static RectangleSelector current;
+    private bool isSelecting;
     private Vector3 startPosition;
     private Vector3 endPosition;
-    public static RectangleSelector current;
-    public bool isSelecting;
-    public RectTransform selectionBox;
-    public List<GameObject> selectable;
-    public List<GameObject> selected;
+    [SerializeField] private RectTransform selectionBox;
+    [SerializeField] private List<GameObject> selectable = new List<GameObject>();
+    public List<GameObject> Selectable { get => selectable; set => selectable = value; }
+    [SerializeField] private List<GameObject> selected = new List<GameObject>();
+    public List<GameObject> Selected { get => selected; set => selected = value; }
     
     void Awake()
     {
@@ -20,7 +22,7 @@ public class RectangleSelector : MonoBehaviour
 
     void Update()
     {
-        if(!EventSystem.current.IsPointerOverGameObject() & !PublicVars.current.isGUIActive)
+        if(!EventSystem.current.IsPointerOverGameObject() & !ScrollBar.isGUIActive)
         {
             if(Input.GetMouseButtonDown(0))
             {

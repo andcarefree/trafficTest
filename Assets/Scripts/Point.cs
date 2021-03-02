@@ -2,11 +2,11 @@
 
 public class Point : MonoBehaviour
 {
-    [SerializeField] private float scaleX;
-    [SerializeField] private float scaleY;
-    [SerializeField] private float scaleZ;
-    [SerializeField] private Vector3 mouseOffset;
-    [SerializeField] private Vector3 screenPoint;
+    private float scaleX;
+    private float scaleY;
+    private float scaleZ;
+    private Vector3 mouseOffset;
+    private Vector3 screenPoint;
 
     void Update()
     {

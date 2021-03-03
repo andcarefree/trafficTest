@@ -76,6 +76,7 @@ public class ChangeLineInstruction : Conditional
         return 1;
     }
 
+    
 
     /// <summary>
     /// 车道选择策略
@@ -155,24 +156,152 @@ public class ChangeLineInstruction : Conditional
         }
     }
 
-
     /// <summary>
     /// 换道目标不为自身，正式开始换道
     /// </summary>
     /// <returns></returns>
     private bool SuccessChange()
     {
-        Line line = NearLinePick();
+        Line line = PickLine();
         /*应付中期*/
         //Line line = RightPick();
         //Line line = LeftPick();
         /**/
-        if (!line.Equals(car.line))
+        if (!line.Equals(car.line) && CanPreGap(car,line) && CanNextGap(car,line))
         {
             targetLineIndex.Value = line.indexInRoad();
             return true;
         }
         return false;
+    }
+
+    //选择一个价值最高的车道
+    private Line PickLine()
+    {
+        if(JudgeRightValue(car) >= JudgeLeftValue(car))
+        {
+            if(JudgeLineValue(car) >= JudgeRightValue(car)) {
+                return car.line;
+            }
+            else
+            {
+                return car.line.fatherRoad.lines[car.line.indexInRoad() + 1];
+            }
+        }
+        else
+        {
+            if(JudgeLineValue(car) >= JudgeLeftValue(car))
+            {
+                return car.line;
+            }
+            else
+            {
+                return car.line.fatherRoad.lines[car.line.indexInRoad() - 1];
+            }
+        }
+    }
+
+    //左侧车道价值: 0.57-0.32V1
+    //V1: 决策车辆与左车道后车相对速度
+    private static double JudgeLeftValue(Car car)
+    {
+        if (car.line.indexInRoad() == 0)//当前车道为最左车道
+        {
+            return double.MinValue;
+        }
+        var LeftLine = car.line.fatherRoad.lines[car.line.indexInRoad() - 1];
+        var cars = LeftLine.cars;
+        var nearCarV = 0.0;
+        foreach (var nearCar in cars)
+        {
+            if (((Car)nearCar).s < car.s)
+            {
+                nearCarV = ((Car)nearCar).velocity;
+            }
+        }
+        return 0.57 - 0.32 * (car.velocity - nearCarV);
+    }
+    //当前车道价值: 0.28*V2 + 0.36*V3 + 0.21S
+    //V2：目标车与前车相对速度
+    //V3：目标车与后车相对速度
+    //S：目标车与当前车道前车相对位置
+    private static double JudgeLineValue(Car car)
+    {
+        var preV = double.MaxValue;
+        var preS = double.MaxValue;
+        if (car.PreCar() != null)
+        {
+            preV = car.PreCar().velocity;
+            preS = car.PreCar().s;
+        }
+        var nextV = 0.0;
+        if (car.NextCar() != null)
+        {
+            nextV = car.NextCar().velocity;
+        }
+        return 0.28 * (preV - car.velocity) + 0.36 * (car.velocity - nextV) + 0.21 * (preS - car.s);
+    }
+    //右侧车道价值: 0.17 - 0.22*V4
+    //V4 ：决策车辆与右车道后车相对速度
+    private static double JudgeRightValue(Car car)
+    {
+        if (car.line.indexInRoad() == car.line.fatherRoad.lines.Length - 1)//当前车道为最右车道
+        {
+            return double.MinValue;
+        }
+        var RightLine = car.line.fatherRoad.lines[car.line.indexInRoad() + 1];
+        var cars = RightLine.cars;
+        var nearCarV = 0.0;
+        foreach (var nearCar in cars)
+        {
+            if (((Car)nearCar).s < car.s)
+            {
+                nearCarV = ((Car)nearCar).velocity;
+            }
+        }
+        return 0.17 - 0.22 * (car.velocity - nearCarV);
+    }
+
+    //换道临界前车间隙： G1 = exp{1.23 - 0.34*max(0,V5) - 0.21*min(0,V5)}
+    //V5: 与目标车道前车相对速度
+    //判断前车间隙是否能够换道
+    private static bool CanPreGap(Car car, Line line)//上述公式条件过于严苛，尝试放宽条件
+    {
+        //目标车道没有前车
+        if (line.cars.First == null || line.cars.First.Value.s < car.s)
+        {
+            return true;
+        }
+        foreach (var node in line.cars)
+        {
+            var preCar = (Car)node;
+            //找到前车
+            if (preCar.NextCar() == null || preCar.NextCar().s < car.s)
+            {
+                var V5 = preCar.velocity - car.velocity;
+                var G1 = Mathf.Exp((float)(1.23 - 0.34 * Mathf.Max(0, V5) - 0.21 * Mathf.Min(0, V5)));
+                //尝试缩小临界前车间隙
+                return preCar.s - car.s >= G1/2;
+            }
+        }
+        return true;
+    }
+    //换道临界后车间隙： G2 = exp{1.35 - 0.41*max(0,V6) - 0.28*min(0,V6)}
+    //V6: 与目标车道后车相对速度
+    private static bool CanNextGap(Car car, Line line)
+    {
+        foreach (var node in line.cars)
+        {
+            var nextCar = (Car)node;
+            //找到前车
+            if (nextCar.s < car.s)
+            {
+                var V6 = car.velocity - nextCar.velocity;
+                var G2 = Mathf.Exp((float)(1.35 - 0.41 * Mathf.Max(0, V6) - 0.28 * Mathf.Min(0, V6)));
+                return car.s - nextCar.s >= G2/2;
+            }
+        }
+        return true;
     }
 
     public override void OnStart()
@@ -193,34 +322,35 @@ public class ChangeLineInstruction : Conditional
         }
         if (car.state == Car.State.changing)
         {
-            changTime = 0;
+            //changTime = 0;
             return TaskStatus.Success;
         }
-
+/*
         if (changTime < 1)
         {
             changTime += Time.deltaTime;
             return TaskStatus.Failure;
-        }
+        }*/
 
-        PositiveChange();
+        //PositiveChange();
 
-        if (car.lineChange == true)
-        {
+        /*if (car.lineChange == true)
+        {*/
             //即将驶入路口，不予换道
             if (car.state == Car.State.prepareCross)
             {
 
                 return TaskStatus.Failure;
             }
-            if (SuccessChange() == true)
+            if (SuccessChange())
             {
+            Debug.LogWarning("count");
                 car.state = Car.State.changing;
                 return TaskStatus.Success;
             }
-        }
-        //最终判断不支持换道，驳回换道请求
-        car.lineChange = false;
+        /*}*/
+        /*//最终判断不支持换道，驳回换道请求
+        car.lineChange = false;*/
         return TaskStatus.Failure;
     }
 }

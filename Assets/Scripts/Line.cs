@@ -8,7 +8,7 @@ public class Line : OLine
     private LineRenderer lineRenderer;
     public Vector3[] points;
     public const int segmentNum = 100;
-    public List<Road> nextRoads { get; set; } = new List<Road>();
+    public Road[] nextRoads;
     public Road fatherRoad;
     public float maxVelocity;
     public Car lineLock;

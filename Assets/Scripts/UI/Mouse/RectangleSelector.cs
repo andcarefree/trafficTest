@@ -10,9 +10,9 @@ public class RectangleSelector : MonoBehaviour
     private Vector3 startPosition;
     private Vector3 endPosition;
     [SerializeField] private RectTransform selectionBox;
-    private List<GameObject> selectable = new List<GameObject>();
+    [SerializeField] private List<GameObject> selectable = new List<GameObject>();
     public List<GameObject> Selectable { get => selectable; set => selectable = value; }
-    private List<GameObject> selected = new List<GameObject>();
+    [SerializeField] private List<GameObject> selected = new List<GameObject>();
     public List<GameObject> Selected { get => selected; set => selected = value; }
     
     void Awake()

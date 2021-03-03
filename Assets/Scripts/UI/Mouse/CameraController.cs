@@ -104,7 +104,7 @@ public class CameraController : MonoBehaviour
 
         if (Input.mouseScrollDelta.y != 0)
         {
-            newZoom.Set(newZoom.x, newZoom.y - zoomAmount * Input.mouseScrollDelta.y, newZoom.z);
+            newZoom.Set(newZoom.x, newZoom.y + zoomAmount * Input.mouseScrollDelta.y, newZoom.z);
         }
     }
 

@@ -75,7 +75,7 @@ public class Following : Action
         {
             car.lineT = 0;
             //车辆行驶完所在道路并且没有后续道路
-            if (car.state == Car.State.inLine && (car.line.nextRoads == null || car.line.nextRoads.Count == 0))
+            if (car.state == Car.State.inLine && (car.line.nextRoads == null || car.line.nextRoads.Length == 0))
             {
                 car.DestroyCar();
                 return TaskStatus.Success;

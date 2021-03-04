@@ -6,6 +6,6 @@ public class TestButtonAdder : MonoBehaviour
 {
     public void AddDll()
     {
-        DllReader.testInit();
+        DllReader.LoadDll("");
     }
 }

@@ -2,12 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UI.Panel.FileSelet;
 
 public class ButtonHandler : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI statusBar;
     [SerializeField] private GameObject roadPrefeb;
     [SerializeField] private GameObject carPrefeb;
+    [SerializeField] private FileSelectPanel fileSelectPanel;
+    private GameObject[] roadList;
+    private Vector3[] roadPosition;
+
 
     void Awake()
     {
@@ -29,7 +34,7 @@ public class ButtonHandler : MonoBehaviour
         while (status == 1)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
-            {    
+            {
                 statusBar.SetText("");
                 yield break;
             }
@@ -53,7 +58,7 @@ public class ButtonHandler : MonoBehaviour
         while (status == 2)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
-            {    
+            {
                 statusBar.SetText("");
                 yield break;
             }
@@ -93,12 +98,12 @@ public class ButtonHandler : MonoBehaviour
         statusBar.SetText("请点击需要被连接的前一条车道， 按ESC退出");
         while (status == 1)
         {
-            if(Input.GetKey(KeyCode.Escape))
+            if (Input.GetKey(KeyCode.Escape))
             {
                 statusBar.SetText("");
                 yield break;
             }
-            if(Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 roadList[0] = this.SelectObjectOnClick();
 
@@ -113,12 +118,12 @@ public class ButtonHandler : MonoBehaviour
         statusBar.SetText("请点击需要被连接的后一条车道， 按ESC退出");
         while (status == 2)
         {
-            if(Input.GetKey(KeyCode.Escape))
+            if (Input.GetKey(KeyCode.Escape))
             {
                 statusBar.SetText("");
                 yield break;
             }
-            if(Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 roadList[1] = this.SelectObjectOnClick();
 
@@ -160,7 +165,7 @@ public class ButtonHandler : MonoBehaviour
 
                     isDone = true;
                 }
-            }       
+            }
             yield return null;
         }
 
@@ -178,9 +183,9 @@ public class ButtonHandler : MonoBehaviour
         {
             selectedObject = rayHit.collider.gameObject;
 
-            #if UNITY_EDITOR
-                Debug.Log(selectedObject.name);
-            #endif
+#if UNITY_EDITOR
+            Debug.Log(selectedObject.name);
+#endif
         }
 
         return selectedObject;
@@ -258,6 +263,15 @@ public class ButtonHandler : MonoBehaviour
 
     public void OnLoadModelButtonClick()
     {
-        DllReader.testInit();
+        //DllReader.testInit();
+        if (fileSelectPanel != null)
+            fileSelectPanel.Activate(DllSelect);
     }
+
+    private void DllSelect()
+    {
+        DllReader.LoadDll(UI.Panel.FileSelet.FileSelectPanel.currentFileSelectPanel.filePath);
+    }
+
+
 }

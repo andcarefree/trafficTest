@@ -135,8 +135,8 @@ public class ButtonHandler : MonoBehaviour
             yield return null;
         }
 
-        var nextRoad = roadList[1].GetComponentInParent<Road>();
-        roadList[0].GetComponent<Line>().nextRoads.Add(nextRoad);
+        var nextRoad = roadList[1].GetComponentsInParent<Road>();
+        roadList[0].GetComponent<Line>().nextRoads = nextRoad;
 
         statusBar.SetText("");
     }

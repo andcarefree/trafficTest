@@ -111,7 +111,13 @@ public class Cross : MonoBehaviour
     //根据道路车流量权重随机选择驶出道路
     public Road FindRoadOut(Car car)
     {
-        
+        //为了路口处的视觉效果，限制车辆在进入路口时的换道动作
+        //大概率条件下车辆都会选择当前line对应的road
+        int a = Random.Range(0, 100);
+        if (a < 80)
+        {
+            return car.line.nextRoads[Random.Range(0,car.line.nextRoads.Length)];
+        }
         RoadIn roadIn = RoadMap[car.line.fatherRoad];
         float rand = Random.Range(0,roadIn.totalCars);
         int temp = 0;
@@ -149,10 +155,19 @@ public class Cross : MonoBehaviour
     }
 
     //从已经选择好的roadOut中选择一条“较好”的道路
-    public Line FindLineOut(Road roadOut)
+    public Line FindLineOut(Road roadOut,Line linein)
     {
         //暂时选择随机选取
-        return roadOut.lines[Random.Range(0, roadOut.lines.Length)];
+        //考虑到同源车辆在路口内避免碰撞的行为，我们让车辆只会行驶到对应道路的半区
+        if(linein.indexInRoad() < linein.fatherRoad.lines.Length / 2)
+        {
+            return roadOut.lines[Random.Range(0, roadOut.lines.Length/2)];
+        }
+        else
+        {
+            return roadOut.lines[Random.Range(roadOut.lines.Length/2, roadOut.lines.Length)];
+        }
+        
     }
 
     void Start()

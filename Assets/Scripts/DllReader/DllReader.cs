@@ -49,9 +49,9 @@ public class DllReader
         return go;
     }
 
-    public static void testInit()
+    public static void LoadDll(string path)
     {
-        type = ReadDll(@"Custom", @"Custom/DllRecoverTest.dll");
+        type = ReadDll(@"Custom", path);
 
         go = CreateManager(type);
 

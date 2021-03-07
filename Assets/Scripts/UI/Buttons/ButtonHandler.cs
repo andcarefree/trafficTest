@@ -9,6 +9,7 @@ public class ButtonHandler : MonoBehaviour
     [SerializeField] private TextMeshProUGUI statusBar;
     [SerializeField] private GameObject roadPrefeb;
     [SerializeField] private GameObject carPrefeb;
+    [SerializeField] private GameObject crossPrefab;
     [SerializeField] private FileSelectPanel fileSelectPanel;
     private GameObject[] roadList;
     private Vector3[] roadPosition;
@@ -41,13 +42,13 @@ public class ButtonHandler : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                var Plane = new Plane(Vector3.up, Vector3.zero);
-                var Ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                var plane = new Plane(Vector3.up, Vector3.zero);
+                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 float entry;
 
-                if (Plane.Raycast(Ray, out entry))
+                if (plane.Raycast(ray, out entry))
                 {
-                    roadPosition[0] = Ray.GetPoint(entry);
+                    roadPosition[0] = ray.GetPoint(entry);
                 }
                 status += 1;
             }
@@ -65,13 +66,13 @@ public class ButtonHandler : MonoBehaviour
 
             if (Input.GetMouseButtonDown(0))
             {
-                var Plane = new Plane(Vector3.up, Vector3.zero);
-                var Ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                var plane = new Plane(Vector3.up, Vector3.zero);
+                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 float entry;
 
-                if (Plane.Raycast(Ray, out entry))
+                if (plane.Raycast(ray, out entry))
                 {
-                    roadPosition[1] = Ray.GetPoint(entry);
+                    roadPosition[1] = ray.GetPoint(entry);
                 }
                 status += 1;
             }
@@ -141,7 +142,7 @@ public class ButtonHandler : MonoBehaviour
         statusBar.SetText("");
     }
 
-    private IEnumerator SetUpCarSource()
+    private IEnumerator SetCarSource()
     {
         bool isDone = false;
 
@@ -182,10 +183,6 @@ public class ButtonHandler : MonoBehaviour
         if (Physics.Raycast(ray, out rayHit))
         {
             selectedObject = rayHit.collider.gameObject;
-
-#if UNITY_EDITOR
-            Debug.Log(selectedObject.name);
-#endif
         }
 
         return selectedObject;
@@ -210,6 +207,31 @@ public class ButtonHandler : MonoBehaviour
                     Destroy(propertyTable[i]);
                 }
                 RectangleSelector.current.Selected.Clear();
+            }
+            yield return null;
+        }
+    }
+
+    private IEnumerator SetCross()
+    {
+        var isDone = false;
+        while (!isDone)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                var plane = new Plane(Vector3.up, Vector3.zero);
+                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                var position = new Vector3();
+                float entry;
+
+                if (plane.Raycast(ray, out entry))
+                {
+                    position = ray.GetPoint(entry);
+                }
+
+                GameObject gameObject = Instantiate(crossPrefab, position, Quaternion.identity);
+
+                isDone = true;
             }
             yield return null;
         }
@@ -253,7 +275,7 @@ public class ButtonHandler : MonoBehaviour
     {
         if (Time.timeScale == 0)
         {
-            StartCoroutine(SetUpCarSource());
+            StartCoroutine(SetCarSource());
         }
         else
         {
@@ -266,6 +288,18 @@ public class ButtonHandler : MonoBehaviour
         //DllReader.testInit();
         if (fileSelectPanel != null)
             fileSelectPanel.Activate(DllSelect);
+    }
+
+    public void OnSetCrossButtonClick()
+    {
+        if (Time.timeScale == 0)
+        {
+            StartCoroutine(SetCross());
+        }
+        else
+        {
+            statusBar.SetText("正在播放中，请先停止再进行编辑");
+        }
     }
 
     private void DllSelect()

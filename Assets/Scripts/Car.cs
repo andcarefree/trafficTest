@@ -8,7 +8,7 @@ public class Car : OCar
 {
     
     const float MaxVelocityNoRoad = 30;
-
+    public Barrier barrier = null;
     /*
     public enum State
     {
@@ -267,7 +267,7 @@ public class Car : OCar
     public void findPath()
     {
         if (state == State.inLine) return;
-        int rdm1 = Random.Range(0, line.nextRoads.Length - 1);//确定道路
+        int rdm1 = Random.Range(0, line.nextRoads.Count - 1);//确定道路
         int rdm2 = 0;
         //找到车辆数最少的车道
         for (int i = 0; i < line.nextRoads[rdm1].lines.Length; i++)

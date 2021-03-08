@@ -17,7 +17,7 @@ public static class CollisionSystem
     //阻碍车辆的障碍物可能有多种，从每一个障碍物都可以获取一个加速度，在所有加速度中取最小值做最小加速度
     private static Dictionary<Car, List<Vector3>> car2barriers = new Dictionary<Car, List<Vector3>>(); 
 
-    private static Car ChooseLucky(Car car1,Car car2)
+    public static Car ChooseLucky(Car car1,Car car2)
     {
         //“车辆在车道方向的前后关系”采取一种近似手段
         //即将冲突车辆行驶方向相加得到一个夹角方向，按两车在该夹角方向投影前后判断车辆前后关系
@@ -30,7 +30,7 @@ public static class CollisionSystem
     //Calculate the intersection point of two lines. Returns true if lines intersect, otherwise false.
     //Note that in 3d, two lines do not intersect most of the time. So if the two lines are not in the 
     //same plane, use ClosestPointsOnTwoLines() instead.
-    private static Vector3 LineLineIntersection(Vector3 linePoint1, Vector3 lineVec1, Vector3 linePoint2, Vector3 lineVec2)
+    public static Vector3 LineLineIntersection(Vector3 linePoint1, Vector3 lineVec1, Vector3 linePoint2, Vector3 lineVec2)
     {
 
         Vector3 lineVec3 = linePoint2 - linePoint1;

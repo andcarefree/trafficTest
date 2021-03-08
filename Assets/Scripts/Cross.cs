@@ -114,9 +114,9 @@ public class Cross : MonoBehaviour
         //为了路口处的视觉效果，限制车辆在进入路口时的换道动作
         //大概率条件下车辆都会选择当前line对应的road
         int a = Random.Range(0, 100);
-        if (a < 80)
+        if (a < 70)
         {
-            return car.line.nextRoads[Random.Range(0,car.line.nextRoads.Length)];
+            return car.line.nextRoads[Random.Range(0, car.line.nextRoads.Count)];
         }
         RoadIn roadIn = RoadMap[car.line.fatherRoad];
         float rand = Random.Range(0,roadIn.totalCars);

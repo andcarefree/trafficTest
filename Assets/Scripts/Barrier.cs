@@ -4,9 +4,10 @@ using System.Collections.Generic;
 public class Barrier : MonoBehaviour
 {
 
-    Vector3 position;
-    float radius;
-    LinkedList<Car> waitCars;
+    public Vector3 position;
+    public float radius = 4;
+    public float s;
+    public LinkedList<Car> waitCars;
 
     private void Update()
     {

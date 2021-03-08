@@ -19,7 +19,16 @@ public class CarStop : Action
     public override TaskStatus OnUpdate()
     {
         //TODO 逐渐减速过程的细化，注意处理加速度的变化趋势
-        car.velocity = 10;
+        //car.velocity = 10;
+        if(Vector3.Distance(car.barrier.position,car.transform.position)-car.barrier.radius <= 0.5f+car.transform.localScale.z)
+        {
+            car.accel = 0;
+            car.velocity = 0;
+        }
+        else
+        {
+            car.accel = Mathf.Pow(car.Km2m(), 1.5f) * (0 - car.Km2m()) / Mathf.Pow(car.barrier.s - car.barrier.radius - car.s, 0.9f);
+        }
         car.driving();
 
         return TaskStatus.Running;

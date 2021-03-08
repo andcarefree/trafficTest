@@ -10,7 +10,7 @@ public class IsInCross : Conditional
 
     public override TaskStatus OnUpdate()
     {
-        if(car.line != null && car.line.nextRoads.Length == 0)
+        if(car.line != null && car.line.nextRoads.Count == 0)
         {
             return  TaskStatus.Failure;
         }

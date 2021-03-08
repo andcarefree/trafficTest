@@ -16,6 +16,10 @@ public class PrepareCross : Action
     }
     public override TaskStatus OnUpdate()
     {
+        if(car.line.nextRoads.Count == 0)
+        {
+            return TaskStatus.Failure;
+        }
         Road roadOut = car.cross.FindRoadOut(car);
         car.cross.carRoadOut[car] = roadOut;
         lineIn = car.cross.FindLineIn(car, roadOut);

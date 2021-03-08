@@ -72,6 +72,10 @@ public class Cross : MonoBehaviour
         if (other.gameObject.GetComponent<Car>() != null)
         {
             Car car = other.gameObject.GetComponent<Car>();
+            if (car.line != null && car.line.nextRoads.Count == 0)
+            {
+                return;
+            }
             if (car.preCross == this)//已经驶出道路
             {
                 return;
@@ -97,6 +101,10 @@ public class Cross : MonoBehaviour
         //other is a car
         if (other.gameObject.GetComponent<Car>() != null) {
             Car car = other.gameObject.GetComponent<Car>();
+            if (car.line != null && car.line.nextRoads.Count == 0)
+            {
+                return;
+            }
             cars.AddLast(car);
             car.cross = this;
             if (car.state != Car.State.inLine)

@@ -51,11 +51,6 @@ MonoBehaviour:
   roadObject: {fileID: 0}
   lines: []
   roadType: 0
-  objectData:
-    id: 
-    type: 
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!65 &223530681382260215
 BoxCollider:
   m_ObjectHideFlags: 0

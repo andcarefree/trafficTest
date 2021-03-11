@@ -6,10 +6,12 @@ using UI.Panel.FileSelet;
 
 public class ButtonHandler : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI startButtonText;
     [SerializeField] private TextMeshProUGUI statusBar;
     [SerializeField] private GameObject roadPrefeb;
     [SerializeField] private GameObject carPrefeb;
     [SerializeField] private GameObject crossPrefab;
+    [SerializeField] private GameObject savePanel;
     [SerializeField] private FileSelectPanel fileSelectPanel;
     private GameObject[] roadList;
     private Vector3[] roadPosition;
@@ -237,6 +239,25 @@ public class ButtonHandler : MonoBehaviour
         }
     }
 
+    public void OnPlayButtonClick()
+    {
+        if (Time.timeScale == 0f)
+        {
+            startButtonText.SetText("暂停");
+            Time.timeScale = 1f;
+        }
+        else
+        {
+            startButtonText.SetText("开始");
+            Time.timeScale = 0f;
+        }
+    }
+
+    public void OnSaveButtonClick()
+    {
+        savePanel.SetActive(true);
+    }
+
     public void OnStopButtonClick()
     {
         Time.timeScale = 0;
@@ -249,7 +270,7 @@ public class ButtonHandler : MonoBehaviour
 
     public void OnGenerateRoadButtonClick()
     {
-        if (Time.timeScale == 0)
+        if (Time.timeScale == 0f)
         {
             StartCoroutine(SetUpRoad());
         }
@@ -261,7 +282,7 @@ public class ButtonHandler : MonoBehaviour
 
     public void OnLinkLaneButtonClick()
     {
-        if (Time.timeScale == 0)
+        if (Time.timeScale == 0f)
         {
             StartCoroutine(ConnectLane());
         }
@@ -273,7 +294,7 @@ public class ButtonHandler : MonoBehaviour
 
     public void OnSetCarSourceButtonClick()
     {
-        if (Time.timeScale == 0)
+        if (Time.timeScale == 0f)
         {
             StartCoroutine(SetCarSource());
         }
@@ -288,6 +309,11 @@ public class ButtonHandler : MonoBehaviour
         //DllReader.testInit();
         if (fileSelectPanel != null)
             fileSelectPanel.Activate(DllSelect);
+    }
+
+    public void OnQuitButtonClick()
+    {
+        Application.Quit();
     }
 
     public void OnSetCrossButtonClick()

@@ -32,6 +32,11 @@ public class RectangleSelector : MonoBehaviour
             else if(Input.GetMouseButton(0))
             {
                 endPosition = Input.mousePosition;
+
+                var xMax = Mathf.Max(endPosition.x, startPosition.x);
+                var yMax = Mathf.Max(endPosition.y, startPosition.y);
+                var xMin = Mathf.Min(endPosition.x, startPosition.x);
+                var yMin = Mathf.Min(endPosition.y, startPosition.y);
                 
                 var width = (endPosition.x - startPosition.x) * 1920f / Screen.width;
                 var height = (endPosition.y - startPosition.y) * 1080f / Screen.height;
@@ -41,18 +46,12 @@ public class RectangleSelector : MonoBehaviour
 
                 if(!selectionBox.gameObject.activeInHierarchy)
                     selectionBox.gameObject.SetActive(true);
-
-                var selection = Rect.MinMaxRect(Mathf.Min(startPosition.x, endPosition.x), 
-                                                Screen.height - Mathf.Max(startPosition.y, endPosition.y),
-                                                Mathf.Max(startPosition.x, endPosition.x), 
-                                                Screen.height - Mathf.Min(startPosition.y, endPosition.y));
                 
                 foreach(var go in selectable)
                 {
                     var position = Camera.main.WorldToScreenPoint(go.transform.position);
-                    var positionInScreen = new Vector2(position.x, Camera.main.pixelHeight - position.y);
 
-                    if(selection.Contains(positionInScreen, true))
+                    if(position.x > xMin && position.x < xMax && position.y > yMin && position.y < yMax)
                     {
                         if(!selected.Contains(go))
                         {

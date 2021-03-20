@@ -11,12 +11,12 @@ public class SerializationManager
     {
         BinaryFormatter formatter = GetBinaryFormatter();
 
-        if(!Directory.Exists(Application.persistentDataPath + "/saves"))
+        if(!Directory.Exists(Application.dataPath + "/saves"))
         {
-            Directory.CreateDirectory(Application.persistentDataPath + "/saves");
+            Directory.CreateDirectory(Application.dataPath + "/saves");
         }
 
-        string path = Application.persistentDataPath + "/saves/" + saveName +".save";
+        string path = Application.dataPath + "/saves/" + saveName +".save";
 
         FileStream file = File.Create(path);
 

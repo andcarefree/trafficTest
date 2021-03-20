@@ -7,10 +7,11 @@ public class SaveManager : MonoBehaviour
 {
     [SerializeField] private TMP_InputField saveName;
     [SerializeField] private GameObject carPrefab;
-    [SerializeField] private GameObject saveButtonPrefab;
-    [SerializeField] private GameObject scrollContentArea;
     [SerializeField] private GameObject loadObject;
     [SerializeField] private GameObject loadPanel;
+    [SerializeField] private GameObject saveButtonPrefab;
+    [SerializeField] private GameObject scrollContentArea;
+    [SerializeField] private GameObject savePanel;
     [SerializeField] private GameObject warningPanel;
     [SerializeField] private GameObject warningText;
     private string[] saveFileName;
@@ -20,11 +21,13 @@ public class SaveManager : MonoBehaviour
         try
         {
             SerializationManager.Save(saveName.text, SaveData.current);
+            savePanel.SetActive(false);
             warningPanel.SetActive(true);
             warningText.GetComponent<TextMeshProUGUI>().SetText("保存成功！");
         }
         catch (System.Exception exception)
         {
+            savePanel.SetActive(false);
             warningPanel.SetActive(true);
             warningText.GetComponent<TextMeshProUGUI>().SetText(exception.ToString());
             throw;
@@ -52,18 +55,18 @@ public class SaveManager : MonoBehaviour
             {
                 GetObjectFromLoadFile(saveFileName[index]);
             });
-            buttonObject.GetComponentInChildren<TextMeshProUGUI>().text = saveFileName[index].Replace($"{Application.persistentDataPath}/saves\\", "");
+            buttonObject.GetComponentInChildren<TextMeshProUGUI>().text = saveFileName[index].Replace($"{Application.dataPath}/saves\\", "");
         }
     }
 
     private void GetLoadFile()
     {
-        if(!Directory.Exists(Application.persistentDataPath + "/saves"))
+        if(!Directory.Exists(Application.dataPath + "/saves"))
         {
-            Directory.CreateDirectory(Application.persistentDataPath + "/saves");
+            Directory.CreateDirectory(Application.dataPath + "/saves");
         }
 
-        saveFileName = Directory.GetFiles(Application.persistentDataPath + "/saves");
+        saveFileName = Directory.GetFiles(Application.dataPath + "/saves");
     }
 
     private void GetObjectFromLoadFile(string loadFile)

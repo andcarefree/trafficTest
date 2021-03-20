@@ -1147,7 +1147,6 @@ GameObject:
   - component: {fileID: 170792599}
   - component: {fileID: 170792598}
   - component: {fileID: 170792597}
-  - component: {fileID: 170792601}
   - component: {fileID: 170792600}
   m_Layer: 5
   m_Name: ConfirmButton
@@ -1218,7 +1217,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 170792598}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 170792600}
+        m_MethodName: OnCancelButtonClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &170792598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1265,19 +1275,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 170792595}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -57143145, guid: a040fb66244a7f54289914d98ea4ef7d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &170792601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 170792595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1465209106, guid: c8d0ad23af520fe46aabe2b1fecf6462, type: 3}
+  m_Script: {fileID: 11500000, guid: bc60d2f75258f0049bb8d0feaa9f8e77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &190855632
@@ -10228,12 +10226,13 @@ MonoBehaviour:
   saveName: {fileID: 1086971598}
   carPrefab: {fileID: 2075165297274032957, guid: d799f1b600520d446b8ac8e7225b011c,
     type: 3}
-  saveButtonPrefab: {fileID: 7982459019094414844, guid: cb6abe70495fe7d4cb87b987f83aec0b,
-    type: 3}
-  scrollContentArea: {fileID: 1125071395}
   loadObject: {fileID: 4077038019558064422, guid: 5e57b7b7aec88374386dca97ef87d5c9,
     type: 3}
   loadPanel: {fileID: 31531426}
+  saveButtonPrefab: {fileID: 7982459019094414844, guid: cb6abe70495fe7d4cb87b987f83aec0b,
+    type: 3}
+  scrollContentArea: {fileID: 1125071395}
+  savePanel: {fileID: 1171647600}
   warningPanel: {fileID: 427691679}
   warningText: {fileID: 642451786}
 --- !u!1 &2077613786

@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-// TODO 车辆的速度与加速度处理需要重新设计使其符合现实情境
 public class Car : OCar
 {
     
@@ -48,9 +45,8 @@ public class Car : OCar
 
 
     /// <summary>
-    /// 所在路线
+    /// 车辆行驶所在车道
     /// </summary>
-
     public new Line line
     {
         get { return (Line)base.line; }

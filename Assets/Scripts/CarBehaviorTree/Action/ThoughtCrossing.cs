@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
-
+/// <summary>
+/// 穿越路口的行为
+/// </summary>
 public class ThoughtCrossing : Action
 {
     Car car;

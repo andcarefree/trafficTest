@@ -1,25 +1,27 @@
 ﻿using UnityEngine;
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
-
-//通过改变car.lineChange发出对车辆的换道指令
+/// <summary>
+/// 车辆是否换道的判断脚本
+/// </summary>
 public class ChangeLineInstruction : Conditional
 {
     Car car;
-
-    //限制换道频率
+    /// <summary>
+    /// 限制车辆换道频率
+    /// </summary>
     float changTime;
-
     public SharedInt targetLineIndex;
+    /// <summary>
+    /// 为车道行驶价值系数提供二次开发接口
+    /// </summary>
     public static OriginCustom.JV jv=JudgeValue;
     /// <summary>
     /// 判断换道产生的收益值,返回值[0,1]
     /// </summary>
-    //TODO 现在只考虑双值，0代表不值得换道，1代表值得换道
-    //现在需要考虑的因素：1.换道间隙够大
-    //                2.间隙之前的车够快或够远
-    //                3.间隙之后的车够远
-    //TODO 对外提供收益函数的替换接口
+    /// <param name="car"></param>
+    /// <param name="line"></param>
+    /// <returns></returns>
     public static float JudgeValue(OCar car, OLine line)
     {
         //目标车道不存在车辆
@@ -31,7 +33,6 @@ public class ChangeLineInstruction : Conditional
         float PreSpeed;//间隙前车速度
         float nextS;//间隙后车的行驶间距
         float preS;//间隙前车的行驶间距
-
         //near在car之后
         if (OCar.judgeLocation(car, near))
         {
@@ -64,7 +65,6 @@ public class ChangeLineInstruction : Conditional
             }
 
         }
-
         if (preS <= car.transform.localScale.z || nextS <= car.transform.lossyScale.z * 1.5)
         {
             return 0;
@@ -75,9 +75,6 @@ public class ChangeLineInstruction : Conditional
         }
         return 1;
     }
-
-    
-
     /// <summary>
     /// 车道选择策略
     /// 从该车道临近车道选择一个正收益车道
@@ -110,8 +107,10 @@ public class ChangeLineInstruction : Conditional
             }
         }
     }
-
-    /*应付中期*/
+    /// <summary>
+    /// 选择左侧车道换道
+    /// </summary>
+    /// <returns></returns>
     private Line LeftPick()
     {
         Line[] lines = car.line.fatherRoad.lines;
@@ -122,6 +121,10 @@ public class ChangeLineInstruction : Conditional
         }
         return jv(car, lines[nowIndex - 1]) > 0 ? lines[nowIndex - 1] : car.line;
     }
+    /// <summary>
+    /// 选择右侧车道换道
+    /// </summary>
+    /// <returns></returns>
     private Line RightPick()
     {
         Line[] lines = car.line.fatherRoad.lines;
@@ -132,9 +135,6 @@ public class ChangeLineInstruction : Conditional
         }
         return jv(car, lines[nowIndex + 1]) > 0 ? lines[nowIndex + 1] : car.line;
     }
-    /**/
-
-
     /// <summary>
     /// 车辆不满足当前行驶环境时寻求主动换道时修改car.lineChange
     /// </summary>
@@ -155,7 +155,6 @@ public class ChangeLineInstruction : Conditional
             }
         }
     }
-
     /// <summary>
     /// 换道目标不为自身，正式开始换道
     /// </summary>
@@ -163,10 +162,6 @@ public class ChangeLineInstruction : Conditional
     private bool SuccessChange()
     {
         Line line = PickLine();
-        /*应付中期*/
-        //Line line = RightPick();
-        //Line line = LeftPick();
-        /**/
         if (!line.Equals(car.line) && CanPreGap(car,line) && CanNextGap(car,line))
         {
             targetLineIndex.Value = line.indexInRoad();
@@ -174,8 +169,10 @@ public class ChangeLineInstruction : Conditional
         }
         return false;
     }
-
-    //选择一个价值最高的车道
+    /// <summary>
+    /// 选择一个行驶价值最高的车道
+    /// </summary>
+    /// <returns></returns>
     private Line PickLine()
     {
         if(JudgeRightValue(car) >= JudgeLeftValue(car))
@@ -200,9 +197,12 @@ public class ChangeLineInstruction : Conditional
             }
         }
     }
-
-    //左侧车道价值: 0.57-0.32V1
-    //V1: 决策车辆与左车道后车相对速度
+    /// <summary>
+    /// 左侧车道价值: 0.57-0.32V1
+    /// V1: 决策车辆与左车道后车相对速度
+    /// </summary>
+    /// <param name="car"></param>
+    /// <returns></returns>
     private static double JudgeLeftValue(Car car)
     {
         if (car.line.indexInRoad() == 0)//当前车道为最左车道
@@ -221,10 +221,14 @@ public class ChangeLineInstruction : Conditional
         }
         return 0.57 - 0.32 * (car.velocity - nearCarV);
     }
-    //当前车道价值: 0.28*V2 + 0.36*V3 + 0.21S
-    //V2：目标车与前车相对速度
-    //V3：目标车与后车相对速度
-    //S：目标车与当前车道前车相对位置
+    /// <summary>
+    /// 当前车道价值: 0.28*V2 + 0.36*V3 + 0.21S
+    /// V2：目标车与前车相对速度
+    /// V3：目标车与后车相对速度
+    /// S：目标车与当前车道前车相对位置
+    /// </summary>
+    /// <param name="car"></param>
+    /// <returns></returns>
     private static double JudgeLineValue(Car car)
     {
         var preV = double.MaxValue;
@@ -241,8 +245,12 @@ public class ChangeLineInstruction : Conditional
         }
         return 0.28 * (preV - car.velocity) + 0.36 * (car.velocity - nextV) + 0.21 * (preS - car.s);
     }
-    //右侧车道价值: 0.17 - 0.22*V4
-    //V4 ：决策车辆与右车道后车相对速度
+    /// <summary>
+    /// 右侧车道价值: 0.17 - 0.22*V4
+    /// V4 ：决策车辆与右车道后车相对速度
+    /// </summary>
+    /// <param name="car"></param>
+    /// <returns></returns>
     private static double JudgeRightValue(Car car)
     {
         if (car.line.indexInRoad() == car.line.fatherRoad.lines.Length - 1)//当前车道为最右车道
@@ -261,10 +269,14 @@ public class ChangeLineInstruction : Conditional
         }
         return 0.17 - 0.22 * (car.velocity - nearCarV);
     }
-
-    //换道临界前车间隙： G1 = exp{1.23 - 0.34*max(0,V5) - 0.21*min(0,V5)}
-    //V5: 与目标车道前车相对速度
-    //判断前车间隙是否能够换道
+    /// <summary>
+    /// 判断前车间隙是否能够换道
+    /// 换道临界前车间隙： G1 = exp{1.23 - 0.34*max(0,V5) - 0.21*min(0,V5)}
+    /// V5: 与目标车道前车相对速度
+    /// </summary>
+    /// <param name="car"></param>
+    /// <param name="line"></param>
+    /// <returns></returns>
     private static bool CanPreGap(Car car, Line line)//上述公式条件过于严苛，尝试放宽条件
     {
         //目标车道没有前车
@@ -286,8 +298,13 @@ public class ChangeLineInstruction : Conditional
         }
         return true;
     }
-    //换道临界后车间隙： G2 = exp{1.35 - 0.41*max(0,V6) - 0.28*min(0,V6)}
-    //V6: 与目标车道后车相对速度
+    /// <summary>
+    /// 换道临界后车间隙： G2 = exp{1.35 - 0.41*max(0,V6) - 0.28*min(0,V6)}
+    /// V6: 与目标车道后车相对速度
+    /// </summary>
+    /// <param name="car"></param>
+    /// <param name="line"></param>
+    /// <returns></returns>
     private static bool CanNextGap(Car car, Line line)
     {
         foreach (var node in line.cars)
@@ -303,12 +320,14 @@ public class ChangeLineInstruction : Conditional
         }
         return true;
     }
-
     public override void OnStart()
     {
         car = gameObject.GetComponent<Car>();
     }
-
+    /// <summary>
+    /// 每一帧都判断当前车辆是否需要换道
+    /// </summary>
+    /// <returns></returns>
     public override TaskStatus OnUpdate()
     {
         if (car.state == Car.State.prepareCross)
@@ -325,7 +344,7 @@ public class ChangeLineInstruction : Conditional
             //changTime = 0;
             return TaskStatus.Success;
         }
-/*
+        /*
         if (changTime < 1)
         {
             changTime += Time.deltaTime;

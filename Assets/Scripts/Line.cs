@@ -5,23 +5,39 @@ using UnityEngine;
 
 public class Line : OLine
 {
+    /// <summary>
+    /// 车道渲染器
+    /// </summary>
     private LineRenderer lineRenderer;
+    /// <summary>
+    /// 车道的贝塞尔控制点
+    /// </summary>
     public Vector3[] points;
+    /// <summary>
+    /// 车道离散化的轨迹点个数
+    /// </summary>
     public const int segmentNum = 100;
-    
+    /// <summary>
+    /// 车道所属道路
+    /// </summary>
     public Road fatherRoad;
+    /// <summary>
+    /// 车道限速
+    /// </summary>
     public float maxVelocity;
     public Car lineLock;
-
+    /// <summary>
+    /// 车道所能通向的下一条道路
+    /// </summary>
     public List<Road> nextRoads;
-
-
-    //public new LinkedList<Car> cars;
     public Vector3 lineStart { get => points[0]; }
     public Vector3 lineEnd { get => points[points.Length -1]; }
     public Vector3 startVector{ get => (points[1] - points[0]).normalized; }
     public Vector3 endVector { get => (points[points.Length - 1] - points[points.Length - 2]).normalized; }
-
+    /// <summary>
+    /// 获取车道在道路中的下标
+    /// </summary>
+    /// <returns></returns>
     public int indexInRoad()
     {
         for (int i = 0; i < fatherRoad.lines.Length; i++)
@@ -33,7 +49,9 @@ public class Line : OLine
         }
         return -1;
     }
-
+    /// <summary>
+    /// 初始化车道相关字段
+    /// </summary>
     private void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
@@ -46,7 +64,9 @@ public class Line : OLine
             RectangleSelector.current.Selectable.Add(this.gameObject);
         }
     }
-
+    /// <summary>
+    /// 渲染车道，使其可见
+    /// </summary>
     private void Update()
     {
         //获取子点对象的transform
@@ -59,13 +79,11 @@ public class Line : OLine
         }
         DrawCurve();
     }
-
     private void OnDestroy()
     {
         RectangleSelector.current.Selectable.Remove(this.gameObject);
         GameEvents.current.OnDeleteEvent -= DestroySelf;
     }
-
     private void DestroySelf(int id)
     {
         if (id == gameObject.GetInstanceID())
@@ -74,7 +92,9 @@ public class Line : OLine
             Destroy(this.gameObject);
         }
     }
-
+    /// <summary>
+    /// 根据车道的贝塞尔控制点绘制车道
+    /// </summary>
     private void DrawCurve()
     {
         for (int i = 1; i <= segmentNum; i++)
@@ -85,7 +105,12 @@ public class Line : OLine
             lineRenderer.SetPosition(i - 1, pixel);
         }
     }
-
+    /// <summary>
+    /// 根据贝塞尔曲线控制点与T值得到轨迹中的点
+    /// </summary>
+    /// <param name="t"></param>
+    /// <param name="p"></param>
+    /// <returns></returns>
     public static Vector3 Bezier(float t, Vector3[] p)
     {
         Vector3 ans = Vector3.zero;
@@ -96,9 +121,8 @@ public class Line : OLine
         }
         return ans;
     }
-
     /// <summary>
-    /// TODO 求出点在贝塞尔曲线上对应的T值，数值分析方法
+    /// 求出点在贝塞尔曲线上对应的T值，简单二分法
     /// </summary>
     public static float CalculateT(Vector3 point, Vector3[] p)
     {
@@ -119,7 +143,6 @@ public class Line : OLine
         }
         return mid;
     }
-
     /// <returns>
     /// n! / m!(n-m)!
     /// </returns>
@@ -151,9 +174,8 @@ public class Line : OLine
         ans[2] = line2.lineStart;
         return ans;
     }
-
     /// <summary>
-    /// 供linkLine调用
+    /// 路径生成算法需要的贝塞尔控制点，供linkLine调用
     /// </summary>
     private static Vector3 controlPoint(Vector3 now1, Vector3 now2, Vector3 target1, Vector3 target2)
     {
@@ -176,7 +198,6 @@ public class Line : OLine
             return new Vector3((float)(x + now2[0]) / 2, 0, (float)(y + now2[2]) / 2);
         }
     }
-
     /// <summary>
     /// 作用同Interpolation, 算法不同
     /// </summary>
@@ -189,29 +210,31 @@ public class Line : OLine
         result[3] = target.points[0];
         return result;
     }
-
-    //test
-    //稍微延长道路取贝塞尔点
+    /// <summary>
+    /// 新的路径生成算法，适用于更普适的场景
+    /// </summary>
+    /// <param name="now">当前道路</param>
+    /// <param name="target">目标道路</param>
+    /// <returns>生成曲线</returns>
     public static Vector3[] linkLine2(Line now,Line target)
     {
         Vector3[] result = new Vector3[4];
         var len = Vector3.Distance(now.points[now.points.Length - 1], target.points[0])/3 ;
         result[0] = now.points[now.points.Length - 1];
-
+        //计算第一个非端点贝塞尔控制点
         var a1 = now.points[now.points.Length - 2];
         var a2 = now.points[now.points.Length - 1];
         var x = len / Vector3.Distance(a1, a2)*(a2.x-a1.x);
         var z = len / Vector3.Distance(a1, a2)*(a2.z-a1.z);
         result[1].x = a2.x + x;
         result[1].z = a2.z + z;
-
+        //计算第二个非端点贝塞尔控制点
         a1 = target.points[0];
         a2 = target.points[1];
         x = len / Vector3.Distance(a1, a2) * (a2.x - a1.x);
         z = len / Vector3.Distance(a1, a2) * (a2.z - a1.z);
         result[2].x = a1.x - x;
         result[2].z = a1.z - z;
-
         result[3] = target.points[0];
         return result;
     }

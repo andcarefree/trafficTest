@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+// 单个物件的数据类
 [System.Serializable]
 public class ObjectData
 {

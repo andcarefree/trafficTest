@@ -15,6 +15,7 @@ public class SaveManager : MonoBehaviour
     [SerializeField] private GameObject warningText;
     private string[] saveFileName;
     
+    // 保存功能，用于与UI按钮关联
     public void OnSave()
     {
         try
@@ -32,6 +33,7 @@ public class SaveManager : MonoBehaviour
         
     }
 
+    // 读取功能，用于与UI按钮关联
     public void OnLoad()
     {
         loadPanel.SetActive(true);
@@ -56,6 +58,7 @@ public class SaveManager : MonoBehaviour
         }
     }
 
+    // 获取存档文件列表
     private void GetLoadFile()
     {
         if(!Directory.Exists(Application.persistentDataPath + "/saves"))
@@ -66,6 +69,7 @@ public class SaveManager : MonoBehaviour
         saveFileName = Directory.GetFiles(Application.persistentDataPath + "/saves");
     }
 
+    // 从文件内的ObjectData示例中获取到物件的位置、旋转等信息，以重新生成物件
     private void GetObjectFromLoadFile(string loadFile)
     {
         try

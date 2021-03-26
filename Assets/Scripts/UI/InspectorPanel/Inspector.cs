@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+// 探测器面板脚本，目前使用反射实现
+// 在未来确定了路，车，路口的模式之后会改用更好的方法实现
 public class Inspector : MonoBehaviour
 {
     public static Inspector current;
@@ -21,7 +23,7 @@ public class Inspector : MonoBehaviour
 
     void Update()
     {
-        // When nothing is selected, show prompt
+        // 当没有任何物件被选中的时候，显示提示
         if (RectangleSelector.current.Selected.Count == 0)
         {
             warningText.SetActive(true);
@@ -33,21 +35,21 @@ public class Inspector : MonoBehaviour
             scrollView.SetActive(true);
         }
         
-        // Check things selected
+        // 使用数量确认是否有东西选中
         if(RectangleSelector.current.Selected.Count != tableInList)
         {
             ShowProperty();
             tableInList = RectangleSelector.current.Selected.Count;
         }
 
-        // Update properties of selected objects
+        // 在探测器中更新选中物件的属性
         if(Time.timeScale != 0)
         {
             UpdateProperty();
         }
     }
 
-    // when something is seleced, show its properties
+    // 当任何物件被选中时，在探测器面板展示其内部属性
     public void ShowProperty()
     {
         for(int i = 0; i < propertyTableList.Count; i++)
@@ -112,6 +114,7 @@ public class Inspector : MonoBehaviour
         }
     }
 
+    // 更新已经显示的属性
     public void UpdateProperty()
     {
         foreach (var gameObject in RectangleSelector.current.Selected)

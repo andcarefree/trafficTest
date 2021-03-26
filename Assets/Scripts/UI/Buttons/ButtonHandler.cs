@@ -26,6 +26,7 @@ public class ButtonHandler : MonoBehaviour
         Debug.Log(Application.persistentDataPath);
     }
 
+    // 设置道路
     private IEnumerator SetUpRoad()
     {
         int status = 1;
@@ -91,6 +92,7 @@ public class ButtonHandler : MonoBehaviour
         statusBar.SetText("");
     }
 
+    // 连接道路
     private IEnumerator ConnectLane()
     {
         int status = 1;
@@ -142,6 +144,7 @@ public class ButtonHandler : MonoBehaviour
         statusBar.SetText("");
     }
 
+    // 设置车辆源
     private IEnumerator SetCarSource()
     {
         bool isDone = false;
@@ -173,6 +176,7 @@ public class ButtonHandler : MonoBehaviour
         statusBar.SetText("");
     }
 
+    // 用于选中鼠标点击的物件
     private GameObject SelectObjectOnClick()
     {
         GameObject selectedObject = null;
@@ -188,6 +192,7 @@ public class ButtonHandler : MonoBehaviour
         return selectedObject;
     }
 
+    // del键删除选中的物件
     private IEnumerator DestroyObjectOnLick()
     {
         while (true)
@@ -212,6 +217,7 @@ public class ButtonHandler : MonoBehaviour
         }
     }
 
+    // 设置路口
     private IEnumerator SetCross()
     {
         var isDone = false;
@@ -237,6 +243,7 @@ public class ButtonHandler : MonoBehaviour
         }
     }
 
+    // 下列函数均用于与按钮关联，用于触发上面的函数
     public void OnStopButtonClick()
     {
         Time.timeScale = 0;

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+// 控制照相机的脚本，实现视角移动
 public class CameraController : MonoBehaviour
 {
     public Transform cameraTransform;
@@ -30,25 +31,25 @@ public class CameraController : MonoBehaviour
 
     async Task Update()
     {
-        // Check if there is any panel opened
+        // 确认是否有其他面板打开
         if(!EventSystem.current.IsPointerOverGameObject())
         {
-            // Create asynchorous tasks for camera control
+            // 创建异步工作
             Task moveCamera = MoveCamera();
             Task zoomCamera = ZoomCamera();
             Task rotateCamera = RotateCamera();
 
-            // Wait until all task finished
+            // 等待完成
             await Task.WhenAll(moveCamera, zoomCamera, rotateCamera);
 
-            // Calculate movement
+            // 计算移动/旋转的量值，并以此改变照相机的位置
             transform.position = Vector3.Lerp(transform.position, newPosition, moveTime);
             transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, moveTime);
             cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, newZoom, moveTime);
         }
     }
 
-    // Move camera by using wsad / arrows
+    // 使用wsad键/鼠标中键拖拽移动照相机
     private async Task MoveCamera()
     {
         await Task.Yield();
@@ -70,7 +71,6 @@ public class CameraController : MonoBehaviour
             newPosition += (transform.right * moveSpeed);
         }
 
-        // Move camera by using mouse mid button
         if (Input.GetMouseButtonDown(2))
         {
             Plane Plane = new Plane(Vector3.up, Vector3.zero);
@@ -97,7 +97,7 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    // Zooming by using mouse scroll
+    // 使用鼠标滚轮进行缩放
     private async Task ZoomCamera()
     {
         await Task.Yield();
@@ -108,7 +108,7 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    // Rotating by using leftCtrl + Mouse right Button
+    // 用ctrl+右键旋转摄像机
     private async Task RotateCamera()
     {
         await Task.Yield();

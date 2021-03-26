@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+// 该脚本实现框选功能、按住鼠标左键在画布上框选对象
 public class RectangleSelector : MonoBehaviour
 {
     public static RectangleSelector current;

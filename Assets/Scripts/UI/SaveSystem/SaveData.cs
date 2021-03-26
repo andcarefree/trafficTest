@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// 所有物件的数据集合，单例
 [System.Serializable]
 public class SaveData
 {

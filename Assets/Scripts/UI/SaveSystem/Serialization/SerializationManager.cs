@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class SerializationManager
 {
+    // 将画布上的物品转化成二进制数据存档
     public static bool Save(string saveName, object saveData)
     {
         BinaryFormatter formatter = GetBinaryFormatter();
@@ -27,6 +28,7 @@ public class SerializationManager
         return true;
     }
 
+    // 从文件加载二进制存档数据
     public static object Load(string path)
     {
         if (!File.Exists(path))
@@ -52,6 +54,7 @@ public class SerializationManager
         }
     }
 
+    // 二进制格式化函数
     public static BinaryFormatter GetBinaryFormatter()
     {
         BinaryFormatter formatter = new BinaryFormatter();

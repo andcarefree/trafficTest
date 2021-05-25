@@ -1,77 +1,31 @@
 ﻿using System.IO;
+using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SaveManager : MonoBehaviour
+public class SaveManager : MonoBehaviour, IFile
 {
-    [SerializeField] private TMP_InputField saveName;
     [SerializeField] private GameObject carPrefab;
     [SerializeField] private GameObject loadObject;
     [SerializeField] private GameObject loadPanel;
-    [SerializeField] private GameObject saveButtonPrefab;
-    [SerializeField] private GameObject scrollContentArea;
-    [SerializeField] private GameObject savePanel;
     [SerializeField] private GameObject warningPanel;
     [SerializeField] private GameObject warningText;
-    private string[] saveFileName;
     
     public void OnSave()
     {
-        try
-        {
-            SerializationManager.Save(saveName.text, SaveData.current);
-            savePanel.SetActive(false);
-            warningPanel.SetActive(true);
-            warningText.GetComponent<TextMeshProUGUI>().SetText("保存成功！");
-        }
-        catch (System.Exception exception)
-        {
-            savePanel.SetActive(false);
-            warningPanel.SetActive(true);
-            warningText.GetComponent<TextMeshProUGUI>().SetText(exception.ToString());
-            throw;
-        }
-        
+        IFile openFile = this;
+        var saveFilePath = openFile.SaveFile();
+
+        SerializationManager.Save(saveFilePath, SaveData.current);
     }
 
     public void OnLoad()
     {
-        loadPanel.SetActive(true);
-        GetLoadFile();
+        IFile OpenFile = this;
+        var loadFile = OpenFile.OpenFile();
 
-        foreach(Transform button in scrollContentArea.transform)
-        {
-            Destroy(button.gameObject);
-        }
-
-        for(int i = 0; i<saveFileName.Length; i++)
-        {
-            GameObject buttonObject = Instantiate(saveButtonPrefab);
-            buttonObject.transform.SetParent(scrollContentArea.transform, false);
-
-            var index = i;
-            buttonObject.GetComponent<Button>().onClick.AddListener(() =>
-            {
-                GetObjectFromLoadFile(saveFileName[index]);
-            });
-            buttonObject.GetComponentInChildren<TextMeshProUGUI>().text = saveFileName[index].Replace($"{Application.dataPath}/saves\\", "");
-        }
-    }
-
-    private void GetLoadFile()
-    {
-        if(!Directory.Exists(Application.dataPath + "/saves"))
-        {
-            Directory.CreateDirectory(Application.dataPath + "/saves");
-        }
-
-        saveFileName = Directory.GetFiles(Application.dataPath + "/saves");
-    }
-
-    private void GetObjectFromLoadFile(string loadFile)
-    {
-        try
+        if (loadFile != null)
         {
             SaveData.current = (SaveData)SerializationManager.Load(loadFile);
 
@@ -93,12 +47,58 @@ public class SaveManager : MonoBehaviour
             warningPanel.SetActive(true);
             warningText.GetComponent<TextMeshProUGUI>().SetText("读取成功！");
         }
-        catch (System.Exception exception)
-        {
-            warningPanel.SetActive(true);
-            warningText.GetComponent<TextMeshProUGUI>().SetText(exception.ToString());
-            throw;
-        }
+    }
 
+    string IFile.OpenFile()
+    {
+        FileDialog dialog = new FileDialog();
+ 
+        dialog.structSize = Marshal.SizeOf(dialog);
+        dialog.filter = "Save files (*.save)\0*.save\0";
+        dialog.file = new string(new char[256]);
+        dialog.maxFile = dialog.file.Length;
+        dialog.fileTitle = new string(new char[64]);
+        dialog.maxFileTitle = dialog.fileTitle.Length;
+        dialog.initialDir = Application.dataPath;  //默认路径
+        dialog.title = "读取文件";
+        dialog.defExt = "save"; //显示文件的类型
+        dialog.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008;  //OFN_EXPLORER|OFN_FILEMUSTEXIST|OFN_PATHMUSTEXIST| OFN_ALLOWMULTISELECT|OFN_NOCHANGEDIR
+        
+        if (DialogShow.GetOpenFileName(dialog))
+        {
+            Debug.Log(dialog.file);
+            return dialog.file;
+        }
+        else
+        {
+            return string.Empty;
+        }
+    }
+    
+    
+    string IFile.SaveFile()
+    {
+        FileDialog dialog = new FileDialog();
+
+        dialog.structSize = Marshal.SizeOf(dialog);
+        dialog.filter = "Save File (*.save)\0*.save\0";
+        dialog.file = new string(new char[256]);
+        dialog.maxFile = dialog.file.Length;
+        dialog.fileTitle = new string(new char[64]);
+        dialog.maxFileTitle = dialog.fileTitle.Length;
+        dialog.initialDir = Application.dataPath;  
+        dialog.title = "保存文件";
+        dialog.defExt = "save";
+        dialog.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008;
+
+        if (SaveFileDialog.GetSaveFileName(dialog))
+        {
+            Debug.Log(dialog.file);
+            return dialog.file;
+        }
+        else
+        {
+            return string.Empty;
+        }
     }
 }

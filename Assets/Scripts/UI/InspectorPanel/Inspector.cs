@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -7,6 +7,7 @@ public class Inspector : MonoBehaviour
 {
     public static Inspector current;
     private int tableInList;
+    public float RefreshInterval{ get; set; }
     [SerializeField] private GameObject content;
     [SerializeField] private GameObject propertyPrefab;
     [SerializeField] private GameObject warningText;
@@ -22,7 +23,7 @@ public class Inspector : MonoBehaviour
     void Update()
     {
         // When nothing is selected, show prompt
-        if (RectangleSelector.current.Selected.Count == 0)
+        if (Selector.current.Selected.Count == 0)
         {
             warningText.SetActive(true);
             scrollView.SetActive(false);
@@ -34,10 +35,10 @@ public class Inspector : MonoBehaviour
         }
         
         // Check things selected
-        if(RectangleSelector.current.Selected.Count != tableInList)
+        if(Selector.current.Selected.Count != tableInList)
         {
             ShowProperty();
-            tableInList = RectangleSelector.current.Selected.Count;
+            tableInList = Selector.current.Selected.Count;
         }
 
         // Update properties of selected objects
@@ -56,7 +57,7 @@ public class Inspector : MonoBehaviour
             propertyTableList.Remove(propertyTableList[i]);
         }
         
-        foreach(var gameObject in RectangleSelector.current.Selected)
+        foreach(var gameObject in Selector.current.Selected)
         {
             if(gameObject.tag == "Car")
             {
@@ -114,7 +115,7 @@ public class Inspector : MonoBehaviour
 
     public void UpdateProperty()
     {
-        foreach (var gameObject in RectangleSelector.current.Selected)
+        foreach (var gameObject in Selector.current.Selected)
         {
             if(gameObject.tag == "Car")
             {

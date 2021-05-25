@@ -51,17 +51,19 @@ public class DllReader
 
     public static void LoadDll(string path)
     {
-        type = ReadDll(@"Custom", path);
-
-        go = CreateManager(type);
-
-        currentCustom = go.GetComponent<OriginCustom>();
-        if (currentCustom != null)
+        if (path != string.Empty)
         {
-            Following.gm = currentCustom.CustomGM;
-            ChangeLine.cp = currentCustom.CustomCP;
-            ChangeLineInstruction.jv = currentCustom.CustomJV;
+            type = ReadDll(@"Custom", path);
+
+            go = CreateManager(type);
+
+            currentCustom = go.GetComponent<OriginCustom>();
+            if (currentCustom != null)
+            {
+                Following.gm = currentCustom.CustomGM;
+                ChangeLine.cp = currentCustom.CustomCP;
+                ChangeLineInstruction.jv = currentCustom.CustomJV;
+            }
         }
     }
-
 }

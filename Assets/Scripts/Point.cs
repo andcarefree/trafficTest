@@ -1,32 +1,35 @@
 ﻿using UnityEngine;
+using System;
 
 public class Point : MonoBehaviour
 {
-    private float scaleX;
-    private float scaleY;
-    private float scaleZ;
-    private Vector3 mouseOffset;
-    private Vector3 screenPoint;
+    // 控制点的行为脚本，用三个正交方向操作控制点
 
-    void Update()
+    private Action<Guid> action;
+    private void Start()
     {
-        // fix size 
+        // 懒得给事件取名字干脆用lambda得了
+        action = (Guid guid) => 
+        {
+            if (guid == GetComponent<ObjectId>().Guid)
+            {
+                for (int i = 0; i < 3 ; i++)
+                {
+                    transform.GetChild(i).gameObject.SetActive(true);       
+                }
+            }
+        }; 
+        GameEvents.current.OnSelectedEvent += action;
+    }
+
+    private void Update()
+    {
+        // 调整缩放，让点的形状保持一致 
         transform.localScale = new Vector3(0.5f / transform.parent.localScale.x, 0.5f / transform.parent.localScale.y, 0.5f / transform.parent.localScale.z);
     }
 
-    void OnMouseDown()
+    private void OnDestroy()
     {
-        screenPoint = Camera.main.WorldToScreenPoint(transform.position);
-        mouseOffset = gameObject.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
-    }
-
-    void OnMouseDrag()
-    {
-        // Change Position
-        Vector3 currentScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
-        Vector3 currentPosition = Camera.main.ScreenToWorldPoint(currentScreenPoint) + mouseOffset;
-        transform.position = currentPosition;
-
-        GetComponentInParent<LaneMesh>().RecalculateVerticesPosition();
+        GameEvents.current.OnSelectedEvent -= action;
     }
 }

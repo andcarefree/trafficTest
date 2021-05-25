@@ -7,18 +7,11 @@ using UnityEngine;
 
 public class SerializationManager
 {
-    public static bool Save(string saveName, object saveData)
+    public static bool Save(string savePath, object saveData)
     {
         BinaryFormatter formatter = GetBinaryFormatter();
 
-        if(!Directory.Exists(Application.dataPath + "/saves"))
-        {
-            Directory.CreateDirectory(Application.dataPath + "/saves");
-        }
-
-        string path = Application.dataPath + "/saves/" + saveName +".save";
-
-        FileStream file = File.Create(path);
+        FileStream file = File.Create(savePath);
 
         formatter.Serialize(file, saveData);
 

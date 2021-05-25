@@ -196,7 +196,7 @@ public class ButtonHandler : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Delete))
             {
-                var deleteList = RectangleSelector.current.Selected;
+                var deleteList = Selector.current.Selected;
                 var propertyTable = Inspector.current.PropertyTableList;
                 
                 for (int i = 0; i < deleteList.Count; i++)
@@ -208,7 +208,7 @@ public class ButtonHandler : MonoBehaviour
                 {
                     Destroy(propertyTable[i]);
                 }
-                RectangleSelector.current.Selected.Clear();
+                Selector.current.Selected.Clear();
             }
             yield return null;
         }

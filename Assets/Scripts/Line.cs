@@ -41,9 +41,9 @@ public class Line : OLine
         cars = new LinkedList<OCar>();
         maxVelocity = 70;
 
-        if (RectangleSelector.current != null)
+        if (Selector.current != null)
         {
-            RectangleSelector.current.Selectable.Add(this.gameObject);
+            Selector.current.Selectable.Add(this.gameObject);
         }
     }
 
@@ -62,7 +62,7 @@ public class Line : OLine
 
     private void OnDestroy()
     {
-        RectangleSelector.current.Selectable.Remove(this.gameObject);
+        Selector.current.Selectable.Remove(this.gameObject);
         GameEvents.current.OnDeleteEvent -= DestroySelf;
     }
 
@@ -70,7 +70,7 @@ public class Line : OLine
     {
         if (id == gameObject.GetInstanceID())
         {
-            RectangleSelector.current.Selectable.Remove(this.gameObject);
+            Selector.current.Selectable.Remove(this.gameObject);
             Destroy(this.gameObject);
         }
     }

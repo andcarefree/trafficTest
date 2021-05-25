@@ -6,9 +6,6 @@ public class Road : MonoBehaviour
 {
     private int id;
     public int Id { get => id; set => id = value; }
-    private Vector3 prevPosition;
-    private Vector3 nowPosition;
-    public GameObject roadObject;
 
     /// <summary>
     /// 道路
@@ -23,8 +20,7 @@ public class Road : MonoBehaviour
 
     private void Start()
     {
-        // this is used for preset scene
-        // to check whether the road is car source
+        // 确认该道路是不是车辆源
         if (GetComponent<OriginRoad>() != null)
         {
             roadType = RoadTypeEnum.SOURCE;
@@ -34,20 +30,20 @@ public class Road : MonoBehaviour
             roadType = RoadTypeEnum.NORMAL;
         }
 
-        // generate id for road
+        // 给道路设置id
         var random = new System.Random();
         id = random.Next(1, int.MaxValue);
 
-        // add the road itself to savelist
+        // 添加到saveList中，供存读数据用
         if (objectData.id == 0)
         {
             objectData.id = id;
             SaveData.current.objects.Add(objectData);
         }
 
-        if (RectangleSelector.current != null)
+        if (Selector.current != null)
         {  
-            RectangleSelector.current.Selectable.Add(this.gameObject);
+            Selector.current.Selectable.Add(this.gameObject);
         }
 
         GameEvents.current.OnLoadEvent += DestorySelf;
@@ -75,7 +71,7 @@ public class Road : MonoBehaviour
 
     private void OnDestroy()
     {
-        RectangleSelector.current.Selectable.Remove(this.gameObject);
+        Selector.current.Selectable.Remove(this.gameObject);
         SaveData.current.objects.Remove(objectData);
         GameEvents.current.OnLoadEvent -= DestorySelf;
         GameEvents.current.OnDeleteEvent -= DestroySelf;

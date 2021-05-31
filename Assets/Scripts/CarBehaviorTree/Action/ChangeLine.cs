@@ -16,13 +16,18 @@ public class ChangeLine : Action
     /// </summary>
     public static Vector3[] CalculatePath(OCar car,OLine targetLine)
     {
-        Vector3[] ret =new Vector3[4];
+        var ret =new Vector3[4];
+        var direction = targetLine.transform.GetChild(2).position - targetLine.transform.GetChild(0).position;
+        var norm = Vector3.Magnitude(direction);
+
         ret[0] = car.transform.position;
-        ret[1] = ret[0] + car.transform.forward.normalized * 3f;
+        // ret[1] = ret[0] + car.transform.forward.normalized * 3f;
+        ret[1] = ret[0] + direction / norm * 3f;
         ret[2] = ret[1] + targetLine.transform.position - car.line.transform.position;
         ret[3] = ret[2] + ret[1] - ret[0];
         return ret;
     }
+    // 注：换道轨迹计算很粗糙，待修改。
 
     /*应付中期检查*/
      public Vector3[] Move()

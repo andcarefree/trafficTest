@@ -280,8 +280,7 @@ public class ChangeLineInstruction : Conditional
             {
                 var V5 = preCar.velocity - car.velocity;
                 var G1 = Mathf.Exp((float)(1.23 - 0.34 * Mathf.Max(0, V5) - 0.21 * Mathf.Min(0, V5)));
-                //尝试缩小临界前车间隙
-                return preCar.s - car.s >= G1/2;
+                return preCar.s - car.s >= G1;
             }
         }
         return true;

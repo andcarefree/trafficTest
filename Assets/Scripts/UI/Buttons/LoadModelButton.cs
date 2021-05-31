@@ -8,7 +8,12 @@ public class LoadModelButton : MonoBehaviour, IFile
     public void LoadModel()
     {
         IFile openFile = this;
-        DllReader.LoadDll(openFile.OpenFile());
+        var file = openFile.OpenFile();
+        
+        if (file != string.Empty)
+        {
+            DllReader.LoadDll(file);
+        }
     }
 
     string IFile.OpenFile()
@@ -16,7 +21,7 @@ public class LoadModelButton : MonoBehaviour, IFile
         FileDialog dialog = new FileDialog();
  
         dialog.structSize = Marshal.SizeOf(dialog);
-        dialog.filter = "C# Source file\0*.cs";
+        dialog.filter = "C# Source file\0*.cs\0";
         dialog.file = new string(new char[256]);
         dialog.maxFile = dialog.file.Length;
         dialog.fileTitle = new string(new char[64]);

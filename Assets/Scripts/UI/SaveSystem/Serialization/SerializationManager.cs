@@ -8,16 +8,22 @@ using UnityEngine;
 public class SerializationManager
 {
     public static bool Save(string savePath, object saveData)
-    {
-        BinaryFormatter formatter = GetBinaryFormatter();
+    {  
+        if (savePath != string.Empty)
+        {
+            BinaryFormatter formatter = GetBinaryFormatter();
+            FileStream file = File.Create(savePath);
 
-        FileStream file = File.Create(savePath);
+            formatter.Serialize(file, saveData);
 
-        formatter.Serialize(file, saveData);
+            file.Close();
 
-        file.Close();
-
-        return true;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public static object Load(string path)

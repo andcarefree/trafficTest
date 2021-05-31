@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UI.Panel.FileSelet;
 
 public class ButtonHandler : MonoBehaviour
 {
@@ -11,11 +10,6 @@ public class ButtonHandler : MonoBehaviour
     [SerializeField] private GameObject roadPrefeb;
     [SerializeField] private GameObject carPrefeb;
     [SerializeField] private GameObject crossPrefab;
-    [SerializeField] private GameObject savePanel;
-    [SerializeField] private FileSelectPanel fileSelectPanel;
-    private GameObject[] roadList;
-    private Vector3[] roadPosition;
-
 
     void Awake()
     {
@@ -253,11 +247,6 @@ public class ButtonHandler : MonoBehaviour
         }
     }
 
-    public void OnSaveButtonClick()
-    {
-        savePanel.SetActive(true);
-    }
-
     public void OnStopButtonClick()
     {
         Time.timeScale = 0;
@@ -304,13 +293,6 @@ public class ButtonHandler : MonoBehaviour
         }
     }
 
-    public void OnLoadModelButtonClick()
-    {
-        //DllReader.testInit();
-        if (fileSelectPanel != null)
-            fileSelectPanel.Activate(DllSelect);
-    }
-
     public void OnQuitButtonClick()
     {
         Application.Quit();
@@ -327,11 +309,4 @@ public class ButtonHandler : MonoBehaviour
             statusBar.SetText("正在播放中，请先停止再进行编辑");
         }
     }
-
-    private void DllSelect()
-    {
-        DllReader.LoadDll(UI.Panel.FileSelet.FileSelectPanel.currentFileSelectPanel.filePath);
-    }
-
-
 }

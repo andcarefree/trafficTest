@@ -1,18 +1,24 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class CameraController : MonoBehaviour
 {
-    public Transform cameraTransform;
-    public float moveSpeed;
-    public float moveTime;
-    public float rotationSpeed;
-    public float zoomAmount;
+    [field : SerializeField]
+    public float MoveSpeed { get; set; }
 
+    [field : SerializeField]
+    public float MoveTime { get; set; }
+
+    [field : SerializeField]
+    public float RotationSpeed { get; set; }
+
+    [field : SerializeField]
+    public float ZoomAmount { get; set; }
+
+    [SerializeField]
+    private Transform cameraTransform;
     private Vector3 newPosition;
     private Vector3 dragStartPosition;
     private Vector3 dragStopPosition;
@@ -42,9 +48,9 @@ public class CameraController : MonoBehaviour
             await Task.WhenAll(moveCamera, zoomCamera, rotateCamera);
 
             // Calculate movement
-            transform.position = Vector3.Lerp(transform.position, newPosition, moveTime);
-            transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, moveTime);
-            cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, newZoom, moveTime);
+            transform.position = Vector3.Lerp(transform.position, newPosition, MoveTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, MoveTime);
+            cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, newZoom, MoveTime);
         }
     }
 
@@ -55,19 +61,19 @@ public class CameraController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            newPosition += (transform.forward * moveSpeed);
+            newPosition += (transform.forward * MoveSpeed);
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            newPosition += (transform.forward * -moveSpeed);
+            newPosition += (transform.forward * -MoveSpeed);
         }
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            newPosition += (transform.right * -moveSpeed);
+            newPosition += (transform.right * -MoveSpeed);
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            newPosition += (transform.right * moveSpeed);
+            newPosition += (transform.right * MoveSpeed);
         }
 
         // Move camera by using mouse mid button
@@ -104,7 +110,7 @@ public class CameraController : MonoBehaviour
 
         if (Input.mouseScrollDelta.y != 0)
         {
-            newZoom.Set(newZoom.x, newZoom.y + zoomAmount * Input.mouseScrollDelta.y, newZoom.z);
+            newZoom.Set(newZoom.x, newZoom.y + ZoomAmount * Input.mouseScrollDelta.y, newZoom.z);
         }
     }
 
@@ -122,7 +128,7 @@ public class CameraController : MonoBehaviour
             rotationStopPosition = Input.mousePosition;
             Vector3 rotationDiff = rotationStopPosition - rotationStartPosition;
             rotationStartPosition = rotationStopPosition;
-            newRotation *= Quaternion.Euler(Vector3.up * (-rotationDiff.x * rotationSpeed));
+            newRotation *= Quaternion.Euler(Vector3.up * (-rotationDiff.x * RotationSpeed));
         }
     }
 }

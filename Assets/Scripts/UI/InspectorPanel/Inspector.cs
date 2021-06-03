@@ -8,12 +8,21 @@ public class Inspector : MonoBehaviour
     public static Inspector current;
     private int tableInList;
     public float RefreshInterval{ get; set; }
-    [SerializeField] private GameObject content;
-    [SerializeField] private GameObject propertyPrefab;
-    [SerializeField] private GameObject warningText;
-    [SerializeField] private GameObject scrollView;
-    private List<GameObject> propertyTableList = new List<GameObject>();
-    public List<GameObject> PropertyTableList { get => propertyTableList; set => propertyTableList = value; }
+
+    [SerializeField] 
+    private GameObject content;
+
+    [SerializeField] 
+    private GameObject propertyPrefab;
+
+    [SerializeField] 
+    private GameObject warningText;
+
+    [SerializeField] 
+    private GameObject scrollView;
+
+    [field : SerializeField]
+    public List<GameObject> PropertyTableList { get; set; }
 
     void Start()
     {
@@ -51,10 +60,10 @@ public class Inspector : MonoBehaviour
     // when something is seleced, show its properties
     public void ShowProperty()
     {
-        for(int i = 0; i < propertyTableList.Count; i++)
+        for(int i = 0; i < PropertyTableList.Count; i++)
         {
-            Destroy(propertyTableList[i]);
-            propertyTableList.Remove(propertyTableList[i]);
+            Destroy(PropertyTableList[i]);
+            PropertyTableList.Remove(PropertyTableList[i]);
         }
         
         foreach(var gameObject in Selector.current.Selected)
@@ -67,7 +76,7 @@ public class Inspector : MonoBehaviour
                     GameObject propertyTable = Instantiate(propertyPrefab);
                     propertyTable.transform.SetParent(content.transform, false);
                     propertyTable.name = gameObject.GetInstanceID().ToString() + ' ' + property.Name;
-                    propertyTableList.Add(propertyTable);
+                    PropertyTableList.Add(propertyTable);
 
                     propertyTable.transform.Find("Name").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.Name);
                     if(property.GetValue(gameObject.GetComponent<Car>()) != null)
@@ -84,7 +93,7 @@ public class Inspector : MonoBehaviour
                     GameObject propertyTable = Instantiate(propertyPrefab);
                     propertyTable.transform.SetParent(content.transform, false);
                     propertyTable.name = gameObject.GetInstanceID().ToString() + ' ' + property.Name;
-                    propertyTableList.Add(propertyTable);
+                    PropertyTableList.Add(propertyTable);
 
                     propertyTable.transform.Find("Name").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.Name);
                     if(property.GetValue(gameObject.GetComponent<Road>()) != null)
@@ -101,7 +110,7 @@ public class Inspector : MonoBehaviour
                     GameObject propertyTable = Instantiate(propertyPrefab);
                     propertyTable.transform.SetParent(content.transform, false);
                     propertyTable.name = gameObject.GetInstanceID().ToString() + ' ' + property.Name;
-                    propertyTableList.Add(propertyTable);
+                    PropertyTableList.Add(propertyTable);
 
                     propertyTable.transform.Find("Name").gameObject.GetComponent<TextMeshProUGUI>().SetText(property.Name);
                     if(property.GetValue(gameObject.GetComponent<Line>()) != null)
@@ -123,7 +132,7 @@ public class Inspector : MonoBehaviour
 
                 foreach(var field in fields)
                 {
-                    foreach (var propertyTable in propertyTableList)
+                    foreach (var propertyTable in PropertyTableList)
                     {
                         if(propertyTable.name == gameObject.GetInstanceID().ToString() + ' ' + field.Name)
                         {
@@ -139,7 +148,7 @@ public class Inspector : MonoBehaviour
 
                 foreach(var field in fields)
                 {
-                    foreach (var propertyTable in propertyTableList)
+                    foreach (var propertyTable in PropertyTableList)
                     {
                         if(propertyTable.name == gameObject.GetInstanceID().ToString() + ' ' + field.Name)
                         {
@@ -155,7 +164,7 @@ public class Inspector : MonoBehaviour
 
                 foreach(var field in fields)
                 {
-                    foreach (var propertyTable in propertyTableList)
+                    foreach (var propertyTable in PropertyTableList)
                     {
                         if(propertyTable.name == gameObject.GetInstanceID().ToString() + ' ' + field.Name)
                         {

@@ -6,14 +6,17 @@ using UnityEngine.EventSystems;
 public class Selector : MonoBehaviour
 {
     public static Selector current;
-    private bool isSelecting;
     private Vector3 startPosition;
     private Vector3 endPosition;
-    [SerializeField] private RectTransform selectionBox;
-    [SerializeField] private List<GameObject> selectable = new List<GameObject>();
-    public List<GameObject> Selectable { get => selectable; set => selectable = value; }
-    [SerializeField] private List<GameObject> selected = new List<GameObject>();
-    public List<GameObject> Selected { get => selected; set => selected = value; }
+    
+    [SerializeField] 
+    private RectTransform selectionBox;
+
+    [field : SerializeField]
+    public List<GameObject> Selectable { get; set; }
+
+    [field : SerializeField]
+    public List<GameObject> Selected { get; set; }
     
     void Awake()
     {
@@ -23,34 +26,6 @@ public class Selector : MonoBehaviour
     void Update()
     {
         RectangleSelection();
-        // SingleClickSelection();
-    }
-
-    // 单击选中游戏对象
-    private void SingleClickSelection()
-    {
-        if(!EventSystem.current.IsPointerOverGameObject() & !ScrollBar.isGUIActive)
-        {
-            if(Input.GetMouseButton(0))
-            {
-                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit rayHit;
-
-                if (Physics.Raycast(ray, out rayHit))
-                {
-                    // 将对象添加到列表
-                    var gameObject = rayHit.collider.gameObject;
-                    selected.Add(gameObject);
-
-                    // 给选中的对象加高亮
-                    gameObject.GetComponent<Outline>().enabled = true;
-
-                    // 触发选中事件
-                    var guid = gameObject.GetComponent<ObjectId>().Guid;
-                    GameEvents.current.OnSelected(guid);
-                }
-            }
-        }
     }
 
     // 框选游戏对象
@@ -60,7 +35,6 @@ public class Selector : MonoBehaviour
         {
             if(Input.GetMouseButtonDown(0))
             {
-                isSelecting = true;
                 startPosition = Input.mousePosition;
             }
             else if(Input.GetMouseButton(0))
@@ -81,15 +55,15 @@ public class Selector : MonoBehaviour
                 if(!selectionBox.gameObject.activeInHierarchy)
                     selectionBox.gameObject.SetActive(true);
                 
-                foreach(var go in selectable)
+                foreach(var go in Selectable)
                 {
                     var position = Camera.main.WorldToScreenPoint(go.transform.position);
 
                     if(position.x > xMin && position.x < xMax && position.y > yMin && position.y < yMax)
                     {
-                        if(!selected.Contains(go))
+                        if(!Selected.Contains(go))
                         {
-                            selected.Add(go);
+                            Selected.Add(go);
                             go.GetComponent<Outline>().enabled = true;
                         }              
                     }
@@ -97,22 +71,22 @@ public class Selector : MonoBehaviour
             }
             else if(Input.GetKey(KeyCode.Escape))
             {
-                foreach(GameObject gameObject in selectable)
+                foreach(GameObject gameObject in Selectable)
                 {
-                    if(selected.Contains(gameObject))
+                    if(Selected.Contains(gameObject))
                     {    
                         gameObject.GetComponent<Outline>().enabled = false;
-                        selected.Remove(gameObject);
+                        Selected.Remove(gameObject);
                     }
                 }
 
             }
             else
             {
-                isSelecting = false;
-
                 if(selectionBox.gameObject.activeInHierarchy)
+                {
                     selectionBox.gameObject.SetActive(false);
+                }
             }
         }
     }

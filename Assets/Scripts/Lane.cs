@@ -101,21 +101,25 @@ public class Lane : MonoBehaviour
     }
 
     // 调试用
-    private void OnDrawGizmos()
-    {
-        if (vertices == null)
+    #if UNITY_EDITOR
+        private void OnDrawGizmos()
         {
-            return;
+            if (vertices == null)
+            {
+                return;
+            }
+            
+            for(int i = 0; i < vertices.Length; i++)
+            {
+                Gizmos.color = Color.black;
+                Gizmos.DrawSphere(vertices[i], 0.02f);
+                UnityEditor.Handles.Label(vertices[i], $"{i}");
+
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawRay(vertices[i], normals[i]);
+            }
         }
         
-        for(int i = 0; i < vertices.Length; i++)
-        {
-            Gizmos.color = Color.black;
-            Gizmos.DrawSphere(vertices[i], 0.02f);
-            UnityEditor.Handles.Label(vertices[i], $"{i}");
-
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawRay(vertices[i], normals[i]);
-        }
-    }
+    #endif
+    
 }

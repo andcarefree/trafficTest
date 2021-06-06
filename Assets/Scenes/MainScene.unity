@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -750,6 +750,7 @@ GameObject:
   - component: {fileID: 203580069}
   - component: {fileID: 203580068}
   - component: {fileID: 203580067}
+  - component: {fileID: 203580070}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -821,8 +822,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2067790618}
-        m_MethodName: OnGenerateRoadButtonClick
+      - m_Target: {fileID: 203580070}
+        m_MethodName: OnButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -869,6 +870,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 203580065}
   m_CullTransparentMesh: 0
+--- !u!114 &203580070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203580065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f84a6833c41327d4eac50d41c9c52476, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lane: {fileID: 0}
+  material: {fileID: 0}
 --- !u!1 &229613506
 GameObject:
   m_ObjectHideFlags: 0

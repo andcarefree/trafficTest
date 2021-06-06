@@ -25,7 +25,8 @@ public class Point : MonoBehaviour
     private void Update()
     {
         // 调整缩放，让点的形状保持一致 
-        transform.localScale = new Vector3(0.5f / transform.parent.localScale.x, 0.5f / transform.parent.localScale.y, 0.5f / transform.parent.localScale.z);
+        if (transform.parent.localScale.x != 0f)
+            transform.localScale = new Vector3(0.5f / transform.parent.localScale.x, 0.5f / transform.parent.localScale.y, 0.5f / transform.parent.localScale.z);
     }
 
     private void OnDestroy()

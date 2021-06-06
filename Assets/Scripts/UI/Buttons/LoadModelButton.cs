@@ -31,7 +31,7 @@ public class LoadModelButton : MonoBehaviour, IFile
         dialog.defExt = "cs"; //显示文件的类型
         dialog.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008;  //OFN_EXPLORER|OFN_FILEMUSTEXIST|OFN_PATHMUSTEXIST| OFN_ALLOWMULTISELECT|OFN_NOCHANGEDIR
         
-        if (DialogShow.GetOpenFileName(dialog))
+        if (OpenFileDialog.GetOpenFileName(dialog))
         {
             Debug.Log(dialog.file);
             return dialog.file;

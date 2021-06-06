@@ -31,7 +31,7 @@ public class FileDialog
     public int flagsEx = 0;
 }
  
-public class DialogShow
+public class OpenFileDialog
 {
     [DllImport("Comdlg32.dll", SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Auto)]
     public static extern bool GetOpenFileName([In, Out]FileDialog dialog);

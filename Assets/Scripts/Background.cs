@@ -64,7 +64,6 @@ public class Background : MonoBehaviour, IFile
         background.SetActive(true);
 
         var isFinished = false;
-        var worldPosition = new Vector3[2];
         var color = background.GetComponent<SpriteRenderer>().color;
 
         color.a = 0.5f;
@@ -78,7 +77,7 @@ public class Background : MonoBehaviour, IFile
                 case false:
                     if (Input.GetMouseButtonDown(0))
                     {
-                        mousePosition[0] = Background.GetPointOnXZPlane(Input.mousePosition);
+                        mousePosition[0] = Util.GetPointOnXZPlane(Input.mousePosition);
                     }
                     if (Input.GetMouseButton(0))
                     {
@@ -87,7 +86,7 @@ public class Background : MonoBehaviour, IFile
                             background.SetActive(true);
                         }
 
-                        mousePosition[1] = Background.GetPointOnXZPlane(Input.mousePosition);
+                        mousePosition[1] = Util.GetPointOnXZPlane(Input.mousePosition);
                         
                         var widthScale = Mathf.Abs(mousePosition[1].x - mousePosition[0].x) / (textureWidth / 100.0f) ;
                         var heightScale = Mathf.Abs(mousePosition[1].z - mousePosition[0].z) / (textureHeight / 100.0f);
@@ -137,23 +136,6 @@ public class Background : MonoBehaviour, IFile
         }
     }
 
-    // 将鼠标确定的两个角点从屏幕坐标转换到世界坐标
-    public static Vector3 GetPointOnXZPlane(Vector3 vector)
-    {
-        var plane = new Plane(Vector3.up, Vector3.zero);
-        var ray = Camera.main.ScreenPointToRay(vector);
-        float entry;
-
-        if (plane.Raycast(ray, out entry))
-        {
-            return ray.GetPoint(entry);
-        }
-        else
-        {
-            return Vector3.zero;
-        }
-    }
-
     // 实现IFile接口，用于选取文件
     string IFile.OpenFile()
     {
@@ -170,7 +152,7 @@ public class Background : MonoBehaviour, IFile
         dialog.defExt = "JPG"; // 默认显示文件的类型
         dialog.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008;  //OFN_EXPLORER|OFN_FILEMUSTEXIST|OFN_PATHMUSTEXIST| OFN_ALLOWMULTISELECT|OFN_NOCHANGEDIR
         
-        if (DialogShow.GetOpenFileName(dialog))
+        if (OpenFileDialog.GetOpenFileName(dialog))
         {
             Debug.Log(dialog.file);
             return dialog.file;

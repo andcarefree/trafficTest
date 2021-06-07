@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.ProBuilder;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer)), DisallowMultipleComponent]
 public class Lane : MonoBehaviour
@@ -19,19 +18,14 @@ public class Lane : MonoBehaviour
         triangles = mesh.triangles;
     }
 
-    void Start()
-    {
-        Debug.Log(triangles.Length);
-        
-        foreach (var item in triangles)
-        {
-            Debug.Log(item);
-        }
-    }
-
     void Update()
     {
-        RecalculateMesh();
+        // RecalculateMesh();
+
+        for (int i = 0; i < triangles.Length / 3; i += 3)
+        {
+            Debug.Log($"{triangles[i]},{triangles[i + 1]},{triangles[i + 2]}");
+        }
     }
 
     // 重新计算网格
@@ -46,6 +40,7 @@ public class Lane : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             childPositions[i] = childTransforms[i + 1].position;
+            Debug.Log($"{childTransforms[i + 1].name}:{childPositions[i]}"); 
         }
 
         offsets[0] = Quaternion.Euler(0, 90, 0) * (childPositions[1] - childPositions[0]).normalized;
@@ -118,10 +113,13 @@ public class Lane : MonoBehaviour
             {
                 Gizmos.color = Color.black;
                 Gizmos.DrawSphere(vertices[i], 0.02f);
+                UnityEditor.Handles.Label(vertices[i], $"{i}");
+
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawRay(vertices[i], normals[i]);
             }
-        }    
+        }
+        
     #endif
-
+    
 }

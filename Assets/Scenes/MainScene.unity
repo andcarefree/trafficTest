@@ -7389,6 +7389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 097ae3051fb3483498c0465e78cab06b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvas: {fileID: 2067790616}
   selectionBox: {fileID: 980110223}
   <Selectable>k__BackingField: []
   <Selected>k__BackingField: []

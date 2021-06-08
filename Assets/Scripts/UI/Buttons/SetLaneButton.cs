@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class SetLaneButton : MonoBehaviour
@@ -10,8 +11,12 @@ public class SetLaneButton : MonoBehaviour
     [SerializeField]
     private Material material;
 
+    [SerializeField]
+    private TextMeshProUGUI text;
+
     public void OnButtonClick()
     {
+        Selector.current.enabled = false;
         StartCoroutine(this.SetLane());
     }
 
@@ -24,6 +29,14 @@ public class SetLaneButton : MonoBehaviour
 
         while (true)
         {
+            if (Input.GetKey(KeyCode.Escape))
+            {
+                Destroy(newObject);
+                Selector.current.enabled = true;
+
+                yield break;
+            }
+
             switch (state)
             {
                 case 0:
@@ -74,6 +87,8 @@ public class SetLaneButton : MonoBehaviour
                     break;
 
                 default:
+                    
+                    Selector.current.enabled = true;
                     
                     yield break;
 

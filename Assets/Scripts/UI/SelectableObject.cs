@@ -20,6 +20,7 @@ public class SelectableObject : MonoBehaviour
         Selector.current.Selectable.Remove(this.gameObject);
         GameEvents.current.OnDeleteEvent -= DestroySelf;
     }
+    
     private void DestorySelf()
     {
         Destroy(this.gameObject);

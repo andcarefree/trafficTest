@@ -5,7 +5,7 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class OriginRoad : MonoBehaviour//泊松分布的交通流
 {
-    public GameObject Car;
+    public GameObject Car { get; set; }
     public Road originRoad;
     private float z;//单位时间内平均到达数（辆/s）
     private float m;//泊松分布下车辆到达率( m = zt)

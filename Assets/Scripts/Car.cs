@@ -30,17 +30,6 @@ public class Car : OCar
     void Start()
     {
         GameEvents.current.OnLoadEvent += DestroyCar;
-        if (Selector.current != null)
-            Selector.current.Selectable.Add(this.gameObject);
-    }
-
-    void OnDestroy()
-    {
-        if (Selector.current != null)
-        {
-            Selector.current.Selectable.Remove(this.gameObject);
-            Selector.current.Selected.Remove(this.gameObject);
-        }
     }
 
     public new Car PreCar()

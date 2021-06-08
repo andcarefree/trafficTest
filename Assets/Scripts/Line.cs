@@ -40,11 +40,6 @@ public class Line : OLine
         lineRenderer.sortingLayerID = 0;
         cars = new LinkedList<OCar>();
         maxVelocity = 70;
-
-        if (Selector.current != null)
-        {
-            Selector.current.Selectable.Add(this.gameObject);
-        }
     }
 
     private void Update()
@@ -58,21 +53,6 @@ public class Line : OLine
             points[i - 1] = pointTran[i].position;
         }
         DrawCurve();
-    }
-
-    private void OnDestroy()
-    {
-        Selector.current.Selectable.Remove(this.gameObject);
-        GameEvents.current.OnDeleteEvent -= DestroySelf;
-    }
-
-    private void DestroySelf(int id)
-    {
-        if (id == gameObject.GetInstanceID())
-        {
-            Selector.current.Selectable.Remove(this.gameObject);
-            Destroy(this.gameObject);
-        }
     }
 
     private void DrawCurve()

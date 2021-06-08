@@ -76,7 +76,7 @@ public class ButtonHandler : MonoBehaviour
         }
 
         Vector3 position = (roadPosition[1] + roadPosition[0]) / 2.0f;
-        var scale = Vector3.Distance(roadPosition[1], roadPosition[0]) / 60.0f;
+        var scale = Vector3.Distance(roadPosition[1], roadPosition[0]) / 200.0f;
 
         Quaternion rotation = Quaternion.LookRotation(roadPosition[1] - roadPosition[0], Vector3.up);
         rotation *= Quaternion.Euler(0, -90f, 0);

@@ -90,4 +90,20 @@ public class Selector : MonoBehaviour
             }
         }
     }
+    
+    // 返回点选的单一GameObject
+    public static GameObject SelectObjectOnClick()
+    {
+        GameObject selectedObject = null;
+
+        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit rayHit;
+
+        if (Physics.Raycast(ray, out rayHit))
+        {
+            selectedObject = rayHit.collider.gameObject;
+        }
+
+        return selectedObject;
+    }
 }

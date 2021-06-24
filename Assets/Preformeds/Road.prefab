@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4077038019558064420}
   - component: {fileID: 4077038019558064421}
+  - component: {fileID: -907815980296204994}
+  - component: {fileID: 8602771269252159936}
   m_Layer: 0
   m_Name: Road
   m_TagString: Road
@@ -45,3 +47,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lines: []
   roadType: 0
+--- !u!114 &-907815980296204994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4077038019558064422}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1942b5725d49864981434b4c3b24c7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  carPrefab:
+  - {fileID: 1646981259178978, guid: 0ae65270c30153049ab49eb3ebf070d6, type: 3}
+  - {fileID: 1646981259178978, guid: 2dc42346e5313b34c93d598a61994629, type: 3}
+  - {fileID: 1646981259178978, guid: 512151c1530b99343a884b12ee9c5e1e, type: 3}
+  - {fileID: 1646981259178978, guid: ab26596a331d7ee43a3e9d29e2be9f84, type: 3}
+  originRoad: {fileID: 0}
+--- !u!114 &8602771269252159936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4077038019558064422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 566dc06dc4864034aaba48562164b2a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

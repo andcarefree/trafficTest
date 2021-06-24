@@ -1,81 +1,65 @@
-﻿using System.IO;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class LoadButton : MonoBehaviour, IFile
+public class LoadButton : MonoBehaviour
 {
     [SerializeField]
-    private GameObject carPrefab;
+    private GameObject lanePrefab;
 
     [SerializeField]
-    private GameObject loadObject;
+    private GameObject roadPrefab;
 
     [SerializeField]
     private GameObject warningPanel;
     
     [SerializeField]
-    private GameObject warningText;
+    private TextMeshProUGUI warningText;
 
     public void OnLoad()
     {
-        IFile OpenFile = this;
-        var loadFile = OpenFile.OpenFile();
-
-        if (loadFile != string.Empty)
+        var loadFile = FileDialog.OpenFileDialog("打开道路存档", "JSON 源文件 (.json)", "*.json");
+        
+        if (loadFile != null)
         {
-            SaveData.current = (SaveData)SerializationManager.Load(loadFile);
+            var tuple = SaveManager.ReadFromJson<LaneData, RoadData>(loadFile);
 
-            GameEvents.current.DispatchOnLoad();
-            
-            foreach(var newObject in SaveData.current.objects)
+            var oldRoad = GameObject.FindGameObjectsWithTag("Road");
+            for (int i = 0; i < oldRoad.Length; i++)
             {
-                var gameObject = Instantiate(loadObject, newObject.position, newObject.rotation);
-                gameObject.GetComponent<Road>().Id = newObject.id;
+                Destroy(oldRoad[i]);
+            }
 
-                if (newObject.roadType == RoadTypeEnum.SOURCE)
+            LaneDataManager.laneDatas = tuple.Item1;
+            RoadDataManager.roadDatas = tuple.Item2;
+
+            var newRoadDict = new Dictionary<GameObject, GameObject>();
+
+            foreach (var roadData in RoadDataManager.roadDatas)
+            {
+                var newRoad = Instantiate(roadPrefab);
+                newRoadDict.Add(roadData.road, newRoad);
+
+                if (roadData.roadType == RoadTypes.SOURCE)
                 {
-                    var originRoad = gameObject.AddComponent<OriginRoad>();
-                    originRoad.Car = carPrefab;
+                    newRoad.GetComponent<OriginRoad>().enabled = true;
                 }
             }
 
-            warningPanel.SetActive(true);
-            warningText.GetComponent<TextMeshProUGUI>().SetText("读取成功！");
-        }
-    }
+            foreach (var laneData in LaneDataManager.laneDatas)
+            {
+                var newLane = Instantiate(lanePrefab, laneData.position, laneData.rotation);
 
-    public string SaveFile()
-    {
-        throw new System.NotImplementedException();
-    }
+                newLane.transform.SetParent(newRoadDict[laneData.thisRoad].transform);
+                newLane.transform.localScale = laneData.scale;
 
-    string IFile.OpenFile()
-    {
-        FileDialog dialog = new FileDialog();
- 
-        dialog.structSize = Marshal.SizeOf(dialog);
-        dialog.filter = "Save files (*.save)\0*.save\0";
-        dialog.file = new string(new char[256]);
-        dialog.maxFile = dialog.file.Length;
-        dialog.fileTitle = new string(new char[64]);
-        dialog.maxFileTitle = dialog.fileTitle.Length;
-        dialog.initialDir = Application.dataPath;  //默认路径
-        dialog.title = "读取文件";
-        dialog.defExt = "save"; //显示文件的类型
-        dialog.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008;  //OFN_EXPLORER|OFN_FILEMUSTEXIST|OFN_PATHMUSTEXIST| OFN_ALLOWMULTISELECT|OFN_NOCHANGEDIR
-        
-        if (OpenFileDialog.GetOpenFileName(dialog))
-        {
-            Debug.Log(dialog.file);
-            return dialog.file;
-        }
-        else
-        {
-            return string.Empty;
+                foreach (var nextRoad in laneData.nextRoad)
+                {
+                    newLane.GetComponent<Line>().nextRoads.Add(newRoadDict[nextRoad].GetComponent<Road>());
+                }
+            }
         }
     }
-    
-    
 }

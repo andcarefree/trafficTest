@@ -32,11 +32,10 @@ public class SetSourceButton : MonoBehaviour
             {
                 var selectedObject = Selector.SelectObjectOnClick();
 
-                if (selectedObject.tag == "Lane")
+                if (selectedObject != null && selectedObject.tag == "Lane")
                 {
-                    OriginRoad originRoad = selectedObject.transform.parent.gameObject.AddComponent<OriginRoad>();
-                    originRoad.Car = car;
-                    selectedObject.GetComponentInParent<Road>().roadType = RoadTypeEnum.SOURCE;
+                    selectedObject.GetComponentInParent<OriginRoad>().enabled = true;
+                    selectedObject.GetComponentInParent<Road>().roadType = RoadTypes.SOURCE;
 
                     isDone = true;
                 }

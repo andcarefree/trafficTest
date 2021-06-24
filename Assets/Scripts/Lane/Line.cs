@@ -15,7 +15,6 @@ public class Line : OLine
 
     public List<Road> nextRoads;
 
-
     //public new LinkedList<Car> cars;
     public Vector3 lineStart { get => points[0]; }
     public Vector3 lineEnd { get => points[points.Length -1]; }

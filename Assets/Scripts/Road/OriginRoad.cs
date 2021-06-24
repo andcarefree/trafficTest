@@ -5,11 +5,15 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class OriginRoad : MonoBehaviour//泊松分布的交通流
 {
-    public GameObject Car { get; set; }
-    public Road originRoad;
-    private float z;//单位时间内平均到达数（辆/s）
-    private float m;//泊松分布下车辆到达率( m = zt)
-    //private float t = 0;
+    [SerializeField]
+    private GameObject[] carPrefab;
+
+    [SerializeField]
+    private Road originRoad;
+
+    private float z; // 单位时间内平均到达数（辆/s）
+    private float m; // 泊松分布下车辆到达率( m = zt)
+    // private float t = 0;
     
     void Start()
     {
@@ -23,19 +27,24 @@ public class OriginRoad : MonoBehaviour//泊松分布的交通流
         m = t * z;*/
         m = Time.deltaTime * z;
         double p = m * Mathf.Exp(-m);
-        if(p> UnityEngine.Random.Range(0f,1f))
+        if (p > UnityEngine.Random.Range(0f, 1f))
         {
             GenerateCar();
-            //t = 0;
+            // t = 0;
         }
     }
 
     private void GenerateCar()
     {
-        Line line = originRoad.lines[UnityEngine.Random.Range(0, originRoad.lines.Length)];
-        if (line.cars.Last != null&& line.cars.Last.Value.s <= Car.transform.localScale.z) return;//上次同车道生产的车辆未走远时，放弃生产车辆
-        GameObject go = GameObject.Instantiate(Car, line.lineStart, Quaternion.identity);
-        Car car = go.GetComponent<Car>();
+        var line = originRoad.lines[UnityEngine.Random.Range(0, originRoad.lines.Length)];
+        var i = (int)UnityEngine.Random.Range(1.0f, 4.0f);
+
+        if (line.cars.Last != null && line.cars.Last.Value.s <= 6.0f)
+            return; // 上次同车道生产的车辆未走远时，放弃生产车辆
+
+        var go = GameObject.Instantiate(carPrefab[i], line.lineStart, Quaternion.identity);
+        var car = go.GetComponent<Car>();
+
         car.line = line;
         car.lineT = 0;
         car.linePoints = line.points;

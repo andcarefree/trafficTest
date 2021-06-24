@@ -1,10 +1,18 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class ObjectData
+public class LaneData
 {
-    public int id;
-    public RoadTypeEnum roadType;
     public Vector3 position;
     public Quaternion rotation;
+    public Vector3 scale;
+    public GameObject thisRoad;
+    public GameObject[] nextRoad;
+}
+
+[System.Serializable]
+public class RoadData
+{
+    public GameObject road; 
+    public RoadTypes roadType;
 }

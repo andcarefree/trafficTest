@@ -833,17 +833,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 1
-      - m_Target: {fileID: 2067790618}
-        m_MethodName: OnGenerateRoadButtonClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 0
 --- !u!114 &203580068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -895,7 +884,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lane: {fileID: 9025392021884977298, guid: 8b7d61aadf645a14f97d466ca9acf9b4, type: 3}
   material: {fileID: 2100000, guid: 38cf2e51ca1f80842ab567c5a3157bac, type: 2}
-  text: {fileID: 0}
+  text: {fileID: 994288543}
 --- !u!1 &229613506
 GameObject:
   m_ObjectHideFlags: 0
@@ -3092,7 +3081,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   warningPanel: {fileID: 427691679}
-  warningText: {fileID: 642451786}
+  warningText: {fileID: 0}
 --- !u!1 &944392263
 GameObject:
   m_ObjectHideFlags: 0
@@ -3886,6 +3875,7 @@ GameObject:
   - component: {fileID: 1026468971}
   - component: {fileID: 1026468970}
   - component: {fileID: 1026468969}
+  - component: {fileID: 1026468972}
   m_Layer: 5
   m_Name: StartButton
   m_TagString: Untagged
@@ -3957,8 +3947,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2067790618}
-        m_MethodName: OnPlayButtonClick
+      - m_Target: {fileID: 1026468972}
+        m_MethodName: OnStartButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4005,6 +3995,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1026468967}
   m_CullTransparentMesh: 0
+--- !u!114 &1026468972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1026468967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71aa512bdd778864eaee89ff9f045447, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1034284517
 GameObject:
   m_ObjectHideFlags: 0
@@ -4571,6 +4573,7 @@ GameObject:
   - component: {fileID: 1205631675}
   - component: {fileID: 1205631674}
   - component: {fileID: 1205631673}
+  - component: {fileID: 1205631676}
   m_Layer: 5
   m_Name: Button (2)
   m_TagString: Untagged
@@ -4642,8 +4645,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2067790618}
-        m_MethodName: OnLinkLaneButtonClick
+      - m_Target: {fileID: 1205631676}
+        m_MethodName: OnButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4690,6 +4693,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1205631671}
   m_CullTransparentMesh: 0
+--- !u!114 &1205631676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205631671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2e28e9193da5ea49b36c74146a1c7ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statusText: {fileID: 994288543}
 --- !u!1 &1221390714
 GameObject:
   m_ObjectHideFlags: 0
@@ -4834,8 +4850,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ada7fea08552def419c1b594baf0fd9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  carPrefab: {fileID: 1646981259178978, guid: ab26596a331d7ee43a3e9d29e2be9f84, type: 3}
-  loadObject: {fileID: 4077038019558064422, guid: 5e57b7b7aec88374386dca97ef87d5c9,
+  lanePrefab: {fileID: 9025392021884977298, guid: 8b7d61aadf645a14f97d466ca9acf9b4,
+    type: 3}
+  roadPrefab: {fileID: 4077038019558064422, guid: 5e57b7b7aec88374386dca97ef87d5c9,
     type: 3}
   warningPanel: {fileID: 427691679}
   warningText: {fileID: 642451786}
@@ -5436,17 +5453,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2067790618}
-        m_MethodName: OnSetCarSourceButtonClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 0
       - m_Target: {fileID: 1320090277}
         m_MethodName: OnButtonClick
         m_Mode: 1
@@ -7284,8 +7290,8 @@ GameObject:
   - component: {fileID: 2067790615}
   - component: {fileID: 2067790614}
   - component: {fileID: 2067790613}
-  - component: {fileID: 2067790618}
   - component: {fileID: 2067790617}
+  - component: {fileID: 2067790618}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -7402,16 +7408,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2067790612}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dd95ad9b81f6f8418b7a0e5bfeaf9da, type: 3}
+  m_Script: {fileID: 11500000, guid: bbe6706556139c04c8390800da32a79f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startButtonText: {fileID: 972880085}
-  statusBar: {fileID: 994288543}
-  roadPrefeb: {fileID: 4077038019558064422, guid: 5e57b7b7aec88374386dca97ef87d5c9,
-    type: 3}
-  carPrefeb: {fileID: 1646981259178978, guid: ab26596a331d7ee43a3e9d29e2be9f84, type: 3}
-  crossPrefab: {fileID: 1031185707969793672, guid: 614bb3de6e88f884db8b5b1ce7cca9d6,
-    type: 3}
 --- !u!1 &2077613786
 GameObject:
   m_ObjectHideFlags: 0
@@ -7424,6 +7423,7 @@ GameObject:
   - component: {fileID: 2077613792}
   - component: {fileID: 2077613791}
   - component: {fileID: 2077613788}
+  - component: {fileID: 2077613789}
   m_Layer: 5
   m_Name: StopButton
   m_TagString: Untagged
@@ -7495,7 +7495,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2067790618}
+      - m_Target: {fileID: 2077613789}
         m_MethodName: OnStopButtonClick
         m_Mode: 1
         m_Arguments:
@@ -7506,6 +7506,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 1
+--- !u!114 &2077613789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077613786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4909e6567e47a24d83185ce168bdd43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2077613791
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7627,17 +7639,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2067790618}
-        m_MethodName: OnSetCrossButtonClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 0
       - m_Target: {fileID: 2079490921}
         m_MethodName: OnButtonClick
         m_Mode: 1

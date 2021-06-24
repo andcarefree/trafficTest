@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-public class Background : MonoBehaviour, IFile
+public class Background : MonoBehaviour
 {
     [SerializeField]
     private GameObject background;
@@ -24,8 +24,7 @@ public class Background : MonoBehaviour, IFile
     {
         ResetImage();
 
-        IFile file = this;
-        var path = file.OpenFile();
+        var path = FileDialog.OpenFileDialog("选择背景图", "jpg", "png");
 
         if (path != string.Empty)
         {
@@ -63,8 +62,6 @@ public class Background : MonoBehaviour, IFile
     // 拖拽预览背景图缩放
     private IEnumerator SetSizeOnDrag()
     {
-        background.SetActive(true);
-
         var isFinished = false;
         var color = background.GetComponent<SpriteRenderer>().color;
 
@@ -92,6 +89,7 @@ public class Background : MonoBehaviour, IFile
                     var widthScale = Mathf.Abs(mousePosition[1].x - mousePosition[0].x) / (textureWidth / 100.0f) ;
                     var heightScale = Mathf.Abs(mousePosition[1].z - mousePosition[0].z) / (textureHeight / 100.0f);
 
+                    // use different calculating method for four different mouse dragging ways
                     if (mousePosition[1].x > mousePosition[0].x && mousePosition[1].z > mousePosition[0].z)
                     {
                         background.transform.position = mousePosition[0] - new Vector3(0f, 0.01f, 0f);
@@ -138,35 +136,4 @@ public class Background : MonoBehaviour, IFile
         }
     }
 
-    // 实现IFile接口，用于选取文件
-    string IFile.OpenFile()
-    {
-        FileDialog dialog = new FileDialog();
- 
-        dialog.structSize = Marshal.SizeOf(dialog);
-        dialog.filter = "JPG Files (*.jpg)\0*.jpg\0JPEG Files (*.jpeg)\0*.jpeg\0PNG Files (*.png)\0*.png\0";
-        dialog.file = new string(new char[256]);
-        dialog.maxFile = dialog.file.Length;
-        dialog.fileTitle = new string(new char[64]);
-        dialog.maxFileTitle = dialog.fileTitle.Length;
-        dialog.initialDir = Application.dataPath;  // 默认路径
-        dialog.title = "读取文件";
-        dialog.defExt = "JPG"; // 默认显示文件的类型
-        dialog.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008;  //OFN_EXPLORER|OFN_FILEMUSTEXIST|OFN_PATHMUSTEXIST| OFN_ALLOWMULTISELECT|OFN_NOCHANGEDIR
-        
-        if (OpenFileDialog.GetOpenFileName(dialog))
-        {
-            Debug.Log(dialog.file);
-            return dialog.file;
-        }
-        else
-        {
-            return string.Empty;
-        }    
-    }
-
-    string IFile.SaveFile()
-    {
-        throw new System.NotImplementedException();
-    }
 }

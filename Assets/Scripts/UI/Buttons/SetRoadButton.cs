@@ -24,13 +24,21 @@ public class SetRoadButton : MonoBehaviour
         {
             if (Selector.current.Selected.Count == 0)
             {
-                text.SetText("请选择车道，按回车键继续");
+                text.SetText("请选择车道，按回车键继续，Esc键退出");
 
                 while (true)
                 {
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
-                        break;
+                        if (Selector.current.Selected.Count == 0)
+                        {
+                            text.SetText("未选择车道，请重新选择");
+                        }
+                        else
+                        {
+                            text.SetText("请在侧面板中选择操作，选中后按del键可以删除对象");
+                            break;
+                        }
                     }
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
@@ -48,6 +56,8 @@ public class SetRoadButton : MonoBehaviour
                     if (gameObject.tag == "Lane")
                     {
                         gameObject.transform.SetParent(parentObject.transform);
+                        
+                        text.SetText("绑定成功");
                     }
                 }
                 yield break;

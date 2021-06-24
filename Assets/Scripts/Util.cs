@@ -27,4 +27,20 @@ public class Util
             return Vector3.zero;
         }
     }
+
+    // 点击返回场景中的物体
+    public static GameObject SelectObjectOnClick()
+    {
+        GameObject selectedObject = null;
+
+        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit rayHit;
+
+        if (Physics.Raycast(ray, out rayHit))
+        {
+            selectedObject = rayHit.collider.gameObject;
+        }
+
+        return selectedObject;
+    }
 }

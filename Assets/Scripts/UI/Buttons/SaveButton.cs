@@ -17,7 +17,11 @@ public class SaveButton : MonoBehaviour
 
         if (laneSaveFile != null)
         {
-            SaveManager.SaveToJson<LaneData, RoadData>(laneSaveFile, LaneDataManager.laneDatas, RoadDataManager.roadDatas);
+            var list1 = LaneDataManager.laneDatas;
+            var list2 = RoadDataManager.roadDatas;
+            var list3 = IntersectionDataManager.intersectionDatas;
+
+            SaveManager.SaveToJson<LaneData, RoadData, IntersectionData>(laneSaveFile, list1, list2, list3);
         }
     }
     

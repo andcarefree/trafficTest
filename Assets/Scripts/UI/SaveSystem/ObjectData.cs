@@ -16,3 +16,10 @@ public class RoadData
     public GameObject road; 
     public RoadTypes roadType;
 }
+
+[System.Serializable]
+public class IntersectionData
+{
+    public Vector3 position;
+    public Vector3 scale;
+}

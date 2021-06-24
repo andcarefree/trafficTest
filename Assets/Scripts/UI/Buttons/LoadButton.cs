@@ -13,6 +13,9 @@ public class LoadButton : MonoBehaviour
     private GameObject roadPrefab;
 
     [SerializeField]
+    private GameObject intersectionPrefab;
+
+    [SerializeField]
     private GameObject warningPanel;
     
     [SerializeField]
@@ -24,7 +27,7 @@ public class LoadButton : MonoBehaviour
         
         if (loadFile != null)
         {
-            var tuple = SaveManager.ReadFromJson<LaneData, RoadData>(loadFile);
+            var tuple = SaveManager.ReadFromJson<LaneData, RoadData, IntersectionData>(loadFile);
 
             var oldRoad = GameObject.FindGameObjectsWithTag("Road");
             for (int i = 0; i < oldRoad.Length; i++)
@@ -32,8 +35,15 @@ public class LoadButton : MonoBehaviour
                 Destroy(oldRoad[i]);
             }
 
+            var oldIntersection = GameObject.FindGameObjectsWithTag("Intersection");
+            for (int i = 0; i < oldIntersection.Length; i++)
+            {
+                Destroy(oldIntersection[i]);
+            }
+
             LaneDataManager.laneDatas = tuple.Item1;
             RoadDataManager.roadDatas = tuple.Item2;
+            IntersectionDataManager.intersectionDatas = tuple.Item3;
 
             var newRoadDict = new Dictionary<GameObject, GameObject>();
 
@@ -59,6 +69,13 @@ public class LoadButton : MonoBehaviour
                 {
                     newLane.GetComponent<Line>().nextRoads.Add(newRoadDict[nextRoad].GetComponent<Road>());
                 }
+            }
+
+            foreach (var intersectionData in IntersectionDataManager.intersectionDatas)
+            {
+                var newIntersection = Instantiate(intersectionPrefab, intersectionData.position, Quaternion.identity);
+                
+                newIntersection.transform.localScale = intersectionData.scale;
             }
         }
     }

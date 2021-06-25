@@ -6,8 +6,6 @@ using UnityEngine.EventSystems;
 public class Selector : MonoBehaviour
 {
     public static Selector current;
-    private Vector3 startPosition;
-    private Vector3 endPosition;
 
     [SerializeField]
     private RectTransform canvas;
@@ -15,15 +13,18 @@ public class Selector : MonoBehaviour
     [SerializeField] 
     private RectTransform selectionBox;
 
-    [field : SerializeField]
-    public List<GameObject> Selectable { get; set; }
+    [SerializeField]
+    private List<Vector3> mousePosition;
 
-    [field : SerializeField]
+    public List<GameObject> Selectable { get; set; }
     public List<GameObject> Selected { get; set; }
     
-    void Awake()
+    void Start()
     {
         current = this;
+        
+        this.Selectable = new List<GameObject>();
+        this.Selected = new List<GameObject>();
     }
 
     void Update()
@@ -39,40 +40,50 @@ public class Selector : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(0))
         {
-            startPosition = Input.mousePosition;
+            if (mousePosition.Count == 0)
+            {
+                mousePosition.Add(Input.mousePosition);
+            }
         }
         else if(Input.GetMouseButton(0))
         {
-            endPosition = Input.mousePosition;
-
-            var xMax = Mathf.Max(endPosition.x, startPosition.x);
-            var yMax = Mathf.Max(endPosition.y, startPosition.y);
-            var xMin = Mathf.Min(endPosition.x, startPosition.x);
-            var yMin = Mathf.Min(endPosition.y, startPosition.y);
-            
-            var width = (endPosition.x - startPosition.x) *  canvas.rect.width / Screen.width;
-            var height = (endPosition.y - startPosition.y) * canvas.rect.height / Screen.height;
-
-            var positionX = startPosition.x * canvas.rect.width / Screen.width + width / 2;
-            var positionY = startPosition.y * canvas.rect.height / Screen.height + height / 2;
-
-            selectionBox.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
-            selectionBox.anchoredPosition = new Vector2(positionX, positionY);
-
-            if(!selectionBox.gameObject.activeInHierarchy)
-                selectionBox.gameObject.SetActive(true);
-            
-            foreach(var go in Selectable)
+            if (mousePosition.Count == 1)
             {
-                var position = Camera.main.WorldToScreenPoint(go.transform.position);
+                mousePosition.Add(Input.mousePosition);
+            }
+            if (mousePosition.Count == 2)
+            {
+                mousePosition[1] = Input.mousePosition;
 
-                if(position.x > xMin && position.x < xMax && position.y > yMin && position.y < yMax)
+                var xMax = Mathf.Max(mousePosition[1].x, mousePosition[0].x);
+                var yMax = Mathf.Max(mousePosition[1].y, mousePosition[0].y);
+                var xMin = Mathf.Min(mousePosition[1].x, mousePosition[0].x);
+                var yMin = Mathf.Min(mousePosition[1].y, mousePosition[0].y);
+                
+                var width = (mousePosition[1].x - mousePosition[0].x) *  canvas.rect.width / Screen.width;
+                var height = (mousePosition[1].y - mousePosition[0].y) * canvas.rect.height / Screen.height;
+
+                var positionX = mousePosition[0].x * canvas.rect.width / Screen.width + width / 2;
+                var positionY = mousePosition[0].y * canvas.rect.height / Screen.height + height / 2;
+
+                selectionBox.sizeDelta = new Vector2(Mathf.Abs(width), Mathf.Abs(height));
+                selectionBox.anchoredPosition = new Vector2(positionX, positionY);
+
+                if(!selectionBox.gameObject.activeInHierarchy)
+                    selectionBox.gameObject.SetActive(true);
+                
+                foreach(var go in Selectable)
                 {
-                    if(!Selected.Contains(go))
+                    var position = Camera.main.WorldToScreenPoint(go.transform.position);
+
+                    if(position.x > xMin && position.x < xMax && position.y > yMin && position.y < yMax)
                     {
-                        Selected.Add(go);
-                        go.GetComponent<Outline>().enabled = true;
-                    }              
+                        if(!Selected.Contains(go))
+                        {
+                            Selected.Add(go);
+                            go.GetComponent<Outline>().enabled = true;
+                        }              
+                    }
                 }
             }
         }
@@ -92,6 +103,7 @@ public class Selector : MonoBehaviour
         {
             if(selectionBox.gameObject.activeInHierarchy)
             {
+                mousePosition.Clear();
                 selectionBox.gameObject.SetActive(false);
             }
         }

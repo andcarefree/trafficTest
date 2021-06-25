@@ -18,10 +18,8 @@ public class SetSourceButton : MonoBehaviour
 
     private IEnumerator SetCarSource()
     {
-        bool isDone = false;
-
         text.SetText("请点击需要设置为车辆源的道路，点击车道即可");
-        while (!isDone)
+        while (true)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -37,11 +35,10 @@ public class SetSourceButton : MonoBehaviour
                     selectedObject.GetComponentInParent<OriginRoad>().enabled = true;
                     selectedObject.GetComponentInParent<Road>().roadType = RoadTypes.SOURCE;
 
-                    isDone = true;
+                    break;
                 }
                 else
                 {
-                    selectedObject = null;
                     text.SetText("所点击的不是道路，请重新选择");
                 }
             }

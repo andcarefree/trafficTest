@@ -4854,8 +4854,10 @@ MonoBehaviour:
     type: 3}
   roadPrefab: {fileID: 4077038019558064422, guid: 5e57b7b7aec88374386dca97ef87d5c9,
     type: 3}
+  intersectionPrefab: {fileID: 8969356419340817729, guid: 614bb3de6e88f884db8b5b1ce7cca9d6,
+    type: 3}
   warningPanel: {fileID: 427691679}
-  warningText: {fileID: 642451786}
+  warningText: {fileID: 0}
 --- !u!1 &1222791111
 GameObject:
   m_ObjectHideFlags: 0

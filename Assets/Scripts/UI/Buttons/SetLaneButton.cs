@@ -24,8 +24,7 @@ public class SetLaneButton : MonoBehaviour
     {
         var position = new Vector3[2];
         var state = 0;
-
-        GameObject newObject = null;
+        var newObject = (GameObject)null;
 
         while (true)
         {

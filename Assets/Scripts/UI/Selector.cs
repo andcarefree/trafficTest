@@ -124,4 +124,14 @@ public class Selector : MonoBehaviour
 
         return selectedObject;
     }
+
+    #if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawRay(Camera.main.transform.position, ray.direction * 100.0f);
+        }
+    #endif
 }

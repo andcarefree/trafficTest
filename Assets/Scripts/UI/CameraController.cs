@@ -34,7 +34,7 @@ public class CameraController : MonoBehaviour
         newZoom = cameraTransform.localPosition;
     }
 
-    async Task Update()
+    async Task LateUpdate()
     {
         // Check if there is any panel opened
         if(!EventSystem.current.IsPointerOverGameObject())
@@ -79,27 +79,13 @@ public class CameraController : MonoBehaviour
         // Move camera by using mouse mid button
         if (Input.GetMouseButtonDown(2))
         {
-            Plane Plane = new Plane(Vector3.up, Vector3.zero);
-            Ray Ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            float entry;
-
-            if (Plane.Raycast(Ray, out entry))
-            {
-                dragStartPosition = Ray.GetPoint(entry);
-            }
+            dragStartPosition = Util.GetPointOnXZPlane(Input.mousePosition);
         }
         if (Input.GetMouseButton(2))
         {
-            Plane Plane = new Plane(Vector3.up, Vector3.zero);
-            Ray Ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            float entry;
+            dragStopPosition = Util.GetPointOnXZPlane(Input.mousePosition);
 
-            if (Plane.Raycast(Ray, out entry))
-            {
-                dragStopPosition = Ray.GetPoint(entry);
-
-                newPosition = transform.position + dragStartPosition - dragStopPosition;
-            }
+            newPosition = transform.position + dragStartPosition - dragStopPosition;
         }
     }
 

@@ -25,6 +25,6 @@ public class AxisZ : MonoBehaviour
             transform.parent.position = new Vector3(parentPosition.x, projectedPosition.y, parentPosition.z); 
         }
 
-        GetComponentInParent<Lane>().RecalculateMesh();
+        GetComponentInParent<LaneMesh>().RecalculateMesh();
     }
 }

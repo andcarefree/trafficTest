@@ -56,7 +56,7 @@ public class SetLaneButton : MonoBehaviour
 
                     var pivot = (position[1] + position[0]) / 2;
                     var rotation = Quaternion.FromToRotation(Vector3.right, (position[1] - position[0]));
-                    var scale = (position[1] - position[0]).magnitude / 200f;
+                    var scale = (position[1] - position[0]).magnitude / 10.0f;
 
                     if (newObject == null)
                     {

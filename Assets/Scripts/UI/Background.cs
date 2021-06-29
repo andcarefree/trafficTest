@@ -24,7 +24,7 @@ public class Background : MonoBehaviour
     {
         ResetImage();
 
-        var path = FileDialog.OpenFileDialog("选择背景图", "jpg", "png");
+        var path = FileDialog.OpenFileDialog("选择背景图", "JPG 图片(*.jpg)", "*.jpg","JPG 图片(*.jpeg)", "*.jpeg", "PNG 图片(*.png)", "*.png");
 
         if (path != string.Empty)
         {
@@ -62,7 +62,6 @@ public class Background : MonoBehaviour
     // 拖拽预览背景图缩放
     private IEnumerator SetSizeOnDrag()
     {
-        var isFinished = false;
         var color = background.GetComponent<SpriteRenderer>().color;
 
         color.a = 0.5f;
@@ -71,57 +70,49 @@ public class Background : MonoBehaviour
 
         while (true)
         {
-            if (!isFinished)
+            if (Input.GetMouseButtonDown(0))
             {
-                if (Input.GetMouseButtonDown(0))
+                mousePosition[0] = Util.GetPointOnXZPlane(Input.mousePosition);
+            }
+            if (Input.GetMouseButton(0))
+            {
+                if (!background.activeInHierarchy)
                 {
-                    mousePosition[0] = Util.GetPointOnXZPlane(Input.mousePosition);
+                    background.SetActive(true);
                 }
-                if (Input.GetMouseButton(0))
+
+                mousePosition[1] = Util.GetPointOnXZPlane(Input.mousePosition);
+                
+                var widthScale = Mathf.Abs(mousePosition[1].x - mousePosition[0].x) / (textureWidth / 100.0f) ;
+                var heightScale = Mathf.Abs(mousePosition[1].z - mousePosition[0].z) / (textureHeight / 100.0f);
+
+                // use different calculating method for four different mouse dragging ways
+                if (mousePosition[1].x > mousePosition[0].x && mousePosition[1].z > mousePosition[0].z)
                 {
-                    if (!background.activeInHierarchy)
-                    {
-                        background.SetActive(true);
-                    }
-
-                    mousePosition[1] = Util.GetPointOnXZPlane(Input.mousePosition);
-                    
-                    var widthScale = Mathf.Abs(mousePosition[1].x - mousePosition[0].x) / (textureWidth / 100.0f) ;
-                    var heightScale = Mathf.Abs(mousePosition[1].z - mousePosition[0].z) / (textureHeight / 100.0f);
-
-                    // use different calculating method for four different mouse dragging ways
-                    if (mousePosition[1].x > mousePosition[0].x && mousePosition[1].z > mousePosition[0].z)
-                    {
-                        background.transform.position = mousePosition[0] - new Vector3(0f, 0.01f, 0f);
-                        background.transform.localScale = new Vector3(widthScale, heightScale, 1.0f);
-                    }
-                    if (mousePosition[1].x < mousePosition[0].x && mousePosition[1].z < mousePosition[0].z)
-                    {
-                        background.transform.position = mousePosition[1] - new Vector3(0f, 0.01f, 0f);
-                        background.transform.localScale = new Vector3(widthScale, heightScale, 1.0f);
-                    }
-                    if (mousePosition[1].x > mousePosition[0].x && mousePosition[1].z < mousePosition[0].z)
-                    {
-                        var pivot = new Vector3(mousePosition[0].x, 0f, mousePosition[1].z);
-
-                        background.transform.position = pivot - new Vector3(0f, 0.01f, 0f);
-                        background.transform.localScale = new Vector3(widthScale, heightScale, 1.0f);
-                    }
-                    if (mousePosition[1].x < mousePosition[0].x && mousePosition[1].z > mousePosition[0].z)
-                    {
-                        var pivot = new Vector3(mousePosition[1].x, 0f, mousePosition[0].z);
-
-                        background.transform.position = pivot - new Vector3(0f, 0.01f, 0f);
-                        background.transform.localScale = new Vector3(widthScale, heightScale, 1.0f);
-                    }
-
+                    background.transform.position = mousePosition[0] - new Vector3(0f, 0.01f, 0f);
+                    background.transform.localScale = new Vector3(widthScale, heightScale, 1.0f);
                 }
-                if (Input.GetMouseButtonUp(0))
+                if (mousePosition[1].x < mousePosition[0].x && mousePosition[1].z < mousePosition[0].z)
                 {
-                    isFinished = true;
+                    background.transform.position = mousePosition[1] - new Vector3(0f, 0.01f, 0f);
+                    background.transform.localScale = new Vector3(widthScale, heightScale, 1.0f);
+                }
+                if (mousePosition[1].x > mousePosition[0].x && mousePosition[1].z < mousePosition[0].z)
+                {
+                    var pivot = new Vector3(mousePosition[0].x, 0f, mousePosition[1].z);
+
+                    background.transform.position = pivot - new Vector3(0f, 0.01f, 0f);
+                    background.transform.localScale = new Vector3(widthScale, heightScale, 1.0f);
+                }
+                if (mousePosition[1].x < mousePosition[0].x && mousePosition[1].z > mousePosition[0].z)
+                {
+                    var pivot = new Vector3(mousePosition[1].x, 0f, mousePosition[0].z);
+
+                    background.transform.position = pivot - new Vector3(0f, 0.01f, 0f);
+                    background.transform.localScale = new Vector3(widthScale, heightScale, 1.0f);
                 }
             }
-            else 
+            if (Input.GetMouseButtonUp(0))
             {
                 color.a = 1.0f;
 
@@ -131,7 +122,7 @@ public class Background : MonoBehaviour
                 
                 yield break;
             }
-
+            
             yield return null;
         }
     }

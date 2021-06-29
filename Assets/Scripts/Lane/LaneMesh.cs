@@ -1,32 +1,74 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer)), DisallowMultipleComponent]
-public class Lane : MonoBehaviour
+public class LaneMesh : MonoBehaviour
 {
     private Mesh mesh;
     private Vector3[] vertices;
     private Vector3[] normals;
-    private int[] triangles;
 
     void Awake()
     {
         mesh = GetComponent<MeshFilter>().mesh;
         vertices = mesh.vertices;
         normals = mesh.normals;
-        triangles = mesh.triangles;
     }
 
-    void Update()
-    {
-        // RecalculateMesh();
+    // 用脚本生成生成并导出mesh资源文件
+    // private void GenerateMesh()
+    // {
+    //     mesh = new Mesh();
+    //     GetComponent<MeshFilter>().mesh = mesh;
 
-        for (int i = 0; i < triangles.Length / 3; i += 3)
-        {
-            Debug.Log($"{triangles[i]},{triangles[i + 1]},{triangles[i + 2]}");
-        }
-    }
+    //     vertices = new Vector3[33];
+
+    //     for (int i = 0; i < 11; i++)
+    //     {
+    //         vertices[i] = new Vector3(i - 5.0f, 0f, -1.75f);    
+    //     }
+    //     for (int i = 11; i < 22; i++)
+    //     {
+    //         vertices[i] = new Vector3((float)(i - 11) - 5.0f, 0f, 0f);
+    //     }
+    //     for (int i = 22; i < 33; i++)
+    //     {
+    //         vertices[i] = new Vector3((float)(i - 22) - 5.0f, 0f, 1.75f);
+    //     }
+
+    //     mesh.vertices = vertices;
+
+    //     triangles = new int[120];
+    //     var t = 0;
+
+    //     for (int i = 0; i < 10; i++)
+    //     {
+    //         triangles[t] = i;
+    //         triangles[t + 1] = triangles[t + 4] = i + 11; 
+    //         triangles[t + 2] = triangles[t + 3] = i + 1; 
+    //         triangles[t + 5] = i + 12;
+
+    //         t += 6;
+    //     }
+
+    //     for (int i = 11; i < 21; i++)
+    //     {
+    //         triangles[t] = i;
+    //         triangles[t + 1] = triangles[t + 4] = i + 11; 
+    //         triangles[t + 2] = triangles[t + 3] = i + 1; 
+    //         triangles[t + 5] = i + 12;
+
+    //         t += 6;
+    //     }
+
+    //     mesh.triangles = triangles;
+    //     mesh.RecalculateNormals();
+
+    //     AssetDatabase.CreateAsset(mesh, "Assets/Models/Lane.asset");
+    //     AssetDatabase.SaveAssets();
+    // }
 
     // 重新计算网格
     public void RecalculateMesh()
@@ -37,11 +79,9 @@ public class Lane : MonoBehaviour
         var offsets = new Vector3[3];
         var t = 0f;
 
-        for (int i = 0; i < 3; i++)
-        {
-            childPositions[i] = childTransforms[i + 1].position;
-            Debug.Log($"{childTransforms[i + 1].name}:{childPositions[i]}"); 
-        }
+        childPositions[0] = childTransforms[2].position;
+        childPositions[1] = childTransforms[6].position;
+        childPositions[2] = childTransforms[10].position; 
 
         offsets[0] = Quaternion.Euler(0, 90, 0) * (childPositions[1] - childPositions[0]).normalized;
         offsets[1] = Quaternion.Euler(0, 90, 0) * (childPositions[2] - childPositions[0]).normalized;
@@ -55,7 +95,7 @@ public class Lane : MonoBehaviour
         
         for (int i = 0; i < 11; i++)
         {
-            vertices[3 * i + 1] = QuadraicBezier(controlPoints[0], controlPoints[1], controlPoints[2], t);
+            vertices[i + 11] = QuadraicBezier(controlPoints[0], controlPoints[1], controlPoints[2], t);
             t += 0.1f;
         }
 
@@ -69,7 +109,7 @@ public class Lane : MonoBehaviour
 
         for (int i = 0; i < 11; i++)
         {
-            vertices[3 * i] = QuadraicBezier(controlPoints[0], controlPoints[1], controlPoints[2], t);
+            vertices[i] = QuadraicBezier(controlPoints[0], controlPoints[1], controlPoints[2], t);
             t += 0.1f;
         }
         
@@ -83,12 +123,14 @@ public class Lane : MonoBehaviour
 
         for (int i = 0; i < 11; i++)
         {
-            vertices[3 * i + 2] = QuadraicBezier(controlPoints[0], controlPoints[1], controlPoints[2], t);
+            vertices[i + 22] = QuadraicBezier(controlPoints[0], controlPoints[1], controlPoints[2], t);
             t += 0.1f;
         }
 
         mesh.vertices = vertices;
         mesh.RecalculateNormals();
+
+        normals = mesh.normals;
     }
 
     // 贝塞尔函数，用于计算顶点位置

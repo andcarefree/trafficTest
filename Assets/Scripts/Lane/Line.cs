@@ -44,7 +44,7 @@ public class Line : OLine
     private void Update()
     {
         // Update BoxCollider center position to avoid collision mismatch
-        GetComponent<BoxCollider>().center = Vector3.zero;
+        // GetComponent<BoxCollider>().center = Vector3.zero;
 
         // 获取子点对象的transform
         Transform[] pointTran = GetComponentsInChildren<Transform>();

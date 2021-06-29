@@ -70,7 +70,6 @@ public static class FileDialog
         ofn.maxFileTitle = ofn.fileTitle.Length;
         ofn.initialDir = Application.dataPath;
         ofn.title = title;
-        ofn.defExt = extensions[1];
         ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008;// OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ALLOWMULTISELECT | OFN_NOCHANGEDIR
         ofn.dlgOwner = GetForegroundWindow(); // 这一步将文件选择窗口置顶。
         if (!GetOpenFileName(ofn))
@@ -100,7 +99,6 @@ public static class FileDialog
         ofn.maxFileTitle = ofn.fileTitle.Length;
         ofn.initialDir = Application.dataPath;
         ofn.title = title;
-        ofn.defExt = extensions[1];
         ofn.flags = 0x00000002 | 0x00000004; // OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY
         ofn.dlgOwner= GetForegroundWindow(); // 这一步将文件选择窗口置顶。
         if (!GetSaveFileName(ofn))

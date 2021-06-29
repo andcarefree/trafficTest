@@ -4,7 +4,6 @@ using System;
 public class Point : MonoBehaviour
 {
     // 控制点的行为脚本，用三个正交方向操作控制点
-
     private Action<Guid> action;
     private void Start()
     {
@@ -24,7 +23,6 @@ public class Point : MonoBehaviour
 
     private void Update()
     {
-        // 调整缩放，让点的形状保持一致 
         if (transform.parent.localScale.x != 0f)
             transform.localScale = new Vector3(0.5f / transform.parent.localScale.x, 0.5f / transform.parent.localScale.y, 0.5f / transform.parent.localScale.z);
     }

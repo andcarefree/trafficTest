@@ -33,26 +33,27 @@ public class SetLaneButton : MonoBehaviour
                 Destroy(newObject);
                 Selector.current.enabled = true;
 
+                if (newObject != null)
+                {
+                    Destroy(newObject);
+                }
+                
                 yield break;
             }
 
             switch (state)
             {
                 case 0:
-
                     if (Input.GetMouseButtonDown(0))
                     {
                         position[0] = Util.GetPointOnXZPlane(Input.mousePosition);
 
                         state += 1;
                     }
-
                     break;
 
                 case 1:
-
                     position[1] = Util.GetPointOnXZPlane(Input.mousePosition);
-
 
                     var pivot = (position[1] + position[0]) / 2;
                     var rotation = Quaternion.FromToRotation(Vector3.right, (position[1] - position[0]));
@@ -65,7 +66,7 @@ public class SetLaneButton : MonoBehaviour
 
                         color.a = 0.5f;
                         material.color = color;
-                        newObject.GetComponent<LineRenderer>().material = material;
+                        newObject.GetComponent<MeshRenderer>().material = material;
                     }
 
                     newObject.transform.position = pivot;
@@ -78,17 +79,14 @@ public class SetLaneButton : MonoBehaviour
 
                         color.a = 1.0f;
                         material.color = color;
-                        newObject.GetComponent<LineRenderer>().material = material;
+                        newObject.GetComponent<MeshRenderer>().material = material;
                         
                         state += 1;
                     }
-
                     break;
 
                 default:
-                    
                     Selector.current.enabled = true;
-                    
                     yield break;
 
             }

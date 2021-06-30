@@ -15,18 +15,6 @@ public class GameEvents : MonoBehaviour
         current = this;
     }
 
-    public void OnSelected(Guid guid)
-    {
-        if (OnSelectedEvent != null)
-            OnSelectedEvent(guid);
-    }
-    
-    public void DispatchOnLoad()
-    {
-        if (OnLoadEvent != null)
-            OnLoadEvent();
-    }
-
     public void OnDelete(int id)
     {
         if (OnDeleteEvent != null)

@@ -7,14 +7,22 @@ using UnityEngine;
 public class LaneMesh : MonoBehaviour
 {
     private Mesh mesh;
+    private MeshCollider meshCollider;
     private Vector3[] vertices;
     private Vector3[] normals;
+    private int[] triangles;
 
     void Awake()
     {
         mesh = GetComponent<MeshFilter>().mesh;
+        meshCollider = GetComponent<MeshCollider>();
         vertices = mesh.vertices;
         normals = mesh.normals;
+    }
+
+    void Update()
+    {
+        RecalculateMesh();
     }
 
     // 用脚本生成生成并导出mesh资源文件
@@ -31,11 +39,11 @@ public class LaneMesh : MonoBehaviour
     //     }
     //     for (int i = 11; i < 22; i++)
     //     {
-    //         vertices[i] = new Vector3((float)(i - 11) - 5.0f, 0f, 0f);
+    //         vertices[i] = new Vector3((i - 11) - 5.0f, 0f, 0f);
     //     }
     //     for (int i = 22; i < 33; i++)
     //     {
-    //         vertices[i] = new Vector3((float)(i - 22) - 5.0f, 0f, 1.75f);
+    //         vertices[i] = new Vector3((i - 22) - 5.0f, 0f, 1.75f);
     //     }
 
     //     mesh.vertices = vertices;
@@ -73,15 +81,17 @@ public class LaneMesh : MonoBehaviour
     // 重新计算网格
     public void RecalculateMesh()
     {
-        var childTransforms = this.GetComponentsInChildren<Transform>();
+        var childTransforms = this.GetComponentsInChildren<Transform>(true);
         var childPositions = new Vector3[3];
         var controlPoints = new Vector3[3];
         var offsets = new Vector3[3];
+        var matrix = transform.worldToLocalMatrix;
         var t = 0f;
 
-        childPositions[0] = childTransforms[2].position;
-        childPositions[1] = childTransforms[6].position;
-        childPositions[2] = childTransforms[10].position; 
+        for (int i = 0; i < 3; i++)
+        {
+            childPositions[i] = childTransforms[4 * i + 1].position;
+        }
 
         offsets[0] = Quaternion.Euler(0, 90, 0) * (childPositions[1] - childPositions[0]).normalized;
         offsets[1] = Quaternion.Euler(0, 90, 0) * (childPositions[2] - childPositions[0]).normalized;
@@ -93,9 +103,9 @@ public class LaneMesh : MonoBehaviour
             controlPoints[i] = childPositions[i];
         }
         
-        for (int i = 0; i < 11; i++)
+        for (int i = 11; i < 22; i++)
         {
-            vertices[i + 11] = QuadraicBezier(controlPoints[0], controlPoints[1], controlPoints[2], t);
+            vertices[i] = matrix.MultiplyPoint3x4(QuadraicBezier(controlPoints[0], controlPoints[1], controlPoints[2], t));
             t += 0.1f;
         }
 
@@ -109,7 +119,7 @@ public class LaneMesh : MonoBehaviour
 
         for (int i = 0; i < 11; i++)
         {
-            vertices[i] = QuadraicBezier(controlPoints[0], controlPoints[1], controlPoints[2], t);
+            vertices[i] = matrix.MultiplyPoint3x4(QuadraicBezier(controlPoints[0], controlPoints[1], controlPoints[2], t));
             t += 0.1f;
         }
         
@@ -121,15 +131,18 @@ public class LaneMesh : MonoBehaviour
         
         t = 0f;
 
-        for (int i = 0; i < 11; i++)
+        for (int i = 22; i < 33; i++)
         {
-            vertices[i + 22] = QuadraicBezier(controlPoints[0], controlPoints[1], controlPoints[2], t);
+            vertices[i] = matrix.MultiplyPoint3x4(QuadraicBezier(controlPoints[0], controlPoints[1], controlPoints[2], t));
             t += 0.1f;
         }
 
         mesh.vertices = vertices;
         mesh.RecalculateNormals();
-
+        mesh.RecalculateTangents();
+        
+        meshCollider.sharedMesh = mesh;
+        
         normals = mesh.normals;
     }
 

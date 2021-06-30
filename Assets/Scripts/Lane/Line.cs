@@ -5,19 +5,17 @@ using UnityEngine;
 
 public class Line : OLine
 {
-    private LineRenderer lineRenderer;
+    public LineRenderer lineRenderer;
     public Vector3[] points;
-    public const int segmentNum = 100;
+    public const int segmentNum = 10;
     
     public Road fatherRoad;
     public float maxVelocity;
     public Car lineLock;
 
     public List<Road> nextRoads;
-
-    //public new LinkedList<Car> cars;
     public Vector3 lineStart { get => points[0]; }
-    public Vector3 lineEnd { get => points[points.Length -1]; }
+    public Vector3 lineEnd { get => points[points.Length - 1]; }
     public Vector3 startVector{ get => (points[1] - points[0]).normalized; }
     public Vector3 endVector { get => (points[points.Length - 1] - points[points.Length - 2]).normalized; }
 
@@ -33,40 +31,38 @@ public class Line : OLine
         return -1;
     }
 
-    private void Start()
+    void Start()
     {
-        lineRenderer = GetComponent<LineRenderer>();
-        lineRenderer.sortingLayerID = 0;
+        // lineRenderer = GetComponent<LineRenderer>();
         cars = new LinkedList<OCar>();
         maxVelocity = 70;
     }
 
-    private void Update()
+    void Update()
     {
-        // Update BoxCollider center position to avoid collision mismatch
-        // GetComponent<BoxCollider>().center = Vector3.zero;
-
         // 获取子点对象的transform
-        Transform[] pointTran = GetComponentsInChildren<Transform>();
-        points = new Vector3[pointTran.Length - 1];
-        for (int i = 1; i < pointTran.Length; i++)
+        var childTransforms = GetComponentsInChildren<Transform>(true);
+
+        points = new Vector3[3];
+
+        for (int i = 0; i < 3; i++)
         {
             // 获取子点对象的坐标
-            points[i - 1] = pointTran[i].position;
+            points[i] = childTransforms[4 * i + 1].position;
         }
-        DrawCurve();
+        // DrawCurve();
     }
 
-    private void DrawCurve()
-    {
-        for (int i = 1; i <= segmentNum; i++)
-        {
-            float t = (float)i / (float)segmentNum;
-            Vector3 pixel = Bezier(t, points);
-            lineRenderer.positionCount = i;
-            lineRenderer.SetPosition(i - 1, pixel);
-        }
-    }
+    // private void DrawCurve()
+    // {
+    //     for (int i = 1; i <= segmentNum; i++)
+    //     {
+    //         float t = (float)i / (float)segmentNum;
+    //         Vector3 pixel = Bezier(t, points);
+    //         lineRenderer.positionCount = i;
+    //         lineRenderer.SetPosition(i - 1, pixel);
+    //     }
+    // }
 
     public static Vector3 Bezier(float t, Vector3[] p)
     {

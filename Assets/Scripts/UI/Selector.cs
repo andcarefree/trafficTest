@@ -16,7 +16,10 @@ public class Selector : MonoBehaviour
     [SerializeField]
     private List<Vector3> mousePosition;
 
+    [field : SerializeField]
     public List<GameObject> Selectable { get; set; }
+
+    [field : SerializeField]
     public List<GameObject> Selected { get; set; }
     
     void Start()

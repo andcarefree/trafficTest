@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -21,14 +22,14 @@ public class PropertyList : MonoBehaviour
         propertyValues = new List<GameObject>();
         IsCancelRequested = false;
         
-        var objectTag = this.ReferenceObject.tag;
+        var objectTag = ReferenceObject.tag;
 
         if (objectTag == "Car")
         {
             for (int i = 0; i < 6; i++)
             {
                 var property = Instantiate(propertyPrefab);
-                property.transform.SetParent(this.transform);
+                property.transform.SetParent(transform);
                 property.transform.localScale = Vector3.one;
 
                 propertyNames.Add(property.transform.Find("Name").gameObject);
@@ -47,10 +48,12 @@ public class PropertyList : MonoBehaviour
         }
         if (objectTag == "Lane")
         {
-            for (int i = 0; i < 2; i++)
+            var nextRoads = ReferenceObject.GetComponent<Line>().nextRoads;
+
+            for (int i = 0; i < nextRoads.Count + 2; i++)
             {
                 var property = Instantiate(propertyPrefab);
-                property.transform.SetParent(this.transform);
+                property.transform.SetParent(transform);
                 property.transform.localScale = Vector3.one;
 
                 propertyNames.Add(property.transform.Find("Name").gameObject);
@@ -62,11 +65,11 @@ public class PropertyList : MonoBehaviour
             propertyNames[1].GetComponent<TextMeshProUGUI>().SetText("Object Type");
             propertyValues[1].GetComponent<TextMeshProUGUI>().SetText(ReferenceObject.tag);
 
-            
-        }
-        if (objectTag == "Road")
-        {
-
+            for (int i = 2; i < nextRoads.Count + 2; i++)
+            {
+                propertyNames[i].GetComponent<TextMeshProUGUI>().SetText($"Next Road id [{i}]");
+                propertyValues[i].GetComponent<TextMeshProUGUI>().SetText(nextRoads[i - 2].gameObject.GetInstanceID().ToString());
+            }
         }
 
         var task = UpdatePropertyValue(objectTag);
@@ -85,11 +88,12 @@ public class PropertyList : MonoBehaviour
             }
             if (objectType == "Lane")
             {
-                
-            }
-            if (objectType == "Road")
-            {
-                
+                var nextRoads = ReferenceObject.GetComponent<Line>().nextRoads;
+
+                for (int i = 2; i < nextRoads.Count + 2; i++)
+                {
+                    propertyValues[i].GetComponent<TextMeshProUGUI>().SetText(nextRoads[i - 2].gameObject.GetInstanceID().ToString());
+                }
             }
 
             await Task.Delay((int)(PropertiyListContainer.Instance.RefreshInterval * 1000f));

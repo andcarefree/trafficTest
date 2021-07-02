@@ -15,19 +15,14 @@ public class Deleter : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Delete))
             {
-                var deleteList = Selector.current.Selected;
-                var propertyTable = Inspector.current.PropertyTableList;
+                var deleteList = Selector.Instance.Selected;
                 
                 for (int i = 0; i < deleteList.Count; i++)
                 {
-                    GameEvents.current.OnDelete(deleteList[i].GetInstanceID());
+                    GameEvents.Instance.OnDelete(deleteList[i].GetInstanceID());
                 }
 
-                for (int i = 0; i < propertyTable.Count; i++)
-                {
-                    Destroy(propertyTable[i]);
-                }
-                Selector.current.Selected.Clear();
+                Selector.Instance.Selected.Clear();
             }
             yield return null;
         }

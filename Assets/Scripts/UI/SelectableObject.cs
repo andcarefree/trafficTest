@@ -4,64 +4,64 @@ using UnityEngine;
 
 public class SelectableObject : MonoBehaviour
 {
-    private ObjectTypes objectType;
-
     void Start()
     {
-        var tag = gameObject.tag;
-        if (tag == "Car")
+        if (Selector.Instance != null)
         {
-            objectType = ObjectTypes.Car;
-        }
-        if (tag == "Lane")
-        {
-            objectType = ObjectTypes.Lane;
+            Selector.Instance.Selectable.Add(this.gameObject);
         }
 
-        if (Selector.current != null)
-        {
-            Selector.current.Selectable.Add(this.gameObject);
-        }
-
-        GameEvents.current.OnLoadEvent += DestorySelf;
-        GameEvents.current.OnDeleteEvent += DestroySelf;
+        GameEvents.Instance.OnDeleteEvent += DestroySelf;
+        GameEvents.Instance.OnLoadEvent += DestroySelfOnLoad;
+        GameEvents.Instance.OnSelectEvent += OnSelected;
+        GameEvents.Instance.OffSelectEvent += OffSelected;
     }
 
     private void OnDestroy()
     {
-        Selector.current.Selectable.Remove(this.gameObject);
-        GameEvents.current.OnDeleteEvent -= DestroySelf;
+        Selector.Instance.Selectable.Remove(this.gameObject);
+        PropertiyListContainer.Instance.DestroyPropertyList(this.gameObject);
+
+        GameEvents.Instance.OnDeleteEvent -= DestroySelf;
+        GameEvents.Instance.OnLoadEvent -= DestroySelfOnLoad;
+        GameEvents.Instance.OnSelectEvent -= OnSelected;
+        GameEvents.Instance.OffSelectEvent -= OffSelected;
     }
 
-    private void OnSelected()
+    private void OnSelected(int id)
     {
-        if (objectType == ObjectTypes.Car)
+        if (id == gameObject.GetInstanceID())
         {
-            
-        }
-        if (objectType == ObjectTypes.Lane)
-        {
-            
+            Selector.Instance.Selected.Add(this.gameObject);
+
+            this.gameObject.GetComponent<Outline>().enabled = true;
+
+            PropertiyListContainer.Instance.CreatePropertyList(this.gameObject);
         }
     }
-    
-    private void DestorySelf()
+
+    private void OffSelected(int id)
     {
-        Destroy(this.gameObject);
+        if (id == gameObject.GetInstanceID())
+        {
+            Selector.Instance.Selected.Remove(this.gameObject);
+
+            this.gameObject.GetComponent<Outline>().enabled = false;
+
+            PropertiyListContainer.Instance.DestroyPropertyList(this.gameObject);
+        }
     }
     
     private void DestroySelf(int id)
     {
         if (id == gameObject.GetInstanceID())
         {
-            Selector.current.Selectable.Remove(this.gameObject);
             Destroy(this.gameObject);
         }
     }
 
-    enum ObjectTypes
+    private void DestroySelfOnLoad()
     {
-        Car,
-        Lane
+        Destroy(this.gameObject);
     }
 }

@@ -69,6 +69,7 @@ public static class FileDialog
         ofn.fileTitle = new string(new char[64]);
         ofn.maxFileTitle = ofn.fileTitle.Length;
         ofn.initialDir = Application.dataPath;
+        ofn.defExt = extensions[1];
         ofn.title = title;
         ofn.flags = 0x00080000 | 0x00001000 | 0x00000800 | 0x00000200 | 0x00000008;// OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_ALLOWMULTISELECT | OFN_NOCHANGEDIR
         ofn.dlgOwner = GetForegroundWindow(); // 这一步将文件选择窗口置顶。

@@ -5,9 +5,8 @@ using UnityEngine;
 
 public class Line : OLine
 {
-    public LineRenderer lineRenderer;
     public Vector3[] points;
-    public const int segmentNum = 10;
+    public const int segmentNum = 100;
     
     public Road fatherRoad;
     public float maxVelocity;

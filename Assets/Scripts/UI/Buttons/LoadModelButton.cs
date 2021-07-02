@@ -9,7 +9,7 @@ public class LoadModelButton : MonoBehaviour
     {
         var file = FileDialog.OpenFileDialog("打开源文件", "C# 源文件(*.cs)" ,"*.cs");
         
-        if (file != string.Empty)
+        if (file != null)
         {
             DllReader.LoadDll(file);
         }

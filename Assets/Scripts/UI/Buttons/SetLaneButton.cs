@@ -16,7 +16,7 @@ public class SetLaneButton : MonoBehaviour
 
     public void OnButtonClick()
     {
-        Selector.current.enabled = false;
+        Selector.Instance.enabled = false;
         StartCoroutine(this.SetLane());
     }
 
@@ -31,7 +31,7 @@ public class SetLaneButton : MonoBehaviour
             if (Input.GetKey(KeyCode.Escape))
             {
                 Destroy(newObject);
-                Selector.current.enabled = true;
+                Selector.Instance.enabled = true;
 
                 if (newObject != null)
                 {
@@ -86,7 +86,7 @@ public class SetLaneButton : MonoBehaviour
                     break;
 
                 default:
-                    Selector.current.enabled = true;
+                    Selector.Instance.enabled = true;
                     yield break;
 
             }

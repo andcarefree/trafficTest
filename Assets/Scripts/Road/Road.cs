@@ -14,24 +14,36 @@ public class Road : MonoBehaviour
     /// </summary>
     public RoadTypes roadType;
 
-    private void Start()
+    void Start()
     {
         lines = GetComponentsInChildren<Line>();
 
         foreach (Line line in lines)
-        {
             line.fatherRoad = this;
-        }
+
+        GameEvents.Instance.OnLoadEvent += DestroySelfOnLoad;
     }
 
-    private void Update()
+    void Update()
     {
         foreach (Line line in lines)
-        {
             line.fatherRoad = this;
-        }
+
+        lines = GetComponentsInChildren<Line>();
+        
+        if (lines.Length == 0)
+            Destroy(this.gameObject);
     }
 
+    void OnDestroy()
+    {
+        GameEvents.Instance.OnLoadEvent -= DestroySelfOnLoad;
+    }
+
+    private void DestroySelfOnLoad()
+    {
+        Destroy(this.gameObject);
+    }
 }
 
 public enum RoadTypes

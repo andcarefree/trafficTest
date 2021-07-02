@@ -27,11 +27,6 @@ public class Car : OCar
         this.expectVelocity = Car.expects[(int)Random.Range(0f, (float)Car.expects.Length)];
     }
 
-    void Start()
-    {
-        GameEvents.current.OnLoadEvent += DestroyCar;
-    }
-
     public new Car PreCar()
     {
         if (this.line.cars.Find(this) == null)

@@ -28,29 +28,20 @@ public class LoadButton : MonoBehaviour
         if (loadFile != null)
         {
             var tuple = SaveManager.ReadFromJson<LaneData, RoadData, IntersectionData>(loadFile);
-
             var oldRoad = GameObject.FindGameObjectsWithTag("Road");
-            for (int i = 0; i < oldRoad.Length; i++)
-            {
-                Destroy(oldRoad[i]);
-            }
-
             var oldIntersection = GameObject.FindGameObjectsWithTag("Intersection");
-            for (int i = 0; i < oldIntersection.Length; i++)
-            {
-                Destroy(oldIntersection[i]);
-            }
+            var newRoadDict = new Dictionary<int, GameObject>();
+
+            GameEvents.Instance.OnLoad();
 
             LaneDataManager.laneDatas = tuple.Item1;
             RoadDataManager.roadDatas = tuple.Item2;
             IntersectionDataManager.intersectionDatas = tuple.Item3;
 
-            var newRoadDict = new Dictionary<GameObject, GameObject>();
-
             foreach (var roadData in RoadDataManager.roadDatas)
             {
                 var newRoad = Instantiate(roadPrefab);
-                newRoadDict.Add(roadData.road, newRoad);
+                newRoadDict.Add(roadData.roadId, newRoad);
 
                 if (roadData.roadType == RoadTypes.SOURCE)
                 {
@@ -62,10 +53,14 @@ public class LoadButton : MonoBehaviour
             {
                 var newLane = Instantiate(lanePrefab, laneData.position, laneData.rotation);
 
-                newLane.transform.SetParent(newRoadDict[laneData.thisRoad].transform);
+                if (laneData.thisRoadId != 0)
+                {
+                    newLane.transform.SetParent(newRoadDict[laneData.thisRoadId].transform);
+                }
+
                 newLane.transform.localScale = laneData.scale;
 
-                foreach (var nextRoad in laneData.nextRoad)
+                foreach (var nextRoad in laneData.nextRoadId)
                 {
                     newLane.GetComponent<Line>().nextRoads.Add(newRoadDict[nextRoad].GetComponent<Road>());
                 }

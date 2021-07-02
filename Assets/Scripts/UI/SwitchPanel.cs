@@ -9,12 +9,12 @@ public class SwitchPanel : MonoBehaviour
 
     void Start()
     {
-        GameEvents.current.PanelSwitchEvent += ShowPanelOnButtonClick;
+        GameEvents.Instance.PanelSwitchEvent += ShowPanelOnButtonClick;
     }
 
     void OnDestroy()
     {
-        GameEvents.current.PanelSwitchEvent -= ShowPanelOnButtonClick;
+        GameEvents.Instance.PanelSwitchEvent -= ShowPanelOnButtonClick;
     }
 
     public void ShowPanelOnButtonClick(int id)

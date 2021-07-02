@@ -26,7 +26,7 @@ public class Background : MonoBehaviour
 
         var path = FileDialog.OpenFileDialog("选择背景图", "JPG 图片(*.jpg)", "*.jpg","JPG 图片(*.jpeg)", "*.jpeg", "PNG 图片(*.png)", "*.png");
 
-        if (path != string.Empty)
+        if (path != null)
         {
             var byteArray = System.IO.File.ReadAllBytes(path);
             var texture = new Texture2D(1,1);
@@ -43,7 +43,7 @@ public class Background : MonoBehaviour
 
                 background.GetComponent<SpriteRenderer>().sprite = sprite;
 
-                Selector.current.enabled = false;
+                Selector.Instance.enabled = false;
 
                 StartCoroutine(SetSizeOnDrag());
             }
@@ -118,7 +118,7 @@ public class Background : MonoBehaviour
 
                 background.GetComponent<SpriteRenderer>().color = color;
 
-                Selector.current.enabled = true;
+                Selector.Instance.enabled = true;
                 
                 yield break;
             }

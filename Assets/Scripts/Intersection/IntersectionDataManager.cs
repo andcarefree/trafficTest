@@ -9,22 +9,26 @@ public class IntersectionDataManager : MonoBehaviour
 
     void Start()
     {
-        if (intersectionDatas == null)
+        if (IntersectionDataManager.intersectionDatas == null)
         {
-            intersectionDatas = new List<IntersectionData>();
+            IntersectionDataManager.intersectionDatas = new List<IntersectionData>();
         }
 
         if (intersectionData == null)
         {
             intersectionData = new IntersectionData();
-            intersectionDatas.Add(intersectionData);
+            IntersectionDataManager.intersectionDatas.Add(intersectionData);
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         intersectionData.position = transform.position;
         intersectionData.scale = transform.localScale;
+    }
+
+    void OnDestroy()
+    {
+        IntersectionDataManager.intersectionDatas.Remove(intersectionData);
     }
 }

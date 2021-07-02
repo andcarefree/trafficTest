@@ -7,24 +7,29 @@ public class RoadDataManager : MonoBehaviour
     public static List<RoadData> roadDatas;
     private RoadData roadData;
 
-    private void Start()
+    void Start()
     {
-        if (roadDatas == null)
+        if (RoadDataManager.roadDatas == null)
         {
-            roadDatas = new List<RoadData>();
+            RoadDataManager.roadDatas = new List<RoadData>();
         }
 
         if (roadData == null)
         {
             roadData = new RoadData();
-            roadDatas.Add(roadData);
+            RoadDataManager.roadDatas.Add(roadData);
         }
 
-        roadData.road = this.gameObject;
+        roadData.roadId = this.gameObject.GetInstanceID();
     }
 
-    private void Update()
+    void Update()
     {
         roadData.roadType = this.GetComponent<Road>().roadType;
+    }
+    
+    void OnDestroy()
+    {
+        RoadDataManager.roadDatas.Remove(roadData);
     }
 }

@@ -183,8 +183,6 @@ public class Cross : MonoBehaviour
         cars = new LinkedList<Car>();
         RoadMap = new Dictionary<Road, RoadIn>();
         carRoadOut = new Dictionary<Car, Road>();
-
-        Selector.current.Selectable.Add(gameObject);
     }
 }
 class RoadIn

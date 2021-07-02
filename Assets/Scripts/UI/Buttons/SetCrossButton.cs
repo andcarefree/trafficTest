@@ -13,7 +13,7 @@ public class SetCrossButton : MonoBehaviour
 
     public void OnButtonClick()
     {
-        Selector.current.enabled = false;
+        Selector.Instance.enabled = false;
         StartCoroutine(SetCross());
     }
 
@@ -61,7 +61,7 @@ public class SetCrossButton : MonoBehaviour
 
                     break;
                 default:
-                    Selector.current.enabled = true;
+                    Selector.Instance.enabled = true;
                     yield break;
             }
 

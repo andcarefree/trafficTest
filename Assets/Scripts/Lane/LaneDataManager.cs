@@ -8,36 +8,41 @@ public class LaneDataManager : MonoBehaviour
     public static List<LaneData> laneDatas;
     private LaneData laneData;
 
-    private void Start()
+    void Start()
     {
-        if (laneDatas == null)
+        if (LaneDataManager.laneDatas == null)
         {
-            laneDatas = new List<LaneData>();
+            LaneDataManager.laneDatas = new List<LaneData>();
         }
         
         if (laneData == null)
         {
             laneData = new LaneData();
-            laneDatas.Add(laneData);
+            LaneDataManager.laneDatas.Add(laneData);
         }
     }
 
-    private void Update()
+    void Update()
     {
         laneData.position = transform.position;
         laneData.rotation = transform.rotation;
         laneData.scale = transform.localScale;
 
-        Func<Road, GameObject> RoadToGameobject = (road) => 
+        Func<Road, int> RoadToId = (road) => 
         {
-            return road.gameObject;
+            return road.gameObject.GetInstanceID();
         };
 
-        laneData.nextRoad = this.GetComponent<Line>().nextRoads.ConvertAll<GameObject>(new Converter<Road, GameObject>(RoadToGameobject)).ToArray();
+        laneData.nextRoadId = this.GetComponent<Line>().nextRoads.ConvertAll<int>(new Converter<Road, int>(RoadToId)).ToArray();
 
         if (transform.parent != null)
         {
-            laneData.thisRoad = transform.parent.gameObject;
+            laneData.thisRoadId = transform.parent.gameObject.GetInstanceID();
         }
+    }
+
+    void OnDestroy()
+    {
+        LaneDataManager.laneDatas.Remove(laneData);
     }
 }

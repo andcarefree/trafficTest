@@ -5,7 +5,8 @@ using UnityEngine.EventSystems;
 
 public class Selector : MonoBehaviour
 {
-    public static Selector current;
+    private static Selector _instance;
+    public static Selector Instance { get => _instance; }
 
     [SerializeField]
     private RectTransform canvas;
@@ -22,9 +23,16 @@ public class Selector : MonoBehaviour
     [field : SerializeField]
     public List<GameObject> Selected { get; set; }
     
-    void Start()
+    void Awake()
     {
-        current = this;
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        if (_instance == null)
+        {
+            _instance= this;
+        }
         
         this.Selectable = new List<GameObject>();
         this.Selected = new List<GameObject>();
@@ -78,13 +86,13 @@ public class Selector : MonoBehaviour
                 foreach(var go in Selectable)
                 {
                     var position = Camera.main.WorldToScreenPoint(go.transform.position);
+                    var id = go.GetInstanceID();
 
                     if(position.x > xMin && position.x < xMax && position.y > yMin && position.y < yMax)
                     {
                         if(!Selected.Contains(go))
                         {
-                            Selected.Add(go);
-                            go.GetComponent<Outline>().enabled = true;
+                            GameEvents.Instance.OnSelect(id);
                         }              
                     }
                 }
@@ -92,15 +100,11 @@ public class Selector : MonoBehaviour
         }
         else if(Input.GetKey(KeyCode.Escape))
         {
-            foreach(GameObject gameObject in Selectable)
+            for (int i = 0; i < Selected.Count; i++)
             {
-                if(Selected.Contains(gameObject))
-                {    
-                    gameObject.GetComponent<Outline>().enabled = false;
-                    Selected.Remove(gameObject);
-                }
+                var id = Selected[i].GetInstanceID();
+                GameEvents.Instance.OffSelect(id);
             }
-
         }
         else
         {
@@ -127,14 +131,4 @@ public class Selector : MonoBehaviour
 
         return selectedObject;
     }
-
-    #if UNITY_EDITOR
-        private void OnDrawGizmos()
-        {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawRay(Camera.main.transform.position, ray.direction * 100.0f);
-        }
-    #endif
 }

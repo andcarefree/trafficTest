@@ -9,6 +9,6 @@ public class SwitchButton : MonoBehaviour
 
     public void Click()
     {
-        GameEvents.current.OnPanelSwitch(id);
+        GameEvents.Instance.OnPanelSwitch(id);
     }
 }

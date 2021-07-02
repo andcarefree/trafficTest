@@ -22,7 +22,7 @@ public class SetRoadButton : MonoBehaviour
 
         while (true)
         {
-            if (Selector.current.Selected.Count == 0)
+            if (Selector.Instance.Selected.Count == 0)
             {
                 text.SetText("请选择车道，按回车键继续，Esc键退出");
 
@@ -30,7 +30,7 @@ public class SetRoadButton : MonoBehaviour
                 {
                     if (Input.GetKeyDown(KeyCode.Return))
                     {
-                        if (Selector.current.Selected.Count == 0)
+                        if (Selector.Instance.Selected.Count == 0)
                         {
                             text.SetText("未选择车道，请重新选择");
                         }
@@ -51,7 +51,7 @@ public class SetRoadButton : MonoBehaviour
             {
                 parentObject = Instantiate(road);
 
-                foreach (var gameObject in Selector.current.Selected)
+                foreach (var gameObject in Selector.Instance.Selected)
                 {
                     if (gameObject.tag == "Lane")
                     {

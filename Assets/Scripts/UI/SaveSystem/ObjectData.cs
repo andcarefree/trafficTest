@@ -6,14 +6,14 @@ public class LaneData
     public Vector3 position;
     public Quaternion rotation;
     public Vector3 scale;
-    public GameObject thisRoad;
-    public GameObject[] nextRoad;
+    public int thisRoadId;
+    public int[] nextRoadId;
 }
 
 [System.Serializable]
 public class RoadData
 {
-    public GameObject road; 
+    public int roadId; 
     public RoadTypes roadType;
 }
 

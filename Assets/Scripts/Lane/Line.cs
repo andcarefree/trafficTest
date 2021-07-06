@@ -12,6 +12,31 @@ public class Line : OLine
     public float maxVelocity;
     public Car lineLock;
 
+    //枚举红绿灯状态
+    public enum Light
+    {
+        RED,
+        GREEN,
+        YELLOW
+    }
+
+    //红绿灯加时间
+    public class LightInfo
+    {
+        public Light light;
+        public float time;
+    }
+
+    //红绿灯状态
+    public Light curLight;
+    //道路红绿灯信号配时
+    public List<LightInfo> lightInfos;
+    //配置周期总时长
+    public float totalTime;
+    //计步时间
+    public float curTime = 0;
+
+
     public List<Road> nextRoads;
     public Vector3 lineStart { get => points[0]; }
     public Vector3 lineEnd { get => points[points.Length - 1]; }
@@ -50,6 +75,23 @@ public class Line : OLine
             points[i] = childTransforms[4 * i + 1].position;
         }
         // DrawCurve();
+
+        //红绿灯状态变化
+        curTime += Time.deltaTime;
+        float tmp = 0;
+        foreach(var lightInfo in this.lightInfos)
+        {
+            if (curTime > tmp)
+            {
+                this.curLight = lightInfo.light;
+                tmp += lightInfo.time;
+                continue;
+            }
+            else
+            {
+                break;
+            }
+        }
     }
 
     // private void DrawCurve()

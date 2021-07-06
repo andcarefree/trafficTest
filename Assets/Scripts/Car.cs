@@ -29,6 +29,10 @@ public class Car : OCar
 
     public new Car PreCar()
     {
+        if(this.line == null)
+        {
+            return null;
+        }
         if (this.line.cars.Find(this) == null)
         {
             return null;
@@ -194,7 +198,15 @@ public class Car : OCar
         //道路限速；车辆期望速度；正常行驶速度；取最小值
         velocity = Mathf.Min(this.line == null ? Car.MaxVelocityNoRoad : this.line.maxVelocity, velocity + 3.6f * accel * Time.deltaTime, expectVelocity);
         //屏蔽掉速度小于0的倒车行为
-        velocity = Mathf.Max(0, velocity);
+        if (velocity < 2 && accel < 0.1 && accel > -0.1)
+        {
+            velocity = 0;
+        }
+        if (this.PreCar() != null && this.PreCar().s - this.s < 4)
+        {
+            accel = 0;
+            velocity = 0;
+        }
         s += Km2m() * Time.deltaTime;
         this.transform.Translate(Vector3.forward * Km2m() * Time.deltaTime);
     }

@@ -17,7 +17,8 @@ public class Following : Action
     /// <param name="c">车辆灵敏度</param>
     private static float OriginGM(OCar m_car,float c,float m,float l,OCar previous)
     {
-        return c * Mathf.Pow(m_car.Km2m(), m) * (previous.Km2m() - m_car.Km2m()) / Mathf.Pow(previous.s - m_car.s, l);
+        float gm = c * Mathf.Pow(m_car.Km2m(), m) * (previous.Km2m() - m_car.Km2m()) / Mathf.Pow(previous.s - m_car.s, l);
+        return gm;
     }
 
     public override void OnStart()
@@ -83,7 +84,7 @@ public class Following : Action
             //道路与路口的转换
             if (car.state == Car.State.inLine)
             {
-                car.line.cars.Remove(car.line.cars.Find(car));
+                
                 return TaskStatus.Success;
             }
         }

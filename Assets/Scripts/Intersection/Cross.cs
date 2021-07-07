@@ -165,17 +165,8 @@ public class Cross : MonoBehaviour
     //从已经选择好的roadOut中选择一条“较好”的道路
     public Line FindLineOut(Road roadOut,Line linein)
     {
-        //暂时选择随机选取
-        //考虑到同源车辆在路口内避免碰撞的行为，我们让车辆只会行驶到对应道路的半区
-        if(linein.indexInRoad() < linein.fatherRoad.lines.Length / 2)
-        {
-            return roadOut.lines[Random.Range(0, roadOut.lines.Length/2)];
-        }
-        else
-        {
-            return roadOut.lines[Random.Range(roadOut.lines.Length/2, roadOut.lines.Length)];
-        }
-        
+        //只选择目标车道行驶
+        return roadOut.lines[linein.indexInRoad()];
     }
 
     void Start()

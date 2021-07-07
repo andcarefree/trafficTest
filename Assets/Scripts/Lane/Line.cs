@@ -94,6 +94,11 @@ public class Line : OLine
                     break;
                 }
             }
+            if (curTime >= totalTime)
+            {
+                curTime -= totalTime;
+                this.curLight = lightInfos[0].light;
+            }
         }
     }
 

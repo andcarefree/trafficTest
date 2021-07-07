@@ -12,6 +12,7 @@ public class Car : OCar
     public Cross cross;
     public Cross preCross;
     public Vector3[] crossLine;
+    public bool hasWait = false;
 
     /// <summary>
     /// 所在路线
@@ -198,14 +199,23 @@ public class Car : OCar
         //道路限速；车辆期望速度；正常行驶速度；取最小值
         velocity = Mathf.Min(this.line == null ? Car.MaxVelocityNoRoad : this.line.maxVelocity, velocity + 3.6f * accel * Time.deltaTime, expectVelocity);
         //屏蔽掉速度小于0的倒车行为
-        if (velocity < 2 && accel < 0.1 && accel > -0.1)
-        {
-            velocity = 0;
-        }
-        if (this.PreCar() != null && this.PreCar().s - this.s < 4)
+        velocity = Mathf.Max(0, velocity);
+        if (this.PreCar() != null && this.PreCar().s - this.s < 5)
         {
             accel = 0;
             velocity = 0;
+            hasWait = true;
+        }
+        if (hasWait && state != State.crossing)
+        {
+            if(this.PreCar() == null)
+            {
+                velocity = 20;
+            }
+            else
+            {
+                velocity = this.PreCar().velocity - 5 > 0? this.PreCar().velocity - 5:0;
+            }
         }
         s += Km2m() * Time.deltaTime;
         this.transform.Translate(Vector3.forward * Km2m() * Time.deltaTime);

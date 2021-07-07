@@ -11,6 +11,8 @@ public class RunCross : Action
         car = gameObject.GetComponent<Car>();
         car.state = Car.State.crossing;
         car.linePoints = car.crossLine;
+        car.accel = 0;
+        car.velocity = 30;
     }
     public override TaskStatus OnUpdate()
     {
@@ -25,6 +27,7 @@ public class RunCross : Action
             car.preCross = car.cross;
             car.cross = null;
             car.driving();
+            car.hasWait = false;
             return TaskStatus.Success;
         }
         return TaskStatus.Running;

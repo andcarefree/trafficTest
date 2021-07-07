@@ -33,6 +33,9 @@ public class Road : MonoBehaviour
         
         if (lines.Length == 0)
             Destroy(this.gameObject);
+
+        if (GetComponent<OriginRoad>().enabled)
+            roadType = RoadTypes.SOURCE;
     }
 
     void OnDestroy()

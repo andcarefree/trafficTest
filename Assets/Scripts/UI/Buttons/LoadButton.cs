@@ -34,15 +34,11 @@ public class LoadButton : MonoBehaviour
 
             GameEvents.Instance.OnLoad();
 
-            LaneDataManager.laneDatas.Clear();
-            RoadDataManager.roadDatas.Clear();
-            IntersectionDataManager.intersectionDatas.Clear();
+            var laneDatas = tuple.Item1;
+            var roadDatas = tuple.Item2;
+            var intersectionDatas = tuple.Item3;
 
-            LaneDataManager.laneDatas = tuple.Item1;
-            RoadDataManager.roadDatas = tuple.Item2;
-            IntersectionDataManager.intersectionDatas = tuple.Item3;
-
-            foreach (var roadData in RoadDataManager.roadDatas)
+            foreach (var roadData in roadDatas)
             {
                 var newRoad = Instantiate(roadPrefab);
                 newRoadDict.Add(roadData.roadId, newRoad);
@@ -53,7 +49,7 @@ public class LoadButton : MonoBehaviour
                 }
             }
 
-            foreach (var laneData in LaneDataManager.laneDatas)
+            foreach (var laneData in laneDatas)
             {
                 var newLane = Instantiate(lanePrefab, laneData.position, laneData.rotation);
 
@@ -72,7 +68,7 @@ public class LoadButton : MonoBehaviour
                 newLane.GetComponent<Line>().lightInfos = laneData.lightInfos;
             }
 
-            foreach (var intersectionData in IntersectionDataManager.intersectionDatas)
+            foreach (var intersectionData in intersectionDatas)
             {
                 var newIntersection = Instantiate(intersectionPrefab, intersectionData.position, Quaternion.identity);
                 

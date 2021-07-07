@@ -9,7 +9,10 @@ public class SetLaneButton : MonoBehaviour
     private GameObject lane;
 
     [SerializeField]
-    private Material material;
+    private Material normal;
+
+    [SerializeField]
+    private Material transparent;
 
     [SerializeField]
     private TextMeshProUGUI text;
@@ -61,12 +64,8 @@ public class SetLaneButton : MonoBehaviour
 
                     if (newObject == null)
                     {
-                        var color = material.color;
                         newObject = Instantiate(lane, pivot, rotation);
-
-                        color.a = 0.5f;
-                        material.color = color;
-                        newObject.GetComponent<MeshRenderer>().material = material;
+                        newObject.GetComponent<MeshRenderer>().material = transparent;
                     }
 
                     newObject.transform.position = pivot;
@@ -75,11 +74,7 @@ public class SetLaneButton : MonoBehaviour
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                        var color = material.color;
-
-                        color.a = 1.0f;
-                        material.color = color;
-                        newObject.GetComponent<MeshRenderer>().material = material;
+                        newObject.GetComponent<MeshRenderer>().material = normal;
                         
                         state += 1;
                     }

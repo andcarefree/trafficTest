@@ -863,7 +863,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lane: {fileID: 9108998433576482845, guid: 25bcf62acaa8b1145b4ae5a86b4a7277, type: 3}
-  material: {fileID: 2100000, guid: 38cf2e51ca1f80842ab567c5a3157bac, type: 2}
+  normal: {fileID: 2100000, guid: 38cf2e51ca1f80842ab567c5a3157bac, type: 2}
+  transparent: {fileID: 2100000, guid: e40e44c666819594abd510d8bc6d64ca, type: 2}
   text: {fileID: 994288543}
 --- !u!1 &223370677
 GameObject:

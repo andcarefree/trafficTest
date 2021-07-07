@@ -60,14 +60,15 @@ public class Line : OLine
         cars = new LinkedList<OCar>();
         maxVelocity = 70;
 
-        LightInfo l1 = new LightInfo();
+        //自己在unity编辑器里面设置信号配时
+        /*LightInfo l1 = new LightInfo();
         l1.light = Light.RED;
         l1.time = 5;
         LightInfo l2 = new LightInfo();
         l2.light = Light.GREEN;
         l2.time = 5;
         this.lightInfos.Add(l1);
-        this.lightInfos.Add(l2);
+        this.lightInfos.Add(l2);*/
 
         foreach(LightInfo info in lightInfos)
         {

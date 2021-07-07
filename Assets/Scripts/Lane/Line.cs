@@ -31,12 +31,11 @@ public class Line : OLine
     //红绿灯状态
     public Light curLight;
     //道路红绿灯信号配时
-    public List<LightInfo> lightInfos;
+    public List<LightInfo> lightInfos = new List<LightInfo>();
     //配置周期总时长
     public float totalTime;
     //计步时间
     public float curTime = 0;
-
 
     public List<Road> nextRoads;
     public Vector3 lineStart { get => points[0]; }
@@ -60,6 +59,20 @@ public class Line : OLine
     {
         cars = new LinkedList<OCar>();
         maxVelocity = 70;
+
+        LightInfo l1 = new LightInfo();
+        l1.light = Light.RED;
+        l1.time = 5;
+        LightInfo l2 = new LightInfo();
+        l2.light = Light.GREEN;
+        l2.time = 5;
+        this.lightInfos.Add(l1);
+        this.lightInfos.Add(l2);
+
+        foreach(LightInfo info in lightInfos)
+        {
+            totalTime += info.time;
+        }
     }
 
     void Update()

@@ -94,7 +94,6 @@ public class Line : OLine
                     break;
                 }
             }
-
             if (curTime >= totalTime)
             {
                 curTime -= totalTime;

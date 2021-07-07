@@ -20,7 +20,8 @@ public class Line : OLine
         YELLOW
     }
 
-    //红绿灯加时间
+    // 灯色以及对应的灯色的时间
+    [System.Serializable]
     public class LightInfo
     {
         public Light light;
@@ -57,7 +58,6 @@ public class Line : OLine
 
     void Start()
     {
-        // lineRenderer = GetComponent<LineRenderer>();
         cars = new LinkedList<OCar>();
         maxVelocity = 70;
     }
@@ -74,36 +74,28 @@ public class Line : OLine
             // 获取子点对象的坐标
             points[i] = childTransforms[4 * i + 1].position;
         }
-        // DrawCurve();
 
-        //红绿灯状态变化
-        curTime += Time.deltaTime;
-        float tmp = 0;
-        foreach(var lightInfo in this.lightInfos)
+        // 红绿灯状态变化
+        // 仅在场景播放的时候进行开始计算
+        if (Time.timeScale != 0)
         {
-            if (curTime > tmp)
+            curTime += Time.deltaTime;
+            float tmp = 0;
+            foreach(var lightInfo in this.lightInfos)
             {
-                this.curLight = lightInfo.light;
-                tmp += lightInfo.time;
-                continue;
-            }
-            else
-            {
-                break;
+                if (curTime > tmp)
+                {
+                    this.curLight = lightInfo.light;
+                    tmp += lightInfo.time;
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
             }
         }
     }
-
-    // private void DrawCurve()
-    // {
-    //     for (int i = 1; i <= segmentNum; i++)
-    //     {
-    //         float t = (float)i / (float)segmentNum;
-    //         Vector3 pixel = Bezier(t, points);
-    //         lineRenderer.positionCount = i;
-    //         lineRenderer.SetPosition(i - 1, pixel);
-    //     }
-    // }
 
     public static Vector3 Bezier(float t, Vector3[] p)
     {

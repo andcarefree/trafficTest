@@ -27,13 +27,14 @@ public class LaneDataManager : MonoBehaviour
         laneData.position = transform.position;
         laneData.rotation = transform.rotation;
         laneData.scale = transform.localScale;
+        laneData.lightInfos = GetComponent<Line>().lightInfos;
 
         Func<Road, int> RoadToId = (road) => 
         {
             return road.gameObject.GetInstanceID();
         };
 
-        laneData.nextRoadId = this.GetComponent<Line>().nextRoads.ConvertAll<int>(new Converter<Road, int>(RoadToId)).ToArray();
+        laneData.nextRoadId = GetComponent<Line>().nextRoads.ConvertAll<int>(new Converter<Road, int>(RoadToId));
 
         if (transform.parent != null)
         {

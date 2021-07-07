@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [System.Serializable]
 public class LaneData
@@ -7,7 +8,8 @@ public class LaneData
     public Quaternion rotation;
     public Vector3 scale;
     public int thisRoadId;
-    public int[] nextRoadId;
+    public List<int> nextRoadId;
+    public List<Line.LightInfo> lightInfos;
 }
 
 [System.Serializable]

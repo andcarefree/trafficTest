@@ -34,6 +34,10 @@ public class LoadButton : MonoBehaviour
 
             GameEvents.Instance.OnLoad();
 
+            LaneDataManager.laneDatas.Clear();
+            RoadDataManager.roadDatas.Clear();
+            IntersectionDataManager.intersectionDatas.Clear();
+
             LaneDataManager.laneDatas = tuple.Item1;
             RoadDataManager.roadDatas = tuple.Item2;
             IntersectionDataManager.intersectionDatas = tuple.Item3;
@@ -64,6 +68,8 @@ public class LoadButton : MonoBehaviour
                 {
                     newLane.GetComponent<Line>().nextRoads.Add(newRoadDict[nextRoad].GetComponent<Road>());
                 }
+
+                newLane.GetComponent<Line>().lightInfos = laneData.lightInfos;
             }
 
             foreach (var intersectionData in IntersectionDataManager.intersectionDatas)

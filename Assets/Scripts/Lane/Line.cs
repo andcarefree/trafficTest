@@ -108,7 +108,8 @@ public class Line : OLine
                     break;
                 }
             }
-            if (curTime >= totalTime)
+
+            if (curTime >= totalTime && lightInfos.Count != 0)
             {
                 curTime -= totalTime;
                 this.curLight = lightInfos[0].light;

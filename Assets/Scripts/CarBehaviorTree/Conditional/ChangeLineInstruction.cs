@@ -343,7 +343,10 @@ public class ChangeLineInstruction : Conditional
             }
             if (SuccessChange())
             {
-            Debug.LogWarning("count");
+                #if UNITY_EDITOR
+                    Debug.Log("Changing lane success");
+                #endif
+                
                 car.state = Car.State.changing;
                 return TaskStatus.Success;
             }

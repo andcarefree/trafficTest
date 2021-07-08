@@ -17,7 +17,7 @@ public class Cross : MonoBehaviour
 {
     public LinkedList<Car> cars;
 
-    Dictionary<Road, RoadIn> RoadMap;
+    Dictionary<Road, RoadIn> roadMap;
     public Dictionary<Car, Road> carRoadOut;
 
 
@@ -36,7 +36,7 @@ public class Cross : MonoBehaviour
         if (other.gameObject.GetComponent<Road>() != null)
         {
             Road road = other.gameObject.GetComponent<Road>();
-            if (RoadMap.ContainsKey(road))
+            if (roadMap.ContainsKey(road))
             {
                 return;
             }
@@ -64,7 +64,7 @@ public class Cross : MonoBehaviour
                 {
                     totalCar += rvi.Value;
                 }
-                RoadMap[road] = new RoadIn(stream, totalCar);
+                roadMap[road] = new RoadIn(stream, totalCar);
             }
         }
 
@@ -122,22 +122,29 @@ public class Cross : MonoBehaviour
         //为了路口处的视觉效果，限制车辆在进入路口时的换道动作
         //大概率条件下车辆都会选择当前line对应的road
         int a = Random.Range(0, 100);
+        
         if (a < 70)
         {
             return car.line.nextRoads[Random.Range(0, car.line.nextRoads.Count)];
         }
-        RoadIn roadIn = RoadMap[car.line.fatherRoad];
-        float rand = Random.Range(0,roadIn.totalCars);
-        int temp = 0;
-        foreach (KeyValuePair<Road,int> kvp in roadIn.roadOutStream)
+
+        if (roadMap.ContainsKey(car.line.fatherRoad))
         {
-            temp += kvp.Value;
-            if (rand <= temp)
+            var roadIn = roadMap[car.line.fatherRoad];
+            var rand = Random.Range(0,roadIn.totalCars);
+            var temp = 0;
+            
+            foreach (KeyValuePair<Road,int> kvp in roadIn.roadOutStream)
             {
-                carRoadOut[car] = kvp.Key;
-                return kvp.Key;
+                temp += kvp.Value;
+                if (rand <= temp)
+                {
+                    carRoadOut[car] = kvp.Key;
+                    return kvp.Key;
+                }
             }
         }
+
         Debug.LogError("RoadIn streams set error !");
         return null;
     }
@@ -172,7 +179,7 @@ public class Cross : MonoBehaviour
     void Start()
     {
         cars = new LinkedList<Car>();
-        RoadMap = new Dictionary<Road, RoadIn>();
+        roadMap = new Dictionary<Road, RoadIn>();
         carRoadOut = new Dictionary<Car, Road>();
     }
 }

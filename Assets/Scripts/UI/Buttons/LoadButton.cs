@@ -46,6 +46,7 @@ public class LoadButton : MonoBehaviour
                 if (roadData.roadType == RoadTypes.SOURCE)
                 {
                     newRoad.GetComponent<OriginRoad>().enabled = true;
+                    newRoad.GetComponent<Road>().RoadType = RoadTypes.SOURCE;
                 }
             }
 

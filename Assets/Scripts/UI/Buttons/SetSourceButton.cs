@@ -33,7 +33,7 @@ public class SetSourceButton : MonoBehaviour
                 if (selectedObject != null && selectedObject.tag == "Lane")
                 {
                     selectedObject.GetComponentInParent<OriginRoad>().enabled = true;
-                    selectedObject.GetComponentInParent<Road>().roadType = RoadTypes.SOURCE;
+                    selectedObject.GetComponentInParent<Road>().RoadType = RoadTypes.SOURCE;
 
                     break;
                 }

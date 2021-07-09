@@ -25,7 +25,7 @@ public class RoadDataManager : MonoBehaviour
 
     void Update()
     {
-        roadData.roadType = this.GetComponent<Road>().roadType;
+        roadData.roadType = this.GetComponent<Road>().RoadType;
     }
     
     void OnDestroy()

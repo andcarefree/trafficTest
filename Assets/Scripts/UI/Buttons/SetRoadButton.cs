@@ -18,7 +18,8 @@ public class SetRoadButton : MonoBehaviour
 
     private IEnumerator SetRoad()
     {
-        GameObject parentObject = null;
+        var parentObject = (GameObject)null;
+        var parentId = 0;
 
         while (true)
         {
@@ -60,6 +61,10 @@ public class SetRoadButton : MonoBehaviour
                         text.SetText("绑定成功");
                     }
                 }
+
+                parentId = parentObject.GetInstanceID();
+                GameEvents.Instance.OnRoadCreate(parentId);
+
                 yield break;
             }
             yield return null;

@@ -75,6 +75,8 @@ public class LoadButton : MonoBehaviour
                 
                 newIntersection.transform.localScale = intersectionData.scale;
             }
+
+            GameEvents.Instance.OnLateLoad();
         }
     }
 }

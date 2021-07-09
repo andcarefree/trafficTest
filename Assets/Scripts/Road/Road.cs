@@ -19,6 +19,7 @@ public class Road : MonoBehaviour
     void Awake()
     {
         GameEvents.Instance.OnLoadEvent += DestroySelfOnLoad;
+        GameEvents.Instance.OnLateLoadEvent += ArrangeLane;
         GameEvents.Instance.OnRoadCreateEvent += ArrangeLane;
     }
 
@@ -47,6 +48,7 @@ public class Road : MonoBehaviour
     void OnDestroy()
     {
         GameEvents.Instance.OnLoadEvent -= DestroySelfOnLoad;
+        GameEvents.Instance.OnLateLoadEvent += ArrangeLane;
         GameEvents.Instance.OnRoadCreateEvent -= ArrangeLane;
     }
 
@@ -63,41 +65,47 @@ public class Road : MonoBehaviour
         Debug.Log("ArrangeLane() is called");
         #endif
 
-        if (id == gameObject.GetInstanceID())
+        if (id == gameObject.GetInstanceID()) 
         {
-            #if UNITY_EDITOR
-            Debug.Log($"Arranging lanes, Road ID is {id}");
-            #endif
+            ArrangeLane();
+        }   
+    }
 
-            // use projection to convert Vector3 into float
-            lines = GetComponentsInChildren<Line>();
+    private void ArrangeLane()
+    {
+        #if UNITY_EDITOR
+        Debug.Log($"Arranging lanes, Road ID is {gameObject.GetInstanceID()}");
+        #endif
 
-            var direction = lines[0].transform.rotation * Vector3.back;
-            var laneDictionary = new Dictionary<float, Line>();
-            
-            foreach (var lane in lines)
-            {
-                var lanePosition = lane.transform.position;
-                var laneProjection = Vector3.Dot(lanePosition, direction);
+        // use projection to convert Vector3 into float
+        lines = GetComponentsInChildren<Line>();
 
-                #if UNITY_EDITOR
-                Debug.Log($"{laneProjection}, {lane.gameObject.GetInstanceID()}");
-                #endif
-
-                laneDictionary.Add(laneProjection, lane);
-            }
-
-            // using LINQ to reorder lanes
-            lines = laneDictionary.OrderBy(x => x.Key).Select(x => x.Value).ToArray();
+        var direction = lines[0].transform.rotation * Vector3.back;
+        var laneDictionary = new Dictionary<float, Line>();
+        
+        foreach (var lane in lines)
+        {
+            var lanePosition = lane.transform.position;
+            var laneProjection = Vector3.Dot(lanePosition, direction);
 
             #if UNITY_EDITOR
-            int i = 0;
-            foreach (var lane in lines)
-            {
-                Debug.Log($"{i++}, {lane.gameObject.GetInstanceID()}");
-            }
+            Debug.Log($"{laneProjection}, {lane.gameObject.GetInstanceID()}");
             #endif
+
+            laneDictionary.Add(laneProjection, lane);
         }
+
+        // using LINQ to reorder lanes
+        lines = laneDictionary.OrderBy(x => x.Key).Select(x => x.Value).ToArray();
+
+        #if UNITY_EDITOR
+        int i = 0;
+        foreach (var lane in lines)
+        {
+            Debug.Log($"{i++}, {lane.gameObject.GetInstanceID()}");
+        }
+        #endif
+
     }
 }
 

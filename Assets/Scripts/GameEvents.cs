@@ -7,6 +7,7 @@ public class GameEvents : MonoBehaviour
     private static GameEvents _instance;
     public static GameEvents Instance { get => _instance; }
     public event Action OnLoadEvent;
+    public event Action OnLateLoadEvent;
     public event Action<int> OnRoadCreateEvent;
     public event Action<int> OnDeleteEvent;
     public event Action<int> PanelSwitchEvent;
@@ -29,6 +30,12 @@ public class GameEvents : MonoBehaviour
     {
         if (OnLoadEvent != null)
             OnLoadEvent();
+    }
+    
+    public void OnLateLoad()
+    {
+        if (OnLateLoadEvent != null)
+            OnLateLoadEvent();
     }
 
     public void OnDelete(int id)

@@ -22,21 +22,18 @@ public class Road : MonoBehaviour
         GameEvents.Instance.OnRoadCreateEvent += ArrangeLane;
     }
 
-    void Start()
-    {
-        lines = GetComponentsInChildren<Line>();
-
-        foreach (var line in lines)
-            line.fatherRoad = this;
-    }
-
     void Update()
     {
-        foreach (var line in lines)
+        if (lines != null)
+        {
+            foreach (var line in lines)
             line.fatherRoad = this;
+        }
         
         if (lines.Length == 0)
+        {
             Destroy(this.gameObject);
+        }
         
         #if UNITY_EDITOR
         for (int i = 0; i < lines.Length; i++)

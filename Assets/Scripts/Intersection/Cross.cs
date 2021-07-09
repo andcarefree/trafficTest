@@ -32,10 +32,10 @@ public class Cross : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        //other is road
-        if (other.gameObject.GetComponent<Road>() != null)
+        //道路接入路口
+        if (other.gameObject.GetComponent<Line>() != null)
         {
-            Road road = other.gameObject.GetComponent<Road>();
+            Road road = other.gameObject.GetComponent<Line>().fatherRoad;
             if (roadMap.ContainsKey(road))
             {
                 return;

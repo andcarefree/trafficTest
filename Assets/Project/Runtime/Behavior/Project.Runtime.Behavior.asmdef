@@ -1,0 +1,17 @@
+{
+    "name": "Project.Runtime.Behavior",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:c8c733d77eca6494cb695cf5a0536927",
+        "GUID:c2a1c28aac5053b46b1d38b7820ab960"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
